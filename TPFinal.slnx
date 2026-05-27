@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/BaseDeDatos/">
+    <File Path="CreacionM1.sql" />
+  </Folder>
+  <Project Path="Dominio/Dominio.csproj" Id="cdd6d638-ba28-42f4-84fd-854a451323c2" />
+  <Project Path="UnPocoDeHelado/WebUnPocoDeHelado.csproj" Id="a0453508-e1e2-4c4e-a89a-1a84c0de28e9" />
+</Solution>
