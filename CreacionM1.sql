@@ -2,102 +2,217 @@
 -- TPI Base de Datos II - Sistema de UnPocoDeHelado
 -- Script: CreacionM1.sql
 -- Descripción: primera parte de la Creación de la base de datos
--- Módulo 1 de Empleados: Empleado, Usuario, Perfil, Rol
+-- Módulo 1 de Empleados: Empleado, Usuario, Perfil y Rol
+-- Modulo 2 de productos: Producto, Categoria, TipoProducto, Marca, Stock y Sucursal
+-- Modulo 3 de ventas y pedidos: Cliente, Venta, DetalleVenta, Mesa, Pedido, DetallePedido y MedioPago
 -- =============================================================
 
-CREATE DATABASE UnPocoDeHelado;
+Create Database UnPocoDeHelado;
 GO
 
-USE UnPocoDeHelado;
+Use UnPocoDeHelado;
 GO
 
--- Perfil
-CREATE TABLE Perfil (
-    Id          INT IDENTITY(1,1) PRIMARY KEY,
-    Nombre      VARCHAR(40)  NOT NULL UNIQUE, 
-    Descripcion VARCHAR(255) NULL
-);
 
-CREATE TABLE Rol (
-    Id          INT IDENTITY(1,1) PRIMARY KEY,
-    Nombre      VARCHAR(50)  NOT NULL UNIQUE,
-    Descripcion VARCHAR(255) NULL
+Create Table Perfil (
+    Id          Int Identity(1,1) Primary Key,
+    Nombre      Varchar(40)  Not Null Unique, 
+    Descripcion Varchar(255) Null
 );
--- Sucursal
-CREATE TABLE Empleado (
-    Id            BIGINT IDENTITY(1,1) PRIMARY KEY,
-    Nombre        VARCHAR(50)   NOT NULL,
-    Apellido      VARCHAR(50)   NOT NULL,
-    DNI           VARCHAR(15)   NOT NULL UNIQUE,
-    Email         VARCHAR(100)  NULL,
-    Telefono      VARCHAR(30)   NULL,
-    IdSucursal    BIGINT        NOT NULL,
-    IdRol         INT           NOT NULL,
-    FechaIngreso  DATE          NOT NULL,
-    Salario       DECIMAL(10,2) NULL CHECK (Salario IS NULL OR Salario >= 0),
-    Activo        BIT           NOT NULL DEFAULT 1,
-    CONSTRAINT FK_Empleado_Sucursal FOREIGN KEY (IdSucursal) REFERENCES Sucursal(Id),
-    CONSTRAINT FK_Empleado_Rol      FOREIGN KEY (IdRol)      REFERENCES Rol(Id)
-);
+GO
 
-CREATE TABLE Usuario (
-    Id             BIGINT IDENTITY(1,1) PRIMARY KEY,
-    Nombre         VARCHAR(50)  NOT NULL UNIQUE,
-    Pass           VARCHAR(255) NOT NULL,
-    IdEmpleado     BIGINT       NOT NULL,
-    IdPerfil       INT          NOT NULL,
-    Activo         BIT          NOT NULL DEFAULT 1,
-    CONSTRAINT FK_Usuario_Empleado FOREIGN KEY (IdEmpleado) REFERENCES Empleado(Id),
-    CONSTRAINT FK_Usuario_Perfil   FOREIGN KEY (IdPerfil)   REFERENCES Perfil(Id)
+Create Table Rol (
+    Id          Int Identity(1,1) Primary Key,
+    Nombre      Varchar(50)  Not Null Unique,
+    Descripcion Varchar(255) Null
 );
--- Catalogo
-CREATE TABLE Categoria (
-    Id          INT IDENTITY(1,1) PRIMARY KEY,
-    Nombre      VARCHAR(50)  NOT NULL UNIQUE,
-    Descripcion VARCHAR(255) NULL,
-    Activa      BIT NOT NULL DEFAULT 1
-);
+GO
 
-CREATE TABLE TipoProducto (
-    Id           INT IDENTITY(1,1) PRIMARY KEY,
-    Nombre       VARCHAR(50) NOT NULL,
-    IdCategoria  INT         NOT NULL,
-    Activo       BIT NOT NULL DEFAULT 1,
-    CONSTRAINT FK_TipoProducto_Categoria FOREIGN KEY (IdCategoria) REFERENCES Categoria(Id),
-    CONSTRAINT UQ_TipoProducto_Categoria UNIQUE (IdCategoria, Nombre)
+Create Table Sucursal (
+    Id              Bigint Identity(1,1) Primary Key,
+    Nombre          Varchar(80)  Not Null,
+    Direccion       Varchar(150) Not Null,
+    Ciudad          Varchar(60)  Not Null,
+    Provincia       Varchar(60)  Not Null,
+    Telefono        Varchar(30)  Null,
+    Email           Varchar(100) Null,
+    FechaApertura   Date         Not Null,
+    Activa          Bit          Not Null Default 1
 );
+GO
 
-CREATE TABLE Marca (
-    Id     INT IDENTITY(1,1) PRIMARY KEY,
-    Nombre VARCHAR(80) NOT NULL UNIQUE,
-    Activa BIT NOT NULL DEFAULT 1
+Create Table Empleado (
+    Id            Bigint Identity(1,1) Primary Key,
+    Nombre        Varchar(50)   Not Null,
+    Apellido      Varchar(50)   Not Null,
+    DNI           Varchar(15)   Not Null Unique,
+    Email         Varchar(100)  Null,
+    Telefono      Varchar(30)   Null,
+    IdSucursal    Bigint        Not Null,
+    IdRol         Int           Not Null,
+    FechaIngreso  Date          Not Null,
+    Salario       Decimal(10,2) Null Check (Salario IS Null OR Salario >= 0),
+    Activo        Bit           Not Null Default 1,
+    Constraint FK_Empleado_Sucursal Foreign Key (IdSucursal) References Sucursal(Id),
+    Constraint FK_Empleado_Rol      Foreign Key (IdRol)      References Rol(Id)
 );
+GO
 
-CREATE TABLE Producto (
-    Id                 BIGINT IDENTITY(1,1) PRIMARY KEY,
-    Nombre             VARCHAR(80)   NOT NULL,
-    IdCategoria        INT           NOT NULL,
-    IdTipoProducto     INT           NULL,
-    IdMarca            INT           NULL,
-    PrecioVenta        DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK (PrecioVenta >= 0),
-    PorcentajeGanancia DECIMAL(6,2)  NOT NULL DEFAULT 0
-                          CHECK (PorcentajeGanancia >= -100 AND PorcentajeGanancia <= 10000),
-    StockMinimo        DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK (StockMinimo >= 0),
-    Descripcion        VARCHAR(255)  NULL,
-    Activo             BIT           NOT NULL DEFAULT 1,
-    CONSTRAINT FK_Producto_Categoria    FOREIGN KEY (IdCategoria)    REFERENCES Categoria(Id),
-    CONSTRAINT FK_Producto_TipoProducto FOREIGN KEY (IdTipoProducto) REFERENCES TipoProducto(Id),
-    CONSTRAINT FK_Producto_Marca        FOREIGN KEY (IdMarca)        REFERENCES Marca(Id)
+Create Table Usuario (
+    Id             Bigint Identity(1,1) Primary Key,
+    Nombre         Varchar(50)  Not Null Unique,
+    Pass           Varchar(255) Not Null,
+    IdEmpleado     Bigint       Not Null,
+    IdPerfil       Int          Not Null,
+    Activo         Bit          Not Null Default 1,
+    Constraint FK_Usuario_Empleado Foreign Key (IdEmpleado) References Empleado(Id),
+    Constraint FK_Usuario_Perfil   Foreign Key (IdPerfil)   References Perfil(Id)
 );
--- Stock
-CREATE TABLE Stock (
-    IdSucursal          BIGINT NOT NULL,
-    IdProducto          BIGINT NOT NULL,
-    Cantidad            DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK (Cantidad >= 0),
-    FechaActualizacion  DATETIME NOT NULL DEFAULT GETDATE(),
-    CONSTRAINT PK_Stock PRIMARY KEY (IdSucursal, IdProducto),
-    CONSTRAINT FK_Stock_Sucursal FOREIGN KEY (IdSucursal) REFERENCES Sucursal(Id),
-    CONSTRAINT FK_Stock_Producto FOREIGN KEY (IdProducto) REFERENCES Producto(Id)
-);
+GO
 
--- Debemos seguir con Proveedores
+Create Table Categoria (
+    Id          Int Identity(1,1) Primary Key,
+    Nombre      Varchar(50)  Not Null Unique,
+    Descripcion Varchar(255) Null,
+    Activa      Bit Not Null Default 1
+);
+GO
+
+Create Table Marca (
+    Id     Int Identity(1,1) Primary Key,
+    Nombre Varchar(80) Not Null Unique,
+    Activa Bit Not Null Default 1
+);
+GO
+
+Create Table TipoProducto (
+    Id           Int Identity(1,1) Primary Key,
+    Nombre       Varchar(50) Not Null,
+    IdCategoria  Int         Not Null,
+    Activo       Bit Not Null Default 1,
+    Constraint FK_TipoProducto_Categoria Foreign Key (IdCategoria) References Categoria(Id),
+    Constraint UQ_TipoProducto_Categoria Unique (IdCategoria, Nombre)
+);
+GO
+
+Create Table Producto (
+    Id                 Bigint Identity(1,1) Primary Key,
+    Nombre             Varchar(80)   Not Null,
+    IdCategoria        Int           Not Null,
+    IdTipoProducto     Int           Null,
+    IdMarca            Int           Null,
+    PrecioVenta        Decimal(10,2) Not Null Default 0 Check (PrecioVenta >= 0),
+    PorcentajeGanancia Decimal(6,2)  Not Null Default 0
+                          Check (PorcentajeGanancia >= -100 AND PorcentajeGanancia <= 10000),
+    StockMinimo        Decimal(10,2) Not Null Default 0 Check (StockMinimo >= 0),
+    Descripcion        Varchar(255)  Null,
+    Activo             Bit           Not Null Default 1,
+    Constraint FK_Producto_Categoria    Foreign Key (IdCategoria)    References Categoria(Id),
+    Constraint FK_Producto_TipoProducto Foreign Key (IdTipoProducto) References TipoProducto(Id),
+    Constraint FK_Producto_Marca        Foreign Key (IdMarca)        References Marca(Id)
+);
+GO
+
+Create Table Stock (
+    IdSucursal          Bigint Not Null,
+    IdProducto          Bigint Not Null,
+    Cantidad            Decimal(10,2) Not Null Default 0 Check (Cantidad >= 0),
+    FechaActualizacion  Datetime Not Null Default GETDATE(),
+    Constraint PK_Stock Primary Key (IdSucursal, IdProducto),
+    Constraint FK_Stock_Sucursal Foreign Key (IdSucursal) References Sucursal(Id),
+    Constraint FK_Stock_Producto Foreign Key (IdProducto) References Producto(Id)
+);
+GO
+
+Create Table Mesa (
+    Id          Bigint Identity(1,1) Primary Key,
+    IdSucursal  Bigint Not Null,
+    Numero      Int    Not Null,
+    Capacidad   Int    Not Null Check (Capacidad > 0),
+    Activa      Bit    Not Null Default 1,
+    Constraint FK_Mesa_Sucursal Foreign Key (IdSucursal) References Sucursal(Id),
+    Constraint UQ_Mesa_Sucursal_Numero Unique (IdSucursal, Numero)
+);
+GO
+
+Create Table Cliente (
+    Id                Bigint Identity(1,1) Primary Key,
+    Nombre            Varchar(50)  Not Null,
+    Apellido          Varchar(50)  Not Null,
+    DNI               Varchar(15)  Null Unique,
+    Email             Varchar(100) Null,
+    Telefono          Varchar(30)  Null,
+    FechaNacimiento   Date         Null,
+    FechaRegistro     Date         Not Null Default CAST(GETDATE() AS Date),
+    PuntosFidelidad   Int          Not Null Default 0 Check (PuntosFidelidad >= 0),
+    Activo            Bit          Not Null Default 1
+);
+GO
+
+Create Table MedioPago (
+    Id     Int Identity(1,1) Primary Key,
+    Nombre Varchar(40) Not Null Unique,
+    Activo Bit Not Null Default 1
+);
+GO
+
+Create Table Venta (
+    Id               Bigint Identity(1,1) Primary Key,
+    NumeroFactura    Varchar(20) Null,  
+    IdSucursal       Bigint      Not Null,
+    IdEmpleadoVende  Bigint      Not Null,
+    IdEmpleadoCobra  Bigint      Null,   
+    IdCliente        Bigint      Not Null,
+    Fecha            Datetime    Not Null Default GETDATE(),
+    IdMedioPago      Int         Null,   
+    Estado           Varchar(20) Not Null Default 'Pendiente',
+    Total            Decimal(12,2) Not Null Default 0 Check (Total >= 0),
+    Constraint FK_Venta_Sucursal       Foreign Key (IdSucursal)      References Sucursal(Id),
+    Constraint FK_Venta_EmpleadoVende  Foreign Key (IdEmpleadoVende) References Empleado(Id),
+    Constraint FK_Venta_EmpleadoCobra  Foreign Key (IdEmpleadoCobra) References Empleado(Id),
+    Constraint FK_Venta_Cliente        Foreign Key (IdCliente)       References Cliente(Id),
+    Constraint FK_Venta_MedioPago      Foreign Key (IdMedioPago)     References MedioPago(Id)
+);
+GO
+
+Create Unique Index Venta_NumeroFactura
+    On Venta(NumeroFactura) Where NumeroFactura IS Not Null;
+GO
+
+Create Table DetalleVenta (
+    Id              Bigint Identity(1,1) Primary Key,
+    IdVenta         Bigint Not Null,
+    IdProducto      Bigint Not Null,
+    Cantidad        Int    Not Null Check (Cantidad > 0),
+    PrecioUnitario  Decimal(10,2) Not Null Check (PrecioUnitario >= 0),
+    Subtotal        Decimal(12,2) Not Null Check (Subtotal >= 0),
+    Constraint FK_DetVenta_Venta    Foreign Key (IdVenta)    References Venta(Id),
+    Constraint FK_DetVenta_Producto Foreign Key (IdProducto) References Producto(Id)
+);
+GO
+
+Create Table Pedido (
+    Id          Bigint Identity(1,1) Primary Key,
+    IdMesa      Bigint   Not Null,
+    IdEmpleado  Bigint   Not Null,
+    Fecha       Datetime Not Null Default GETDATE(),
+    Estado      Varchar(20) Not Null Default 'Abierto',
+    IdVenta     Bigint   Null,
+    Constraint FK_Pedido_Mesa     Foreign Key (IdMesa)     References Mesa(Id),
+    Constraint FK_Pedido_Empleado Foreign Key (IdEmpleado) References Empleado(Id),
+    Constraint FK_Pedido_Venta    Foreign Key (IdVenta)    References Venta(Id)
+);
+GO
+
+Create Table DetallePedido (
+    Id              Bigint Identity(1,1) Primary Key,
+    IdPedido        Bigint Not Null,
+    IdProducto      Bigint Not Null,
+    Cantidad        Int    Not Null Check (Cantidad > 0),
+    PrecioUnitario  Decimal(10,2) Not Null Check (PrecioUnitario >= 0),
+    Subtotal        Decimal(12,2) Not Null Check (Subtotal >= 0),
+    Observacion     Varchar(255) Null,
+    Constraint FK_DetPedido_Pedido   Foreign Key (IdPedido)   References Pedido(Id),
+    Constraint FK_DetPedido_Producto Foreign Key (IdProducto) References Producto(Id)
+);
+GO
