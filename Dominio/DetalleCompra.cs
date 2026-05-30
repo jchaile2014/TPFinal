@@ -12,10 +12,13 @@ namespace Dominio
         public long Id { get; set; }
         public long IdCompra { get; set; }
         public Producto Producto { get; set; }
+
         [DisplayName("Cantidad")]
         public decimal Cantidad { get; set; }
+
         [DisplayName("Precio Unitario")]
         public decimal PrecioUnitario { get; set; }
+
         [DisplayName("Subtotal")]
         public decimal Subtotal { get; set; }
     }

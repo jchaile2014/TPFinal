@@ -107,6 +107,8 @@ Create Table Cliente (
     Apellido          Varchar(50)  Not Null,
     DNI               Varchar(15)  Null Unique,
 );
+GO
+
 SET IDENTITY_INSERT Cliente ON;
 INSERT INTO Cliente (Id, Nombre, Apellido) VALUES (1, 'Consumidor', 'Final');
 SET IDENTITY_INSERT Cliente OFF;
@@ -180,32 +182,6 @@ Create Table DetallePedido (
 );
 GO
 
-Create Table Compra (
-    Id           Bigint Identity(1,1) PRIMARY KEY,
-    IdProveedor  Bigint   Not Null,
-    IdSucursal   Bigint   Not Null,
-    IdEmpleado   Bigint   Not Null,
-    Fecha        Datetime Not Null Default GETDATE(),
-    Total        Decimal(12,2) Not Null Default 0 Check (Total >= 0),
-    Estado       Varchar(20)   Not Null Default 'Pendiente',
-    Constraint FK_Compra_Proveedor Foreign Key (IdProveedor) References Proveedor(Id),
-    Constraint FK_Compra_Sucursal  Foreign Key (IdSucursal)  References Sucursal(Id),
-    Constraint FK_Compra_Empleado  Foreign Key (IdEmpleado)  References Empleado(Id)
-);
-GO  
-
-Create Table DetalleCompra (
-    Id              Bigint IDENTITY(1,1) PRIMARY KEY,
-    IdCompra        Bigint Not Null,
-    IdProducto      Bigint Not Null,
-    Cantidad        Decimal(10,2) Not Null Check (Cantidad > 0),
-    PrecioUnitario  Decimal(10,2) Not Null Check (PrecioUnitario >= 0),
-    Subtotal        Decimal(12,2) Not Null Check (Subtotal >= 0),
-    Constraint FK_DetCompra_Compra   Foreign Key (IdCompra)   References Compra(Id),
-    Constraint FK_DetCompra_Producto Foreign Key (IdProducto) References     Producto(Id)
-);
-GO
-
 Create Table  Proveedor (
     Id        Bigint Identity(1,1) PRIMARY KEY,
     Nombre    Varchar(100) Not Null,
@@ -226,5 +202,31 @@ Create Table ProductoProveedor (
     Constraint PK_ProductoProveedor PRIMARY KEY (IdProducto, IdProveedor),
     Constraint FK_PP_Producto  Foreign Key (IdProducto)  References Producto(Id),
     Constraint FK_PP_Proveedor Foreign Key (IdProveedor) References Proveedor(Id)
+);
+GO
+
+Create Table Compra (
+    Id           Bigint Identity(1,1) PRIMARY KEY,
+    IdProveedor  Bigint   Not Null,
+    IdSucursal   Bigint   Not Null,
+    IdEmpleado   Bigint   Not Null,
+    Fecha        Datetime Not Null Default GETDATE(),
+    Total        Decimal(12,2) Not Null Default 0 Check (Total >= 0),
+    Estado       Varchar(20)   Not Null Default 'Pendiente' Check (Estado In ('Pendiente', 'Finalizado', 'Cancelado')),
+    Constraint FK_Compra_Proveedor Foreign Key (IdProveedor) References Proveedor(Id),
+    Constraint FK_Compra_Sucursal  Foreign Key (IdSucursal)  References Sucursal(Id),
+    Constraint FK_Compra_Empleado  Foreign Key (IdEmpleado)  References Empleado(Id)
+);
+GO  
+
+Create Table DetalleCompra (
+    Id              Bigint IDENTITY(1,1) PRIMARY KEY,
+    IdCompra        Bigint Not Null,
+    IdProducto      Bigint Not Null,
+    Cantidad        Decimal(10,2) Not Null Check (Cantidad > 0),
+    PrecioUnitario  Decimal(10,2) Not Null Check (PrecioUnitario >= 0),
+    Subtotal        Decimal(12,2) Not Null Check (Subtotal >= 0),
+    Constraint FK_DetCompra_Compra   Foreign Key (IdCompra)   References Compra(Id),
+    Constraint FK_DetCompra_Producto Foreign Key (IdProducto) References     Producto(Id)
 );
 GO

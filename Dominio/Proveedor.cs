@@ -10,11 +10,13 @@ namespace Dominio
     public class Proveedor
     {
         public long Id { get; set; }
+
         [DisplayName("Nombre")]
         public string Nombre { get; set; }
         public string CUIT { get; set; }
         public string Telefono { get; set; }
         public string Email { get; set; }
+
         [DisplayName("Dirección")]
         public string Direccion { get; set; }
         public string Rubro { get; set; }

@@ -11,8 +11,10 @@ namespace Dominio
     {
         public Producto Producto { get; set; }
         public Proveedor Proveedor { get; set; }
+
         [DisplayName("Última Compra")]
         public DateTime? UltimaFechaCompra { get; set; }
+
         [DisplayName("Último Precio")]
         public decimal? UltimoPrecioCompra { get; set; }
     }
