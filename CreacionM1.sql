@@ -5,6 +5,7 @@
 -- Módulo 1 de Empleados: Empleado, Usuario y Rol
 -- Modulo 2 de productos: Producto, Categoria, Stock y Sucursal
 -- Modulo 3 de ventas y pedidos: Cliente, Venta, DetalleVenta, Mesa, Pedido, DetallePedido y MedioPago
+-- Modulo 4 de compras: Proveedor, Compra, DetalleCompra y ProductoProveedor
 -- =============================================================
 
 Create Database UnPocoDeHelado;
@@ -176,5 +177,54 @@ Create Table DetallePedido (
     Observacion     Varchar(255) Null,
     Constraint FK_DetPedido_Pedido   Foreign Key (IdPedido)   References Pedido(Id),
     Constraint FK_DetPedido_Producto Foreign Key (IdProducto) References Producto(Id)
+);
+GO
+
+Create Table Compra (
+    Id           Bigint Identity(1,1) PRIMARY KEY,
+    IdProveedor  Bigint   Not Null,
+    IdSucursal   Bigint   Not Null,
+    IdEmpleado   Bigint   Not Null,
+    Fecha        Datetime Not Null Default GETDATE(),
+    Total        Decimal(12,2) Not Null Default 0 Check (Total >= 0),
+    Estado       Varchar(20)   Not Null Default 'Pendiente',
+    Constraint FK_Compra_Proveedor Foreign Key (IdProveedor) References Proveedor(Id),
+    Constraint FK_Compra_Sucursal  Foreign Key (IdSucursal)  References Sucursal(Id),
+    Constraint FK_Compra_Empleado  Foreign Key (IdEmpleado)  References Empleado(Id)
+);
+GO  
+
+Create Table DetalleCompra (
+    Id              Bigint IDENTITY(1,1) PRIMARY KEY,
+    IdCompra        Bigint Not Null,
+    IdProducto      Bigint Not Null,
+    Cantidad        Decimal(10,2) Not Null Check (Cantidad > 0),
+    PrecioUnitario  Decimal(10,2) Not Null Check (PrecioUnitario >= 0),
+    Subtotal        Decimal(12,2) Not Null Check (Subtotal >= 0),
+    Constraint FK_DetCompra_Compra   Foreign Key (IdCompra)   References Compra(Id),
+    Constraint FK_DetCompra_Producto Foreign Key (IdProducto) References     Producto(Id)
+);
+GO
+
+Create Table  Proveedor (
+    Id        Bigint Identity(1,1) PRIMARY KEY,
+    Nombre    Varchar(100) Not Null,
+    CUIT      Varchar(15)  Not Null Unique,
+    Telefono  Varchar(30)  Null,
+    Email     Varchar(100) Null,
+    Direccion Varchar(150) Null,
+    Rubro     Varchar(80)  Null,
+    Activo    Bit          Not Null Default  1
+);
+GO
+
+Create Table ProductoProveedor (
+    IdProducto          Bigint Not Null,
+    IdProveedor         Bigint Not Null,
+    UltimaFechaCompra   Date   Null,
+    UltimoPrecioCompra  Decimal(10,2) Null,
+    Constraint PK_ProductoProveedor PRIMARY KEY (IdProducto, IdProveedor),
+    Constraint FK_PP_Producto  Foreign Key (IdProducto)  References Producto(Id),
+    Constraint FK_PP_Proveedor Foreign Key (IdProveedor) References Proveedor(Id)
 );
 GO
