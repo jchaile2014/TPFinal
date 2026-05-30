@@ -7,14 +7,17 @@ using System.Threading.Tasks;
 
 namespace Dominio
 {
-    public class Perfil
+    public class Cliente
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         [DisplayName("Nombre")]
         public string Nombre { get; set; }
-        public string Descripcion { get; set; }
 
-        public override string ToString() => Nombre;
+        [DisplayName("Apellido")]
+        public string Apellido { get; set; }
+        public string DNI { get; set; }
+        
+        public override string ToString() => Nombre + " " + Apellido;
     }
 }

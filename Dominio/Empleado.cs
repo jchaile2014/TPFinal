@@ -20,8 +20,8 @@ public class Empleado
     public string Email { get; set; }
     public string Telefono { get; set; }
     public Sucursal Sucursal { get; set; }
-    public Rol Rol { get; set; }
-
+    public int Rol { get; set; }
+   
     [DisplayName("Ingreso")]
     public DateTime FechaIngreso { get; set; }
     public decimal? Salario { get; set; }
