@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/BaseDeDatos/">
+    <File Path="CargaDeDatos.sql" />
     <File Path="CreacionM1.sql" />
   </Folder>
   <Project Path="Dominio/Dominio.csproj" Id="cdd6d638-ba28-42f4-84fd-854a451323c2" />
