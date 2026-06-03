@@ -16,7 +16,7 @@ namespace Negocio
 
         public AccesoDatos()
         {
-            conexion = new SqlConnection("server=DESKTOP-GCAJBDA\\SQLEXPRESS; database=UnPocoDeHelado; integrated security=true");
+            conexion = new SqlConnection("Server=localhost\\SQLEXPRESS; Database=UnPocoDeHelado; Integrated Security=True;");
             comando = new SqlCommand();
             comando.Connection = conexion;
         }

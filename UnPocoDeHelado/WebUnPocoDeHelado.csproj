@@ -69,7 +69,10 @@
   <ItemGroup>
     <Content Include="default.aspx" />
     <Content Include="EmpleadosABM.aspx" />
+    <Content Include="Error.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Sucursales.aspx" />
+    <Content Include="SucursalesABM.aspx" />
     <Content Include="Web.config" />
     <Content Include="Empleados.aspx" />
   </ItemGroup>
@@ -88,6 +91,13 @@
     <Compile Include="EmpleadosABM.aspx.designer.cs">
       <DependentUpon>EmpleadosABM.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Error.aspx.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Error.aspx.designer.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -105,6 +115,20 @@
     </Compile>
     <Compile Include="Empleados.aspx.designer.cs">
       <DependentUpon>Empleados.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Sucursales.aspx.cs">
+      <DependentUpon>Sucursales.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Sucursales.aspx.designer.cs">
+      <DependentUpon>Sucursales.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="SucursalesABM.aspx.cs">
+      <DependentUpon>SucursalesABM.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SucursalesABM.aspx.designer.cs">
+      <DependentUpon>SucursalesABM.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
