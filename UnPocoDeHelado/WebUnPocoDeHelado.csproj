@@ -71,6 +71,8 @@
     <Content Include="EmpleadosABM.aspx" />
     <Content Include="Error.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Productos.aspx" />
+    <Content Include="ProductosABM.aspx" />
     <Content Include="Sucursales.aspx" />
     <Content Include="SucursalesABM.aspx" />
     <Content Include="Web.config" />
@@ -100,6 +102,20 @@
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Productos.aspx.cs">
+      <DependentUpon>Productos.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Productos.aspx.designer.cs">
+      <DependentUpon>Productos.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ProductosABM.aspx.cs">
+      <DependentUpon>ProductosABM.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProductosABM.aspx.designer.cs">
+      <DependentUpon>ProductosABM.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Site.Master.cs">
