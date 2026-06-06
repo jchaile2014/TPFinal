@@ -11,7 +11,7 @@ namespace UnPocoDeHelado
 {
 
 
-    public partial class Empleados
+    public partial class Clientes
     {
 
         /// <summary>
@@ -24,12 +24,12 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.WebControls.Button btnAgregar;
 
         /// <summary>
-        /// Control dgvEmpleados.
+        /// Control dgvClientes.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView dgvEmpleados;
+        protected global::System.Web.UI.WebControls.GridView dgvClientes;
     }
 }

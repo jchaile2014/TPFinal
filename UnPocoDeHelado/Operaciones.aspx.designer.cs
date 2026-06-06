@@ -11,25 +11,34 @@ namespace UnPocoDeHelado
 {
 
 
-    public partial class Empleados
+    public partial class Operaciones
     {
 
         /// <summary>
-        /// Control btnAgregar.
+        /// Control btnNuevaVenta.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnAgregar;
+        protected global::System.Web.UI.WebControls.Button btnNuevaVenta;
 
         /// <summary>
-        /// Control dgvEmpleados.
+        /// Control btnNuevaCompra.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView dgvEmpleados;
+        protected global::System.Web.UI.WebControls.Button btnNuevaCompra;
+
+        /// <summary>
+        /// Control dgvOperaciones.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView dgvOperaciones;
     }
 }
