@@ -7,25 +7,27 @@ using System.Threading.Tasks;
 
 namespace Dominio
 {
-    public class Venta
+    public class Operacion
     {
         public long Id { get; set; }
 
+        [DisplayName("Se Opera")]
+        public bool SeOpera { get; set; }  
+
         [DisplayName("Factura")]
-        public string NumeroFactura { get; set; }
-        public Sucursal Sucursal { get; set; }
-
-        [DisplayName("Vendedor")]
-        public Empleado EmpleadoVende { get; set; }
-
-        [DisplayName("Cobrador")]
-        public Empleado EmpleadoCobra { get; set; }
-        public Cliente Cliente { get; set; }
+        public string NumeroFactura { get; set; }   
         public DateTime Fecha { get; set; }
+        public int IdSucursal { get; set; }
+
+        public Cliente Cliente { get; set; }       
+        public Proveedor Proveedor { get; set; }   
+        public Empleado Empleado { get; set; }    
 
         [DisplayName("Medio De Pago")]
         public int MedioPago { get; set; }
         public string Estado { get; set; }
         public decimal Total { get; set; }
+
+        public List<DetalleOperacion> Detalles { get; set; }
     }
 }

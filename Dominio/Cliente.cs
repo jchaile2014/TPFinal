@@ -17,7 +17,9 @@ namespace Dominio
         [DisplayName("Apellido")]
         public string Apellido { get; set; }
         public string DNI { get; set; }
-        
+        public string Email { get; set; }
+        public string Telefono { get; set; }
+
         public override string ToString() => Nombre + " " + Apellido;
     }
 }

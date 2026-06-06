@@ -73,8 +73,6 @@
     <Content Include="Global.asax" />
     <Content Include="Productos.aspx" />
     <Content Include="ProductosABM.aspx" />
-    <Content Include="Sucursales.aspx" />
-    <Content Include="SucursalesABM.aspx" />
     <Content Include="Web.config" />
     <Content Include="Empleados.aspx" />
   </ItemGroup>
@@ -131,20 +129,6 @@
     </Compile>
     <Compile Include="Empleados.aspx.designer.cs">
       <DependentUpon>Empleados.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Sucursales.aspx.cs">
-      <DependentUpon>Sucursales.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Sucursales.aspx.designer.cs">
-      <DependentUpon>Sucursales.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="SucursalesABM.aspx.cs">
-      <DependentUpon>SucursalesABM.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SucursalesABM.aspx.designer.cs">
-      <DependentUpon>SucursalesABM.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

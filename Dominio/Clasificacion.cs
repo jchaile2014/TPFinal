@@ -7,22 +7,16 @@ using System.Threading.Tasks;
 
 namespace Dominio
 {
-    public class Proveedor
+    public class Clasificacion
     {
         public long Id { get; set; }
 
         [DisplayName("Nombre")]
         public string Nombre { get; set; }
-        public string CUIT { get; set; }
-        public string Telefono { get; set; }
-        public string Email { get; set; }
 
-        [DisplayName("Dirección")]
-        public string Direccion { get; set; }
-        public string Rubro { get; set; }
+        [DisplayName("Se Clasifica")]
+        public bool SeClasifica { get; set; }  
         public bool Activo { get; set; }
-
-        public List<Producto> Productos { get; set; }
 
         public override string ToString() => Nombre;
     }

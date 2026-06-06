@@ -7,10 +7,14 @@ using System.Threading.Tasks;
 
 namespace Dominio
 {
-    public class DetalleVenta
+    public class DetalleOperacion
     {
         public long Id { get; set; }
-        public long IdVenta { get; set; }
+        public long IdOperacion { get; set; }
+
+        [DisplayName("Se Opera")]
+        public bool SeOpera { get; set; }   
+
         public Producto Producto { get; set; }
 
         [DisplayName("Cantidad")]

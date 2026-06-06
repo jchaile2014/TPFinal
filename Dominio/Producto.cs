@@ -15,15 +15,30 @@ namespace Dominio
 
         [DisplayName("Nombre")]
         public string Nombre { get; set; }
-        public int Categoria { get; set; }
-        public string Marca { get; set; }
-          
-        [DisplayName("Precio Venta")]
-        public decimal PrecioVenta { get; set; }
-               
+
         [DisplayName("Descripción")]
         public string Descripcion { get; set; }
+
+        public Clasificacion Marca { get; set; }      
+        public Clasificacion Categoria { get; set; }  
+
+        [DisplayName("Stock")]
+        public int Cantidad { get; set; }               
+
+        [DisplayName("Stock Mínimo")]
+        public int StockMinimo { get; set; }
+
+        [DisplayName("% Ganancia")]
+        public decimal PorcentajeGanancia { get; set; }
+
+        [DisplayName("Precio Compra")]
+        public decimal PrecioCompraActual { get; set; } 
+
+        public int IdSucursal { get; set; }
         public bool Activo { get; set; }
+
+        [DisplayName("Precio Venta")]
+        public decimal PrecioVenta => PrecioCompraActual * (1 + PorcentajeGanancia / 100m);
 
         public override string ToString() => Nombre;
     }
