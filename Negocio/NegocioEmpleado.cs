@@ -16,9 +16,8 @@ namespace Negocio
 
             try
             {
-                datos.setearConsulta("Select E.Id, E.Nombre, E.Apellido, E.DNI, E.Email, E.Telefono, " +
-                    "E.IdSucursal, S.Nombre NombreSucursal, E.IdRol, E.FechaIngreso, E.Salario, E.Activo " +
-                    "From Empleado E Join Sucursal S On E.IdSucursal = S.Id Order By E.Nombre");
+                datos.setearConsulta("Select Id, Nombre, Apellido, DNI, Email, Telefono, " +
+                    "IdSucursal, IdRol, FechaIngreso, Salario, Activo From Empleado Order By Nombre");
                 datos.ejecutarLectura();
 
                 while (datos.Lector.Read())
@@ -30,11 +29,7 @@ namespace Negocio
                     aux.DNI = (string)datos.Lector["DNI"];
                     aux.Email = !(datos.Lector["Email"] is DBNull) ? (string)datos.Lector["Email"] : null;
                     aux.Telefono = !(datos.Lector["Telefono"] is DBNull) ? (string)datos.Lector["Telefono"] : null;
-
-                    aux.Sucursal = new Sucursal();
-                    aux.Sucursal.Id = (long)datos.Lector["IdSucursal"];
-                    aux.Sucursal.Nombre = (string)datos.Lector["NombreSucursal"];
-
+                    aux.IdSucursal = datos.Lector["IdSucursal"] is DBNull ? 0 : Convert.ToInt32(datos.Lector["IdSucursal"]);
                     aux.Rol = (int)datos.Lector["IdRol"];
                     aux.FechaIngreso = (DateTime)datos.Lector["FechaIngreso"];
                     aux.Salario = !(datos.Lector["Salario"] is DBNull) ? (decimal?)datos.Lector["Salario"] : null;
@@ -68,7 +63,7 @@ namespace Negocio
                 datos.setearParametro("@dni", nuevo.DNI);
                 datos.setearParametro("@email", nuevo.Email ?? (object)DBNull.Value);
                 datos.setearParametro("@telefono", nuevo.Telefono ?? (object)DBNull.Value);
-                datos.setearParametro("@idSucursal", nuevo.Sucursal.Id);
+                datos.setearParametro("@idSucursal", nuevo.IdSucursal);
                 datos.setearParametro("@idRol", nuevo.Rol);
                 datos.setearParametro("@fechaIngreso", nuevo.FechaIngreso);
                 datos.setearParametro("@salario", nuevo.Salario ?? (object)DBNull.Value);
@@ -98,7 +93,7 @@ namespace Negocio
                 datos.setearParametro("@dni", empleado.DNI);
                 datos.setearParametro("@email", empleado.Email ?? (object)DBNull.Value);
                 datos.setearParametro("@telefono", empleado.Telefono ?? (object)DBNull.Value);
-                datos.setearParametro("@idSucursal", empleado.Sucursal.Id);
+                datos.setearParametro("@idSucursal", empleado.IdSucursal);
                 datos.setearParametro("@idRol", empleado.Rol);
                 datos.setearParametro("@fechaIngreso", empleado.FechaIngreso);
                 datos.setearParametro("@salario", empleado.Salario ?? (object)DBNull.Value);
