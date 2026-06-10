@@ -15,7 +15,7 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta("Select Id, SeOpera, NumeroFactura, Fecha, IdSucursal, IdCliente, IdProveedor, IdEmpleado, IdMedioPago, Estado, Total From Operacion Where SeOpera = @seOpera Order By Fecha Desc");
+                datos.setearConsulta("Select Id, SeOpera, NumeroFactura, Fecha, IdSucursal, IdCliente, IdEmpleado, IdMedioPago, Estado, Total From Operacion Where SeOpera = @seOpera Order By Fecha Desc");
                 datos.setearParametro("@seOpera", esVenta);
                 datos.ejecutarLectura();
                 while (datos.Lector.Read())
@@ -36,12 +36,6 @@ namespace Negocio
                     {
                         aux.Cliente = new Cliente();
                         aux.Cliente.Id = (long)datos.Lector["IdCliente"];
-                    }
-
-                    if (!(datos.Lector["IdProveedor"] is DBNull))
-                    {
-                        aux.Proveedor = new Proveedor();
-                        aux.Proveedor.Id = (long)datos.Lector["IdProveedor"];
                     }
 
                     aux.Empleado = new Empleado();
@@ -70,7 +64,6 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                // 1. Buscamos la cabecera de la operación
                 datos.setearConsulta("Select Id, SeOpera, NumeroFactura, Fecha, Total, Estado From Operacion Where Id = @id");
                 datos.setearParametro("@id", id);
                 datos.ejecutarLectura();
@@ -85,9 +78,8 @@ namespace Negocio
                     aux.Estado = (string)datos.Lector["Estado"];
                 }
                 datos.cerrarConexion();
-                // 2. Buscamos el detalle (los productos que se compraron/vendieron)
                 datos = new AccesoDatos();
-                datos.setearConsulta("Select D.Id, D.IdProducto, P.Nombre as ProductoNombre, D.Cantidad, D.PrecioUnitario, D.Subtotal From DetalleOperacion D Inner Join Producto P on D.IdProducto = P.Id Where D.IdOperacion = @id");
+                datos.setearConsulta("Select D.Id, D.IdProducto, P.Nombre as ProductoNombre, D.IdProveedor, Pr.Nombre as ProveedorNombre, D.Cantidad, D.PrecioUnitario, D.Subtotal From DetalleOperacion D Inner Join Producto P on D.IdProducto = P.Id Left Join Proveedor Pr on D.IdProveedor = Pr.Id Where D.IdOperacion = @id");
                 datos.setearParametro("@id", id);
                 datos.ejecutarLectura();
                 aux.Detalles = new List<DetalleOperacion>();
@@ -98,6 +90,12 @@ namespace Negocio
                     det.Producto = new Producto();
                     det.Producto.Id = (long)datos.Lector["IdProducto"];
                     det.Producto.Nombre = (string)datos.Lector["ProductoNombre"];
+                    if (!(datos.Lector["IdProveedor"] is DBNull))
+                    {
+                        det.Proveedor = new Proveedor();
+                        det.Proveedor.Id = (long)datos.Lector["IdProveedor"];
+                        det.Proveedor.Nombre = (string)datos.Lector["ProveedorNombre"];
+                    }
                     det.Cantidad = (int)datos.Lector["Cantidad"];
                     det.PrecioUnitario = (decimal)datos.Lector["PrecioUnitario"];
                     det.Subtotal = (decimal)datos.Lector["Subtotal"];
@@ -119,13 +117,12 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta("Insert Into Operacion (SeOpera, NumeroFactura, Fecha, IdSucursal, IdCliente, IdProveedor, IdEmpleado, IdMedioPago, Estado, Total) OUTPUT INSERTED.Id Values (@seOpera, @numFactura, @fecha, @idSucursal, @idCliente, @idProveedor, @idEmpleado, @idMedioPago, @estado, @total)");
+                datos.setearConsulta("Insert Into Operacion (SeOpera, NumeroFactura, Fecha, IdSucursal, IdCliente, IdEmpleado, IdMedioPago, Estado, Total) OUTPUT INSERTED.Id Values (@seOpera, @numFactura, @fecha, @idSucursal, @idCliente, @idEmpleado, @idMedioPago, @estado, @total)");
                 datos.setearParametro("@seOpera", nueva.SeOpera);
                 datos.setearParametro("@numFactura", (object)nueva.NumeroFactura ?? DBNull.Value);
                 datos.setearParametro("@fecha", nueva.Fecha);
                 datos.setearParametro("@idSucursal", nueva.IdSucursal > 0 ? (object)nueva.IdSucursal : DBNull.Value);
                 datos.setearParametro("@idCliente", nueva.Cliente != null && nueva.Cliente.Id > 0 ? (object)nueva.Cliente.Id : DBNull.Value);
-                datos.setearParametro("@idProveedor", nueva.Proveedor != null && nueva.Proveedor.Id > 0 ? (object)nueva.Proveedor.Id : DBNull.Value);
                 datos.setearParametro("@idEmpleado", nueva.Empleado.Id);
                 datos.setearParametro("@idMedioPago", nueva.MedioPago > 0 ? (object)nueva.MedioPago : DBNull.Value);
                 datos.setearParametro("@estado", nueva.Estado ?? "Pendiente");
@@ -134,16 +131,16 @@ namespace Negocio
                 long idOperacion = (long)datos.ejecutarAccionScalar();
                 nueva.Id = idOperacion;
                 datos.cerrarConexion();
-                // Insertar los detalles
                 if (nueva.Detalles != null && nueva.Detalles.Count > 0)
                 {
                     foreach (DetalleOperacion det in nueva.Detalles)
                     {
                         AccesoDatos datosDet = new AccesoDatos();
-                        datosDet.setearConsulta("Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, Cantidad, PrecioUnitario, Subtotal) Values (@idOp, @seOperaDet, @idProd, @cant, @precio, @subtotal)");
+                        datosDet.setearConsulta("Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal) Values (@idOp, @seOperaDet, @idProd, @idProvDet, @cant, @precio, @subtotal)");
                         datosDet.setearParametro("@idOp", nueva.Id);
                         datosDet.setearParametro("@seOperaDet", nueva.SeOpera);
                         datosDet.setearParametro("@idProd", det.Producto.Id);
+                        datosDet.setearParametro("@idProvDet", det.Proveedor != null && det.Proveedor.Id > 0 ? (object)det.Proveedor.Id : DBNull.Value);
                         datosDet.setearParametro("@cant", det.Cantidad);
                         datosDet.setearParametro("@precio", det.PrecioUnitario);
                         datosDet.setearParametro("@subtotal", det.Subtotal);

@@ -18,27 +18,44 @@ namespace UnPocoDeHelado
             {
                 if (Request.QueryString["id"] != null)
                 {
-                    titulo.InnerText = "Modificar Proveedor";
-                    btnEliminar.Visible = true;
-
                     long id = long.Parse(Request.QueryString["id"]);
-                    NegocioProveedor negocio = new NegocioProveedor();
-
-                    Proveedor prov = negocio.listar().FirstOrDefault(x => x.Id == id);
-
-                    if (prov != null)
-                    {
-                        txtNombre.Text = prov.Nombre;
-                        txtCUIT.Text = prov.CUIT;
-                        txtTelefono.Text = prov.Telefono;
-                        txtEmail.Text = prov.Email;
-                        txtDireccion.Text = prov.Direccion;
-                        txtRubro.Text = prov.Rubro;
-                        chkActivo.Checked = prov.Activo;
-                    }
+                    titulo.InnerText = "Modificar Proveedor";
+                    cargarProveedor(id);
+                    btnEliminar.Visible = true;
+                }
+                else
+                {
+                    titulo.InnerText = "Nuevo Proveedor";
+                    btnEliminar.Visible = false;
                 }
             }
         }
+
+        private void cargarProveedor(long id)
+        {
+            try
+            {
+                NegocioProveedor negocio = new NegocioProveedor();
+                List<Proveedor> lista = negocio.listar();
+                Proveedor prov = lista.Find(x => x.Id == id);
+                if (prov != null)
+                {
+                    txtNombre.Text = prov.Nombre;
+                    txtCUIT.Text = prov.CUIT;
+                    txtTelefono.Text = prov.Telefono ?? "";
+                    txtEmail.Text = prov.Email ?? "";
+                    txtDireccion.Text = prov.Direccion ?? "";
+                    txtRubro.Text = prov.Rubro ?? "";
+                    chkActivo.Checked = prov.Activo;
+                }
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
+            }
+        }
+
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
             try
@@ -46,11 +63,12 @@ namespace UnPocoDeHelado
                 Proveedor prov = new Proveedor();
                 prov.Nombre = txtNombre.Text;
                 prov.CUIT = txtCUIT.Text;
-                prov.Telefono = txtTelefono.Text;
-                prov.Email = txtEmail.Text;
-                prov.Direccion = txtDireccion.Text;
-                prov.Rubro = txtRubro.Text;
+                prov.Telefono = string.IsNullOrEmpty(txtTelefono.Text) ? null : txtTelefono.Text;
+                prov.Email = string.IsNullOrEmpty(txtEmail.Text) ? null : txtEmail.Text;
+                prov.Direccion = string.IsNullOrEmpty(txtDireccion.Text) ? null : txtDireccion.Text;
+                prov.Rubro = string.IsNullOrEmpty(txtRubro.Text) ? null : txtRubro.Text;
                 prov.Activo = chkActivo.Checked;
+
                 NegocioProveedor negocio = new NegocioProveedor();
                 if (Request.QueryString["id"] != null)
                 {
@@ -65,29 +83,30 @@ namespace UnPocoDeHelado
             }
             catch (Exception ex)
             {
-                throw ex;
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
             }
         }
+
         protected void btnEliminar_Click(object sender, EventArgs e)
         {
             try
             {
-                if (Request.QueryString["id"] != null)
-                {
-                    long id = long.Parse(Request.QueryString["id"]);
-                    NegocioProveedor negocio = new NegocioProveedor();
-                    negocio.eliminar(id);
-                    Response.Redirect("Proveedores.aspx", false);
-                }
-        }
+                long id = long.Parse(Request.QueryString["id"]);
+                NegocioProveedor negocio = new NegocioProveedor();
+                negocio.eliminarLogico(id, false);
+                Response.Redirect("Proveedores.aspx", false);
+            }
             catch (Exception ex)
             {
-                throw ex;
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
             }
         }
+
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-            Response.Redirect("Proveedores.aspx");
+            Response.Redirect("Proveedores.aspx", false);
         }
     }
 }

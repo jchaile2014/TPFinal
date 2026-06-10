@@ -14,29 +14,43 @@ namespace UnPocoDeHelado
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
+                cargarClientes();
+        }
+
+        private void cargarClientes()
+        {
+            try
             {
-                cargarGrilla();
+                NegocioCliente negocio = new NegocioCliente();
+                List<Cliente> lista = negocio.listar();
+                Session["listaDeClientes"] = lista;
+                dgvClientes.DataSource = lista;
+                dgvClientes.DataBind();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
             }
         }
-        private void cargarGrilla()
-        {
-            NegocioCliente negocio = new NegocioCliente();
-            dgvClientes.DataSource = negocio.listar(); 
-            dgvClientes.DataBind();                   
-        }
+
         protected void dgvClientes_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
+            List<Cliente> lista = (List<Cliente>)Session["listaDeClientes"];
+            dgvClientes.DataSource = lista;
             dgvClientes.PageIndex = e.NewPageIndex;
-            cargarGrilla();
+            dgvClientes.DataBind();
         }
+
         protected void dgvClientes_SelectedIndexChanged(object sender, EventArgs e)
         {
             string id = dgvClientes.SelectedDataKey.Value.ToString();
-            Response.Redirect("ClientesABM.aspx?id=" + id);
+            Response.Redirect("ClientesABM.aspx?id=" + id, false);
         }
+
         protected void btnAgregar_Click(object sender, EventArgs e)
         {
-            Response.Redirect("ClientesABM.aspx");
+            Response.Redirect("ClientesABM.aspx", false);
         }
     }
 }

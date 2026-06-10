@@ -23,13 +23,10 @@ namespace Negocio
                     aux.Id = (long)datos.Lector["Id"];
                     aux.Nombre = (string)datos.Lector["Nombre"];
                     aux.Apellido = (string)datos.Lector["Apellido"];
-
                     if (!(datos.Lector["DNI"] is DBNull))
                         aux.DNI = (string)datos.Lector["DNI"];
-
                     if (!(datos.Lector["Email"] is DBNull))
                         aux.Email = (string)datos.Lector["Email"];
-
                     if (!(datos.Lector["Telefono"] is DBNull))
                         aux.Telefono = (string)datos.Lector["Telefono"];
                     lista.Add(aux);
@@ -45,6 +42,7 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
         public void agregar(Cliente nuevo)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -56,7 +54,6 @@ namespace Negocio
                 datos.setearParametro("@dni", (object)nuevo.DNI ?? DBNull.Value);
                 datos.setearParametro("@email", (object)nuevo.Email ?? DBNull.Value);
                 datos.setearParametro("@telefono", (object)nuevo.Telefono ?? DBNull.Value);
-
                 datos.ejecutarAccion();
             }
             catch (Exception ex)
@@ -68,6 +65,7 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
         public void modificar(Cliente cliente)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -80,7 +78,6 @@ namespace Negocio
                 datos.setearParametro("@email", (object)cliente.Email ?? DBNull.Value);
                 datos.setearParametro("@telefono", (object)cliente.Telefono ?? DBNull.Value);
                 datos.setearParametro("@id", cliente.Id);
-
                 datos.ejecutarAccion();
             }
             catch (Exception ex)
@@ -92,6 +89,7 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
         public void eliminar(long id)
         {
             AccesoDatos datos = new AccesoDatos();

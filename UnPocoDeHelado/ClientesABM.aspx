@@ -2,7 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-     <div class="container mt-5">
+      <div class="container mt-5">
         <div class="row"><div class="col-md-6 offset-md-3">
             <h2 id="titulo" runat="server">Nuevo Cliente</h2><hr />
             <div class="mb-3"><label class="form-label">Nombre</label>

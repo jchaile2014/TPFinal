@@ -1,4 +1,4 @@
---Procedimientos.sql
+-- Script: Procedimientos.sql
 
 Use UnPocoDeHelado;
 GO
@@ -10,7 +10,7 @@ GO
 Create Procedure sp_registrarVenta
     @IdSucursal        Bigint,
     @IdEmpleado        Bigint,
-    @IdCliente         Bigint = 1,   
+    @IdCliente         Bigint = 1,   -- Consumidor Final por defecto
     @IdOperacionSalida Bigint Output
 As
 Begin
@@ -35,6 +35,7 @@ GO
 -- Agrega un item al detalle validando stock del producto.
 -- El precio se calcula con fn_precioVenta
 -- (PrecioCompraActual * (1 + PorcentajeGanancia/100)).
+-- En ventas IdProveedor queda NULL.
 
 Create Procedure sp_agregarItemVenta
     @IdOperacion Bigint,
@@ -132,8 +133,10 @@ End;
 GO
 
 -- sp_registrarCompra
--- Registra una compra (SeOpera = 0). El trigger trg_aplicarStock
--- suma el stock y actualiza el PrecioCompraActual del producto.
+-- Registra una compra (SeOpera = 0). El IdProveedor se guarda
+-- en DetalleOperacion (permite varios proveedores por compra).
+-- El trigger trg_aplicarStock suma el stock y actualiza el
+-- PrecioCompraActual del producto.
 
 Create Procedure sp_registrarCompra
     @IdProveedor     Bigint,
@@ -150,13 +153,13 @@ Begin
         Declare @IdCompra Bigint;
         Declare @Subtotal Decimal(12,2) = @Cantidad * @PrecioUnitario;
 
-        Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdProveedor, IdEmpleado, Estado, Total)
-        Values (0, GETDATE(), @IdSucursal, @IdProveedor, @IdEmpleado, 'Finalizado', @Subtotal);
+        Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdEmpleado, Estado, Total)
+        Values (0, GETDATE(), @IdSucursal, @IdEmpleado, 'Finalizado', @Subtotal);
 
         Set @IdCompra = SCOPE_IDENTITY();
 
-        Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, Cantidad, PrecioUnitario, Subtotal)
-        Values (@IdCompra, 0, @IdProducto, @Cantidad, @PrecioUnitario, @Subtotal);
+        Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal)
+        Values (@IdCompra, 0, @IdProducto, @IdProveedor, @Cantidad, @PrecioUnitario, @Subtotal);
 
         If Not Exists (Select 1 From ProductoProveedor
                        Where IdProducto = @IdProducto And IdProveedor = @IdProveedor)

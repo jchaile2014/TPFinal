@@ -16,6 +16,7 @@ namespace Dominio
         public bool SeOpera { get; set; }   
 
         public Producto Producto { get; set; }
+        public Proveedor Proveedor { get; set; }
 
         [DisplayName("Cantidad")]
         public int Cantidad { get; set; }

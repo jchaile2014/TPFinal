@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Dominio;
+
 
 namespace Negocio
 {
@@ -27,13 +27,10 @@ namespace Negocio
                     aux.Activo = (bool)datos.Lector["Activo"];
                     if (!(datos.Lector["Telefono"] is DBNull))
                         aux.Telefono = (string)datos.Lector["Telefono"];
-
                     if (!(datos.Lector["Email"] is DBNull))
                         aux.Email = (string)datos.Lector["Email"];
-
                     if (!(datos.Lector["Direccion"] is DBNull))
                         aux.Direccion = (string)datos.Lector["Direccion"];
-
                     if (!(datos.Lector["Rubro"] is DBNull))
                         aux.Rubro = (string)datos.Lector["Rubro"];
                     lista.Add(aux);
@@ -49,6 +46,7 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
         public void agregar(Proveedor nuevo)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -61,7 +59,6 @@ namespace Negocio
                 datos.setearParametro("@email", (object)nuevo.Email ?? DBNull.Value);
                 datos.setearParametro("@direccion", (object)nuevo.Direccion ?? DBNull.Value);
                 datos.setearParametro("@rubro", (object)nuevo.Rubro ?? DBNull.Value);
-
                 datos.ejecutarAccion();
             }
             catch (Exception ex)
@@ -73,6 +70,7 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
         public void modificar(Proveedor proveedor)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -87,7 +85,6 @@ namespace Negocio
                 datos.setearParametro("@rubro", (object)proveedor.Rubro ?? DBNull.Value);
                 datos.setearParametro("@activo", proveedor.Activo);
                 datos.setearParametro("@id", proveedor.Id);
-
                 datos.ejecutarAccion();
             }
             catch (Exception ex)
@@ -99,6 +96,7 @@ namespace Negocio
                 datos.cerrarConexion();
             }
         }
+
         public void eliminarLogico(long id, bool activo = false)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -107,7 +105,6 @@ namespace Negocio
                 datos.setearConsulta("Update Proveedor Set Activo = @activo Where Id = @id");
                 datos.setearParametro("@activo", activo);
                 datos.setearParametro("@id", id);
-
                 datos.ejecutarAccion();
             }
             catch (Exception ex)
@@ -118,11 +115,6 @@ namespace Negocio
             {
                 datos.cerrarConexion();
             }
-        }
-
-        public void eliminar(long id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

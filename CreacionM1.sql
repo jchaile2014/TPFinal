@@ -1,12 +1,8 @@
--- =============================================================
--- TPI Base de Datos II - Sistema de UnPocoDeHelado
--- Script: CreacionM1.sql
 -- Descripción: primera parte de la Creación de la base de datos
 -- Módulo 1 de Empleados: Empleado, Usuario y Rol
 -- Modulo 2 de productos: Producto, Categoria, Stock y Sucursal
 -- Modulo 3 de ventas y pedidos: Cliente, Venta, DetalleVenta, Mesa, Pedido, DetallePedido y MedioPago
 -- Modulo 4 de compras: Proveedor, Compra, DetalleCompra y ProductoProveedor
--- =============================================================
 
 
 Create Database UnPocoDeHelado;
@@ -115,13 +111,11 @@ Create Table Operacion (
     Fecha         Datetime Not Null Default GETDATE(),
     IdSucursal    Bigint Null,
     IdCliente     Bigint Null,                    
-    IdProveedor   Bigint Null,
     IdEmpleado    Bigint Not Null,
     IdMedioPago   Int Null,
     Estado        Varchar(20) Not Null Default 'Pendiente',
     Total         Decimal(12,2) Not Null Default 0 Check (Total >= 0),
     Constraint FK_Operacion_Cliente   Foreign Key (IdCliente)   References Cliente(Id),
-    Constraint FK_Operacion_Proveedor Foreign Key (IdProveedor) References Proveedor(Id),
     Constraint FK_Operacion_Empleado  Foreign Key (IdEmpleado)  References Empleado(Id),
     Constraint FK_Operacion_MedioPago Foreign Key (IdMedioPago) References MedioPago(Id)
 );
@@ -138,11 +132,13 @@ Create Table DetalleOperacion (
     IdOperacion    Bigint Not Null,
     SeOpera        Bit Not Null,
     IdProducto     Bigint Not Null,
+    IdProveedor    Bigint Null,                   -- solo en compras
     Cantidad       Int Not Null Check (Cantidad > 0),
     PrecioUnitario Decimal(10,2) Not Null Check (PrecioUnitario >= 0),
     Subtotal       Decimal(12,2) Not Null Check (Subtotal >= 0),
     Constraint FK_DetOp_Operacion Foreign Key (IdOperacion) References Operacion(Id),
-    Constraint FK_DetOp_Producto  Foreign Key (IdProducto)  References Producto(Id)
+    Constraint FK_DetOp_Producto  Foreign Key (IdProducto)  References Producto(Id),
+    Constraint FK_DetOp_Proveedor Foreign Key (IdProveedor) References Proveedor(Id)
 );
 GO
 

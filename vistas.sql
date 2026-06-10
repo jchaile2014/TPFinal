@@ -1,4 +1,4 @@
-﻿ -- Script: Vistas.sql  (modelo refactorizado)
+﻿-- Script: Vistas.sql 
 
 Use UnPocoDeHelado;
 GO
@@ -44,6 +44,9 @@ Where p.Activo = 1
   And p.Cantidad < p.StockMinimo;
 GO
 
+-- En una compra, IdProveedor ahora vive en cada linea de detalle.
+-- Como una operacion puede tener varios proveedores distintos,
+-- los concatenamos con STUFF en una sola columna "Proveedores".
 Create View vista_operacionesDetalladas As
 Select
     o.Id            As IdOperacion,
@@ -53,13 +56,18 @@ Select
     o.IdSucursal,
     e.Nombre + ' ' + e.Apellido As Empleado,
     ISNULL(cl.Nombre + ' ' + cl.Apellido, '-') As Cliente,
-    ISNULL(pv.Nombre, '-')                     As Proveedor,
-    ISNULL(mp.Nombre, '(sin definir)')         As MedioPago,
+    ISNULL(STUFF((
+        Select Distinct ', ' + pr.Nombre
+        From DetalleOperacion d
+        Inner Join Proveedor pr On pr.Id = d.IdProveedor
+        Where d.IdOperacion = o.Id
+        For XML Path('')
+    ), 1, 2, ''), '-') As Proveedores,
+    ISNULL(mp.Nombre, '(sin definir)') As MedioPago,
     o.Estado,
     o.Total
 From Operacion o
 Inner Join Empleado  e  On e.Id  = o.IdEmpleado
 Left  Join Cliente   cl On cl.Id = o.IdCliente
-Left  Join Proveedor pv On pv.Id = o.IdProveedor
 Left  Join MedioPago mp On mp.Id = o.IdMedioPago;
 GO

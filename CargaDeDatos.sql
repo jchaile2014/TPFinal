@@ -1,21 +1,22 @@
--- Script: Datos.sql
--- Descripcion: Carga de datos 
+-- Descripcion: Carga de datos
 
 Use UnPocoDeHelado;
 GO
 SET QUOTED_IDENTIFIER ON;
 GO
--- CLASIFICACIONES 
+
+-- CLASIFICACIONES
+-- Categorias (SeClasifica = 0)
 Insert Into Clasificacion (Nombre, SeClasifica) Values
-('Helados',    0),   
-('Cafeteria',  0), 
+('Helados',    0),
+('Cafeteria',  0),
 ('Reposteria', 0);
 
 -- Marcas (SeClasifica = 1)
 Insert Into Clasificacion (Nombre, SeClasifica) Values
-('Helados del Valle',   1),   
-('Envases Premium',     1),  
-('Cafe La Pampa',       1), 
+('Helados del Valle',   1),
+('Envases Premium',     1),
+('Cafe La Pampa',       1),
 ('Panaderia Artesanal', 1);
 
 -- EMPLEADOS
@@ -26,7 +27,7 @@ Insert Into Empleado (Nombre, Apellido, DNI, Email, Telefono, IdSucursal, IdRol,
 ('Maria',  'Gonzalez',  '32333444', 'mgonzalez@unpocodehelado.com', '03834-700222', 2, 1, '2020-08-15', 820000), -- Id 4 Admin Norte
 ('Pedro',  'Lopez',     '38999000', 'plopez@unpocodehelado.com',    '03834-700555', 2, 2, '2023-11-01', 450000); -- Id 5 Vend  Norte
 
--- USUARIOS 
+-- USUARIOS
 Insert Into Usuario (Id, NombreUsuario, Pass) Values
 (1, 'jperez',     'pass123'),
 (2, 'crodriguez', 'pass123'),
@@ -34,8 +35,7 @@ Insert Into Usuario (Id, NombreUsuario, Pass) Values
 (4, 'mgonzalez',  'pass123'),
 (5, 'plopez',     'pass123');
 
-
--- CLIENTES 
+-- CLIENTES
 Insert Into Cliente (Nombre, Apellido, DNI, Email, Telefono) Values
 ('Consumidor', 'Final',    NULL,       NULL,                  NULL),         -- Id 1
 ('Ana',        'Martinez', '28111222', 'ana.m@gmail.com',     '03834-600111'),-- Id 2
@@ -87,55 +87,57 @@ Insert Into ProductoProveedor (IdProducto, IdProveedor) Values
 (14, 3), (15, 3), (16, 3),
 (17, 3), (18, 3);
 
--- OPERACIONES: COMPRAS
--- Compra 1: Centro <- Helados del Valle (Juan)
-Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdProveedor, IdEmpleado, Estado, Total) Values
-(0, '2026-04-15 10:30', 1, 1, 1, 'Finalizado', 190000.00);
-Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, Cantidad, PrecioUnitario, Subtotal) Values
-(1, 0, 4, 20, 5000.00, 100000.00),
-(1, 0, 3, 30, 3000.00, 90000.00);
+-- OPERACIONES: COMPRAS (IdProveedor ahora va en cada detalle)
 
--- Compra 2: Norte <- Helados del Valle (Maria)
-Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdProveedor, IdEmpleado, Estado, Total) Values
-(0, '2026-04-16 11:00', 2, 1, 4, 'Finalizado', 95000.00);
-Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, Cantidad, PrecioUnitario, Subtotal) Values
-(2, 0, 13, 10, 5000.00, 50000.00),
-(2, 0, 11, 25, 1800.00, 45000.00);
+-- Compra 1: Centro (Juan) - Helados del Valle (Prov 1)
+Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdEmpleado, Estado, Total) Values
+(0, '2026-04-15 10:30', 1, 1, 'Finalizado', 190000.00);
+Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal) Values
+(1, 0, 4, 1, 20, 5000.00, 100000.00),
+(1, 0, 3, 1, 30, 3000.00, 90000.00);
 
--- Compra 3: Centro <- Envases & Cucuruchos (Juan)
-Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdProveedor, IdEmpleado, Estado, Total) Values
-(0, '2026-04-18 09:15', 1, 2, 1, 'Finalizado', 80000.00);
-Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, Cantidad, PrecioUnitario, Subtotal) Values
-(3, 0, 1, 100, 800.00, 80000.00);
+-- Compra 2: Norte (Maria) - Helados del Valle (Prov 1)
+Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdEmpleado, Estado, Total) Values
+(0, '2026-04-16 11:00', 2, 4, 'Finalizado', 95000.00);
+Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal) Values
+(2, 0, 13, 1, 10, 5000.00, 50000.00),
+(2, 0, 11, 1, 25, 1800.00, 45000.00);
 
--- Compra 4: Norte <- Envases & Cucuruchos (Maria)
-Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdProveedor, IdEmpleado, Estado, Total) Values
-(0, '2026-04-19 09:45', 2, 2, 4, 'Finalizado', 40000.00);
-Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, Cantidad, PrecioUnitario, Subtotal) Values
-(4, 0, 10, 50, 800.00, 40000.00);
+-- Compra 3: Centro (Juan) - Envases & Cucuruchos (Prov 2)
+Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdEmpleado, Estado, Total) Values
+(0, '2026-04-18 09:15', 1, 1, 'Finalizado', 80000.00);
+Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal) Values
+(3, 0, 1, 2, 100, 800.00, 80000.00);
 
--- Compra 5: Centro <- Distribuidora La Pampa (Juan)
-Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdProveedor, IdEmpleado, Estado, Total) Values
-(0, '2026-04-22 08:30', 1, 3, 1, 'Finalizado', 116000.00);
-Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, Cantidad, PrecioUnitario, Subtotal) Values
-(5, 0, 5, 80, 400.00, 32000.00),
-(5, 0, 6, 50, 600.00, 30000.00),
-(5, 0, 9, 60, 300.00, 18000.00),
-(5, 0, 8, 40, 400.00, 16000.00),
-(5, 0, 7, 40, 500.00, 20000.00);
+-- Compra 4: Norte (Maria) - Envases & Cucuruchos (Prov 2)
+Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdEmpleado, Estado, Total) Values
+(0, '2026-04-19 09:45', 2, 4, 'Finalizado', 40000.00);
+Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal) Values
+(4, 0, 10, 2, 50, 800.00, 40000.00);
 
--- Compra 6: Norte <- Distribuidora La Pampa (Maria)
-Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdProveedor, IdEmpleado, Estado, Total) Values
-(0, '2026-04-23 08:50', 2, 3, 4, 'Finalizado', 78000.00);
-Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, Cantidad, PrecioUnitario, Subtotal) Values
-(6, 0, 14, 50, 400.00, 20000.00),
-(6, 0, 15, 30, 600.00, 18000.00),
-(6, 0, 18, 40, 300.00, 12000.00),
-(6, 0, 17, 30, 400.00, 12000.00),
-(6, 0, 16, 32, 500.00, 16000.00);
+-- Compra 5: Centro (Juan) - Distribuidora La Pampa (Prov 3)
+Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdEmpleado, Estado, Total) Values
+(0, '2026-04-22 08:30', 1, 1, 'Finalizado', 116000.00);
+Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal) Values
+(5, 0, 5, 3, 80, 400.00, 32000.00),
+(5, 0, 6, 3, 50, 600.00, 30000.00),
+(5, 0, 9, 3, 60, 300.00, 18000.00),
+(5, 0, 8, 3, 40, 400.00, 16000.00),
+(5, 0, 7, 3, 40, 500.00, 20000.00);
 
--- OPERACIONES: VENTAS 
--- Venta 1 (Op Id 7): Centro - Carlos (vend) - COBRADA
+-- Compra 6: Norte (Maria) - Distribuidora La Pampa (Prov 3)
+Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdEmpleado, Estado, Total) Values
+(0, '2026-04-23 08:50', 2, 4, 'Finalizado', 78000.00);
+Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal) Values
+(6, 0, 14, 3, 50, 400.00, 20000.00),
+(6, 0, 15, 3, 30, 600.00, 18000.00),
+(6, 0, 18, 3, 40, 300.00, 12000.00),
+(6, 0, 17, 3, 30, 400.00, 12000.00),
+(6, 0, 16, 3, 32, 500.00, 16000.00);
+
+-- OPERACIONES: VENTAS (IdProveedor en detalle queda en NULL)
+
+-- Venta 1 (Op Id 7): Centro - Carlos - COBRADA
 Insert Into Operacion (SeOpera, NumeroFactura, Fecha, IdSucursal, IdCliente, IdEmpleado, IdMedioPago, Estado, Total) Values
 (1, 'B-0001-00000001', '2026-05-10 14:20', 1, 2, 2, 1, 'Cobrada', 5200.00);
 Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, Cantidad, PrecioUnitario, Subtotal) Values

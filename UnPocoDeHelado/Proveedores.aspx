@@ -2,7 +2,7 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="container mt-5">
+     <div class="container mt-5">
         <div class="row"><div class="col-12"><h2>Gestión de Proveedores</h2><hr /></div></div>
         <div class="row mb-3"><div class="col-12">
             <asp:Button ID="btnAgregar" CssClass="btn btn-success" Text="Nuevo Proveedor" runat="server" OnClick="btnAgregar_Click" />

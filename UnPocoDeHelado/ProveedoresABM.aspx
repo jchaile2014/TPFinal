@@ -22,7 +22,7 @@
             </div>
             <div class="mb-3">
                 <asp:Button ID="btnGuardar" CssClass="btn btn-primary" Text="Guardar" runat="server" OnClick="btnGuardar_Click" />
-                <asp:Button ID="btnEliminar" CssClass="btn btn-danger" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" />
+                <asp:Button ID="btnEliminar" CssClass="btn btn-danger" Text="Inactivar" runat="server" OnClick="btnEliminar_Click" Visible="false" />
                 <asp:Button ID="btnCancelar" CssClass="btn btn-secondary" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" />
             </div>
         </div></div>

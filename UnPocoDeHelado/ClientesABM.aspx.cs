@@ -17,23 +17,39 @@ namespace UnPocoDeHelado
             {
                 if (Request.QueryString["id"] != null)
                 {
-                    titulo.InnerText = "Modificar Cliente";
-                    btnEliminar.Visible = true;
-
                     long id = long.Parse(Request.QueryString["id"]);
-                    NegocioCliente negocio = new NegocioCliente();
-
-                    Cliente cli = negocio.listar().FirstOrDefault(x => x.Id == id);
-
-                    if (cli != null)
-                    {
-                        txtNombre.Text = cli.Nombre;
-                        txtApellido.Text = cli.Apellido;
-                        txtDNI.Text = cli.DNI;
-                        txtEmail.Text = cli.Email;
-                        txtTelefono.Text = cli.Telefono;
-                    }
+                    titulo.InnerText = "Modificar Cliente";
+                    cargarCliente(id);
+                    btnEliminar.Visible = true;
                 }
+                else
+                {
+                    titulo.InnerText = "Nuevo Cliente";
+                    btnEliminar.Visible = false;
+                }
+            }
+        }
+
+        private void cargarCliente(long id)
+        {
+            try
+            {
+                NegocioCliente negocio = new NegocioCliente();
+                List<Cliente> lista = negocio.listar();
+                Cliente cli = lista.Find(x => x.Id == id);
+                if (cli != null)
+                {
+                    txtNombre.Text = cli.Nombre;
+                    txtApellido.Text = cli.Apellido;
+                    txtDNI.Text = cli.DNI ?? "";
+                    txtEmail.Text = cli.Email ?? "";
+                    txtTelefono.Text = cli.Telefono ?? "";
+                }
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
             }
         }
 
@@ -44,12 +60,11 @@ namespace UnPocoDeHelado
                 Cliente cli = new Cliente();
                 cli.Nombre = txtNombre.Text;
                 cli.Apellido = txtApellido.Text;
-                cli.DNI = txtDNI.Text;
-                cli.Email = txtEmail.Text;
-                cli.Telefono = txtTelefono.Text;
+                cli.DNI = string.IsNullOrEmpty(txtDNI.Text) ? null : txtDNI.Text;
+                cli.Email = string.IsNullOrEmpty(txtEmail.Text) ? null : txtEmail.Text;
+                cli.Telefono = string.IsNullOrEmpty(txtTelefono.Text) ? null : txtTelefono.Text;
 
                 NegocioCliente negocio = new NegocioCliente();
-
                 if (Request.QueryString["id"] != null)
                 {
                     cli.Id = long.Parse(Request.QueryString["id"]);
@@ -59,12 +74,12 @@ namespace UnPocoDeHelado
                 {
                     negocio.agregar(cli);
                 }
-
                 Response.Redirect("Clientes.aspx", false);
             }
             catch (Exception ex)
             {
-                throw ex;
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
             }
         }
 
@@ -72,23 +87,21 @@ namespace UnPocoDeHelado
         {
             try
             {
-                if (Request.QueryString["id"] != null)
-                {
-                    long id = long.Parse(Request.QueryString["id"]);
-                    NegocioCliente negocio = new NegocioCliente();
-                    negocio.eliminar(id);
-                    Response.Redirect("Clientes.aspx", false);
-                }
+                long id = long.Parse(Request.QueryString["id"]);
+                NegocioCliente negocio = new NegocioCliente();
+                negocio.eliminar(id);
+                Response.Redirect("Clientes.aspx", false);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                Session.Add("error", "No se puede eliminar el cliente: puede tener operaciones asociadas.");
+                Response.Redirect("Error.aspx", false);
             }
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-            Response.Redirect("Clientes.aspx");
+            Response.Redirect("Clientes.aspx", false);
         }
     }
 }
