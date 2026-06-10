@@ -4,6 +4,7 @@
     <File Path="CreacionM1.sql" />
     <File Path="Funciones.sql" />
     <File Path="Procedimientos.sql" />
+    <File Path="Triggers.sql" />
     <File Path="vistas.sql" />
   </Folder>
   <Project Path="Dominio/Dominio.csproj" Id="cdd6d638-ba28-42f4-84fd-854a451323c2" />

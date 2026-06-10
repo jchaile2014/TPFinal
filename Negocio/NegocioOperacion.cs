@@ -1,0 +1,186 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Dominio;
+
+namespace Negocio
+{
+    public class NegocioOperacion
+    {
+        public List<Operacion> listar(bool esVenta)
+        {
+            List<Operacion> lista = new List<Operacion>();
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("Select Id, SeOpera, NumeroFactura, Fecha, IdSucursal, IdCliente, IdProveedor, IdEmpleado, IdMedioPago, Estado, Total From Operacion Where SeOpera = @seOpera Order By Fecha Desc");
+                datos.setearParametro("@seOpera", esVenta);
+                datos.ejecutarLectura();
+                while (datos.Lector.Read())
+                {
+                    Operacion aux = new Operacion();
+                    aux.Id = (long)datos.Lector["Id"];
+                    aux.SeOpera = (bool)datos.Lector["SeOpera"];
+
+                    if (!(datos.Lector["NumeroFactura"] is DBNull))
+                        aux.NumeroFactura = (string)datos.Lector["NumeroFactura"];
+
+                    aux.Fecha = (DateTime)datos.Lector["Fecha"];
+
+                    if (!(datos.Lector["IdSucursal"] is DBNull))
+                        aux.IdSucursal = Convert.ToInt32(datos.Lector["IdSucursal"]);
+
+                    if (!(datos.Lector["IdCliente"] is DBNull))
+                    {
+                        aux.Cliente = new Cliente();
+                        aux.Cliente.Id = (long)datos.Lector["IdCliente"];
+                    }
+
+                    if (!(datos.Lector["IdProveedor"] is DBNull))
+                    {
+                        aux.Proveedor = new Proveedor();
+                        aux.Proveedor.Id = (long)datos.Lector["IdProveedor"];
+                    }
+
+                    aux.Empleado = new Empleado();
+                    aux.Empleado.Id = (long)datos.Lector["IdEmpleado"];
+
+                    if (!(datos.Lector["IdMedioPago"] is DBNull))
+                        aux.MedioPago = Convert.ToInt32(datos.Lector["IdMedioPago"]);
+
+                    aux.Estado = (string)datos.Lector["Estado"];
+                    aux.Total = (decimal)datos.Lector["Total"];
+                    lista.Add(aux);
+                }
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+        public Operacion obtenerPorId(long id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                // 1. Buscamos la cabecera de la operación
+                datos.setearConsulta("Select Id, SeOpera, NumeroFactura, Fecha, Total, Estado From Operacion Where Id = @id");
+                datos.setearParametro("@id", id);
+                datos.ejecutarLectura();
+                Operacion aux = new Operacion();
+                if (datos.Lector.Read())
+                {
+                    aux.Id = (long)datos.Lector["Id"];
+                    aux.SeOpera = (bool)datos.Lector["SeOpera"];
+                    if (!(datos.Lector["NumeroFactura"] is DBNull)) aux.NumeroFactura = (string)datos.Lector["NumeroFactura"];
+                    aux.Fecha = (DateTime)datos.Lector["Fecha"];
+                    aux.Total = (decimal)datos.Lector["Total"];
+                    aux.Estado = (string)datos.Lector["Estado"];
+                }
+                datos.cerrarConexion();
+                // 2. Buscamos el detalle (los productos que se compraron/vendieron)
+                datos = new AccesoDatos();
+                datos.setearConsulta("Select D.Id, D.IdProducto, P.Nombre as ProductoNombre, D.Cantidad, D.PrecioUnitario, D.Subtotal From DetalleOperacion D Inner Join Producto P on D.IdProducto = P.Id Where D.IdOperacion = @id");
+                datos.setearParametro("@id", id);
+                datos.ejecutarLectura();
+                aux.Detalles = new List<DetalleOperacion>();
+                while (datos.Lector.Read())
+                {
+                    DetalleOperacion det = new DetalleOperacion();
+                    det.Id = (long)datos.Lector["Id"];
+                    det.Producto = new Producto();
+                    det.Producto.Id = (long)datos.Lector["IdProducto"];
+                    det.Producto.Nombre = (string)datos.Lector["ProductoNombre"];
+                    det.Cantidad = (int)datos.Lector["Cantidad"];
+                    det.PrecioUnitario = (decimal)datos.Lector["PrecioUnitario"];
+                    det.Subtotal = (decimal)datos.Lector["Subtotal"];
+                    aux.Detalles.Add(det);
+                }
+                return aux;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+        public void agregar(Operacion nueva)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("Insert Into Operacion (SeOpera, NumeroFactura, Fecha, IdSucursal, IdCliente, IdProveedor, IdEmpleado, IdMedioPago, Estado, Total) OUTPUT INSERTED.Id Values (@seOpera, @numFactura, @fecha, @idSucursal, @idCliente, @idProveedor, @idEmpleado, @idMedioPago, @estado, @total)");
+                datos.setearParametro("@seOpera", nueva.SeOpera);
+                datos.setearParametro("@numFactura", (object)nueva.NumeroFactura ?? DBNull.Value);
+                datos.setearParametro("@fecha", nueva.Fecha);
+                datos.setearParametro("@idSucursal", nueva.IdSucursal > 0 ? (object)nueva.IdSucursal : DBNull.Value);
+                datos.setearParametro("@idCliente", nueva.Cliente != null && nueva.Cliente.Id > 0 ? (object)nueva.Cliente.Id : DBNull.Value);
+                datos.setearParametro("@idProveedor", nueva.Proveedor != null && nueva.Proveedor.Id > 0 ? (object)nueva.Proveedor.Id : DBNull.Value);
+                datos.setearParametro("@idEmpleado", nueva.Empleado.Id);
+                datos.setearParametro("@idMedioPago", nueva.MedioPago > 0 ? (object)nueva.MedioPago : DBNull.Value);
+                datos.setearParametro("@estado", nueva.Estado ?? "Pendiente");
+                datos.setearParametro("@total", nueva.Total);
+
+                long idOperacion = (long)datos.ejecutarAccionScalar();
+                nueva.Id = idOperacion;
+                datos.cerrarConexion();
+                // Insertar los detalles
+                if (nueva.Detalles != null && nueva.Detalles.Count > 0)
+                {
+                    foreach (DetalleOperacion det in nueva.Detalles)
+                    {
+                        AccesoDatos datosDet = new AccesoDatos();
+                        datosDet.setearConsulta("Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, Cantidad, PrecioUnitario, Subtotal) Values (@idOp, @seOperaDet, @idProd, @cant, @precio, @subtotal)");
+                        datosDet.setearParametro("@idOp", nueva.Id);
+                        datosDet.setearParametro("@seOperaDet", nueva.SeOpera);
+                        datosDet.setearParametro("@idProd", det.Producto.Id);
+                        datosDet.setearParametro("@cant", det.Cantidad);
+                        datosDet.setearParametro("@precio", det.PrecioUnitario);
+                        datosDet.setearParametro("@subtotal", det.Subtotal);
+                        datosDet.ejecutarAccion();
+                        datosDet.cerrarConexion();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void cambiarEstado(long id, string estado)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("Update Operacion Set Estado = @estado Where Id = @id");
+                datos.setearParametro("@estado", estado);
+                datos.setearParametro("@id", id);
+
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+    }
+}
