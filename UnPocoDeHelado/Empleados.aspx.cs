@@ -22,7 +22,8 @@ namespace UnPocoDeHelado
         private void cargarLista()
         {
             NegocioEmpleado negocio = new NegocioEmpleado();
-            repEmpleados.DataSource = negocio.listar();
+            int idSucursal = int.Parse(ddlSucursal.SelectedValue);
+            repEmpleados.DataSource = negocio.listar().FindAll(x => x.IdSucursal == idSucursal);
             repEmpleados.DataBind();
         }
 
@@ -33,6 +34,11 @@ namespace UnPocoDeHelado
                 string id = e.CommandArgument.ToString();
                 Response.Redirect("EmpleadosABM.aspx?id=" + id);
             }
+        }
+
+        protected void ddlSucursal_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            cargarLista();
         }
 
         protected void btnAgregar_Click(object sender, EventArgs e)

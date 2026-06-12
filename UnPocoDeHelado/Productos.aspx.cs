@@ -13,18 +13,34 @@ namespace UnPocoDeHelado
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+                cargarProductos();
         }
 
-        protected void dgvProductos_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        private void cargarProductos()
         {
+            try
+            {
+                NegocioProducto negocio = new NegocioProducto();
+                int idSucursal = int.Parse(ddlSucursal.SelectedValue);
+                rptProductos.DataSource = negocio.listar().FindAll(x => x.IdSucursal == idSucursal);
+                rptProductos.DataBind();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
+            }
         }
 
-        protected void dgvProductos_SelectedIndexChanged(object sender, EventArgs e)
+        protected void ddlSucursal_SelectedIndexChanged(object sender, EventArgs e)
         {
+            cargarProductos();
         }
 
         protected void btnAgregar_Click(object sender, EventArgs e)
         {
+            Response.Redirect("ProductosABM.aspx?sucursal=" + ddlSucursal.SelectedValue, false);
         }
     }
 }

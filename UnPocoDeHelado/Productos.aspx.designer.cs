@@ -24,12 +24,17 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.WebControls.Button btnAgregar;
 
         /// <summary>
-        /// Control dgvProductos.
+        /// Control rptProductos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView dgvProductos;
+        protected global::System.Web.UI.WebControls.Repeater rptProductos;
+
+        /// <summary>
+        /// Control ddlSucursal.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSucursal;
     }
 }

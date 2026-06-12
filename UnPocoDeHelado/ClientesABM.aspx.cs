@@ -20,12 +20,10 @@ namespace UnPocoDeHelado
                     long id = long.Parse(Request.QueryString["id"]);
                     titulo.InnerText = "Modificar Cliente";
                     cargarCliente(id);
-                    btnEliminar.Visible = true;
                 }
                 else
                 {
                     titulo.InnerText = "Nuevo Cliente";
-                    btnEliminar.Visible = false;
                 }
             }
         }
@@ -79,22 +77,6 @@ namespace UnPocoDeHelado
             catch (Exception ex)
             {
                 Session.Add("error", ex.ToString());
-                Response.Redirect("Error.aspx", false);
-            }
-        }
-
-        protected void btnEliminar_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                long id = long.Parse(Request.QueryString["id"]);
-                NegocioCliente negocio = new NegocioCliente();
-                negocio.eliminar(id);
-                Response.Redirect("Clientes.aspx", false);
-            }
-            catch (Exception)
-            {
-                Session.Add("error", "No se puede eliminar el cliente: puede tener operaciones asociadas.");
                 Response.Redirect("Error.aspx", false);
             }
         }

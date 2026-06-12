@@ -33,6 +33,24 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.WebControls.TextBox txtNombre;
 
         /// <summary>
+        /// Control txtDescripcion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDescripcion;
+
+        /// <summary>
+        /// Control ddlMarca.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlMarca;
+
+        /// <summary>
         /// Control ddlCategoria.
         /// </summary>
         /// <remarks>
@@ -42,31 +60,49 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.WebControls.DropDownList ddlCategoria;
 
         /// <summary>
-        /// Control txtMarca.
+        /// Control txtCantidad.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMarca;
+        protected global::System.Web.UI.WebControls.TextBox txtCantidad;
 
         /// <summary>
-        /// Control txtPrecioVenta.
+        /// Control txtStockMinimo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtPrecioVenta;
+        protected global::System.Web.UI.WebControls.TextBox txtStockMinimo;
 
         /// <summary>
-        /// Control txtDescripcion.
+        /// Control txtPorcentaje.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDescripcion;
+        protected global::System.Web.UI.WebControls.TextBox txtPorcentaje;
+
+        /// <summary>
+        /// Control txtPrecioCompra.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPrecioCompra;
+
+        /// <summary>
+        /// Control txtIdSucursal.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtIdSucursal;
 
         /// <summary>
         /// Control chkActivo.

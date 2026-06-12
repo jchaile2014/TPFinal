@@ -31,5 +31,10 @@ namespace UnPocoDeHelado
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater repEmpleados;
+
+        /// <summary>
+        /// Control ddlSucursal.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.DropDownList ddlSucursal;
     }
 }
