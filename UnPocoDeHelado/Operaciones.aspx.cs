@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -16,10 +16,10 @@ namespace UnPocoDeHelado
         {
             if (!IsPostBack)
             {
-                cargarGrilla();
+                cargarLista();
             }
         }
-        private void cargarGrilla()
+        private void cargarLista()
         {
             NegocioOperacion negocio = new NegocioOperacion();
 
@@ -34,7 +34,7 @@ namespace UnPocoDeHelado
         protected void dgvOperaciones_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             dgvOperaciones.PageIndex = e.NewPageIndex;
-            cargarGrilla();
+            cargarLista();
         }
         protected void dgvOperaciones_SelectedIndexChanged(object sender, EventArgs e)
         {

@@ -1,67 +1,161 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EmpleadosABM.aspx.cs" Inherits="UnPocoDeHelado.EmpleadosABM" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EmpleadosABM.aspx.cs" Inherits="UnPocoDeHelado.EmpleadosABM" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style>
+        .form-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.8);
+            margin-bottom: 3rem;
+        }
+        .form-title {
+            background: linear-gradient(45deg, #ff9a9e 0%, #ff7eb3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+        .form-control-custom, .form-select-custom {
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e0e0e0;
+            background-color: #fdfbfb;
+            transition: all 0.3s ease;
+        }
+        .form-control-custom:focus, .form-select-custom:focus {
+            border-color: #ff7eb3;
+            box-shadow: 0 0 0 0.25rem rgba(255, 126, 179, 0.25);
+            background-color: #fff;
+        }
+        .btn-gradient {
+            background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 117, 140, 0.4);
+            color: white;
+        }
+        .btn-outline-custom {
+            border: 2px solid #6c757d;
+            color: #6c757d;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+            background: transparent;
+            transition: all 0.3s;
+        }
+        .btn-outline-custom:hover {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-danger-custom {
+            background: linear-gradient(to right, #ff416c 0%, #ff4b2b 100%);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 2rem;
+            border-radius: 12px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: #6c757d;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+        }
+    </style>
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <h2 id="titulo" runat="server">Nuevo Empleado</h2>
-                <hr />
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                
+                <div class="form-card">
+                    <div class="text-center mb-5">
+                        <i class="bi bi-person-badge" style="font-size: 3rem; color: #ff7eb3;"></i>
+                        <h2 id="titulo" runat="server" class="form-title mt-2">Nuevo Empleado</h2>
+                        <p class="text-muted">Completa los datos del empleado para registrarlo en el sistema</p>
+                    </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Nombre</label>
-                    <asp:TextBox ID="txtNombre" CssClass="form-control" runat="server"></asp:TextBox>
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre</label>
+                            <asp:TextBox ID="txtNombre" CssClass="form-control form-control-custom" placeholder="Ej. Juan" runat="server"></asp:TextBox>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Apellido</label>
+                            <asp:TextBox ID="txtApellido" CssClass="form-control form-control-custom" placeholder="Ej. Perez" runat="server"></asp:TextBox>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">DNI</label>
+                            <asp:TextBox ID="txtDNI" CssClass="form-control form-control-custom" placeholder="Sin puntos ni espacios" runat="server"></asp:TextBox>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Telefono</label>
+                            <asp:TextBox ID="txtTelefono" CssClass="form-control form-control-custom" placeholder="Ej. 11 12345678" runat="server"></asp:TextBox>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label">Correo Electronico</label>
+                            <asp:TextBox ID="txtEmail" CssClass="form-control form-control-custom" TextMode="Email" placeholder="juan@ejemplo.com" runat="server"></asp:TextBox>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Sucursal</label>
+                            <asp:DropDownList ID="ddlSucursal" CssClass="form-select form-select-custom" runat="server"></asp:DropDownList>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Rol</label>
+                            <asp:DropDownList ID="ddlRol" CssClass="form-select form-select-custom" runat="server"></asp:DropDownList>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Fecha Ingreso</label>
+                            <asp:TextBox ID="txtFechaIngreso" CssClass="form-control form-control-custom" TextMode="Date" runat="server"></asp:TextBox>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Salario</label>
+                            <div class="input-group">
+                                <span class="input-group-text" style="border-radius: 10px 0 0 10px; border: 1px solid #e0e0e0; background-color: #fdfbfb;">$</span>
+                                <asp:TextBox ID="txtSalario" CssClass="form-control form-control-custom" style="border-radius: 0 10px 10px 0;" TextMode="Number" placeholder="0.00" runat="server"></asp:TextBox>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <div class="form-check mb-1">
+                                <asp:CheckBox ID="chkActivo" CssClass="form-check-input" runat="server" Checked="true" />
+                                <label class="form-check-label fw-bold text-secondary" style="font-size: 1rem; cursor: pointer;">Empleado Activo</label>
+                            </div>
+                            <small class="text-muted d-block">Si se desactiva, el empleado no podra ingresar al sistema ni figurara en listados operativos.</small>
+                        </div>
+                    </div>
+
+                    <hr class="my-5" style="border-color: #fecfef;" />
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <asp:Button ID="btnEliminar" CssClass="btn btn-danger-custom shadow-sm" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" OnClientClick="return confirm('Estas seguro de eliminar este empleado?');" />
+                        </div>
+                        <div class="d-flex gap-3">
+                            <asp:Button ID="btnCancelar" CssClass="btn btn-outline-custom" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" formnovalidate="formnovalidate" />
+                            <asp:Button ID="btnGuardar" CssClass="btn btn-gradient shadow-sm" Text="Guardar Cambios" runat="server" OnClick="btnGuardar_Click" />
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Apellido</label>
-                    <asp:TextBox ID="txtApellido" CssClass="form-control" runat="server"></asp:TextBox>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">DNI</label>
-                    <asp:TextBox ID="txtDNI" CssClass="form-control" runat="server"></asp:TextBox>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <asp:TextBox ID="txtEmail" CssClass="form-control" TextMode="Email" runat="server"></asp:TextBox>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Teléfono</label>
-                    <asp:TextBox ID="txtTelefono" CssClass="form-control" runat="server"></asp:TextBox>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Sucursal</label>
-                    <asp:DropDownList ID="ddlSucursal" CssClass="form-select" runat="server"></asp:DropDownList>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Rol</label>
-                    <asp:DropDownList ID="ddlRol" CssClass="form-select" runat="server"></asp:DropDownList>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Fecha Ingreso</label>
-                    <asp:TextBox ID="txtFechaIngreso" CssClass="form-control" TextMode="Date" runat="server"></asp:TextBox>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Salario</label>
-                    <asp:TextBox ID="txtSalario" CssClass="form-control" TextMode="Number" runat="server"></asp:TextBox>
-                </div>
-
-                <div class="mb-3 form-check">
-                    <asp:CheckBox ID="chkActivo" CssClass="form-check-input" Text="Activo" runat="server" Checked="true" />
-                </div>
-
-                <div class="mb-3">
-                    <asp:Button ID="btnGuardar" CssClass="btn btn-primary" Text="Guardar" runat="server" OnClick="btnGuardar_Click" />
-                    <asp:Button ID="btnEliminar" CssClass="btn btn-danger" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" />
-                    <asp:Button ID="btnCancelar" CssClass="btn btn-secondary" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" />
-                </div>
             </div>
         </div>
     </div>
