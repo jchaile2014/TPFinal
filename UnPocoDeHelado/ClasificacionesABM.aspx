@@ -10,6 +10,7 @@
                 <div class="mb-3">
                     <label class="form-label">Nombre</label>
                     <asp:TextBox ID="txtNombre" CssClass="form-control" runat="server"></asp:TextBox>
+                    <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNombre" CssClass="text-danger" Display="Dynamic" ErrorMessage="El nombre es obligatorio." />
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Tipo</label>
@@ -23,8 +24,8 @@
                 </div>
                 <div class="mb-3">
                     <asp:Button ID="btnGuardar" CssClass="btn btn-primary" Text="Guardar" runat="server" OnClick="btnGuardar_Click" />
-                    <asp:Button ID="btnEliminar" CssClass="btn btn-danger" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" />
-                    <asp:Button ID="btnCancelar" CssClass="btn btn-secondary" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" />
+                    <asp:Button ID="btnEliminar" CssClass="btn btn-danger" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" CausesValidation="false" />
+                    <asp:Button ID="btnCancelar" CssClass="btn btn-secondary" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" CausesValidation="false" />
                 </div>
             </div>
         </div>

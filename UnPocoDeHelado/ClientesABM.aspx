@@ -6,9 +6,11 @@
         <div class="row"><div class="col-md-6 offset-md-3">
             <h2 id="titulo" runat="server">Nuevo Cliente</h2><hr />
             <div class="mb-3"><label class="form-label">Nombre</label>
-                <asp:TextBox ID="txtNombre" CssClass="form-control" runat="server"></asp:TextBox></div>
+                <asp:TextBox ID="txtNombre" CssClass="form-control" runat="server"></asp:TextBox>
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNombre" CssClass="text-danger" Display="Dynamic" ErrorMessage="El nombre es obligatorio." /></div>
             <div class="mb-3"><label class="form-label">Apellido</label>
-                <asp:TextBox ID="txtApellido" CssClass="form-control" runat="server"></asp:TextBox></div>
+                <asp:TextBox ID="txtApellido" CssClass="form-control" runat="server"></asp:TextBox>
+                <asp:RequiredFieldValidator runat="server" ControlToValidate="txtApellido" CssClass="text-danger" Display="Dynamic" ErrorMessage="El apellido es obligatorio." /></div>
             <div class="mb-3"><label class="form-label">DNI</label>
                 <asp:TextBox ID="txtDNI" CssClass="form-control" runat="server"></asp:TextBox></div>
             <div class="mb-3"><label class="form-label">Email</label>
@@ -17,7 +19,7 @@
                 <asp:TextBox ID="txtTelefono" CssClass="form-control" runat="server"></asp:TextBox></div>
             <div class="mb-3">
                 <asp:Button ID="btnGuardar" CssClass="btn btn-primary" Text="Guardar" runat="server" OnClick="btnGuardar_Click" />
-                <asp:Button ID="btnCancelar" CssClass="btn btn-secondary" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" />
+                <asp:Button ID="btnCancelar" CssClass="btn btn-secondary" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" CausesValidation="false" />
             </div>
         </div></div>
     </div>

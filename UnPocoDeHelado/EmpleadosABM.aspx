@@ -88,16 +88,20 @@
                         <div class="col-md-6">
                             <label class="form-label">Nombre</label>
                             <asp:TextBox ID="txtNombre" CssClass="form-control form-control-custom" placeholder="Ej. Juan" runat="server"></asp:TextBox>
+                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNombre" CssClass="text-danger" Display="Dynamic" ErrorMessage="El nombre es obligatorio." />
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Apellido</label>
                             <asp:TextBox ID="txtApellido" CssClass="form-control form-control-custom" placeholder="Ej. Perez" runat="server"></asp:TextBox>
+                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtApellido" CssClass="text-danger" Display="Dynamic" ErrorMessage="El apellido es obligatorio." />
                         </div>
 
                         <div class="col-md-6">
                             <label class="form-label">DNI</label>
                             <asp:TextBox ID="txtDNI" CssClass="form-control form-control-custom" placeholder="Sin puntos ni espacios" runat="server"></asp:TextBox>
+                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtDNI" CssClass="text-danger" Display="Dynamic" ErrorMessage="El DNI es obligatorio." />
+                            <asp:RegularExpressionValidator runat="server" ControlToValidate="txtDNI" ValidationExpression="\d{7,8}" CssClass="text-danger" Display="Dynamic" ErrorMessage="El DNI debe tener 7 u 8 digitos." />
                         </div>
 
                         <div class="col-md-6">
@@ -123,6 +127,7 @@
                         <div class="col-md-6">
                             <label class="form-label">Fecha Ingreso</label>
                             <asp:TextBox ID="txtFechaIngreso" CssClass="form-control form-control-custom" TextMode="Date" runat="server"></asp:TextBox>
+                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtFechaIngreso" CssClass="text-danger" Display="Dynamic" ErrorMessage="La fecha de ingreso es obligatoria." />
                         </div>
 
                         <div class="col-md-6">
@@ -146,10 +151,10 @@
 
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <asp:Button ID="btnEliminar" CssClass="btn btn-danger-custom shadow-sm" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" OnClientClick="return confirm('Estas seguro de eliminar este empleado?');" />
+                            <asp:Button ID="btnEliminar" CssClass="btn btn-danger-custom shadow-sm" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" CausesValidation="false" OnClientClick="return confirm('Estas seguro de eliminar este empleado?');" />
                         </div>
                         <div class="d-flex gap-3">
-                            <asp:Button ID="btnCancelar" CssClass="btn btn-outline-custom" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" formnovalidate="formnovalidate" />
+                            <asp:Button ID="btnCancelar" CssClass="btn btn-outline-custom" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" CausesValidation="false" />
                             <asp:Button ID="btnGuardar" CssClass="btn btn-gradient shadow-sm" Text="Guardar Cambios" runat="server" OnClick="btnGuardar_Click" />
                         </div>
                     </div>
