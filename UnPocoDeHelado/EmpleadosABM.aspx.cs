@@ -91,7 +91,8 @@ namespace UnPocoDeHelado
             }
             catch (Exception ex)
             {
-                Session["Error"] = ex.Message;
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
             }
         }
 
@@ -108,7 +109,8 @@ namespace UnPocoDeHelado
             }
             catch (Exception ex)
             {
-                Session["Error"] = ex.Message;
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
             }
         }
 

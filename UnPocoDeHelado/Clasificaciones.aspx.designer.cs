@@ -15,15 +15,6 @@ namespace UnPocoDeHelado
     {
 
         /// <summary>
-        /// Control ddlTipo.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlTipo;
-
-        /// <summary>
         /// Control btnAgregar.
         /// </summary>
         /// <remarks>
@@ -33,12 +24,21 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.WebControls.Button btnAgregar;
 
         /// <summary>
-        /// Control dgvClasificaciones.
+        /// Control ddlTipo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView dgvClasificaciones;
+        protected global::System.Web.UI.WebControls.DropDownList ddlTipo;
+
+        /// <summary>
+        /// Control rptClasificaciones.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptClasificaciones;
     }
 }
