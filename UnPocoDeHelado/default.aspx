@@ -2,13 +2,15 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
         .hero-section {
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            background: linear-gradient(135deg, rgba(255, 245, 248, 0.6) 0%, rgba(255, 255, 255, 0.1) 100%), url('Images/hero-bg.png');
+            background-size: cover;
+            background-position: center;
             min-height: 80vh;
             display: flex;
             align-items: center;
             border-radius: 15px;
             margin-top: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             overflow: hidden;
         }
         .hero-text {
