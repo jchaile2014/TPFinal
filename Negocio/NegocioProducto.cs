@@ -67,6 +67,63 @@ namespace Negocio
             }
         }
 
+        public List<Producto> listar(int idSucursal)
+        {
+            List<Producto> lista = new List<Producto>();
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta(
+                    "Select P.Id, P.Nombre, P.Descripcion, P.IdMarca, M.Nombre NombreMarca, " +
+                    "P.IdCategoria, C.Nombre NombreCategoria, P.Cantidad, P.StockMinimo, " +
+                    "P.PorcentajeGanancia, P.PrecioCompraActual, P.IdSucursal, P.Activo " +
+                    "From Producto P " +
+                    "Left Join Clasificacion M On P.IdMarca = M.Id " +
+                    "Left Join Clasificacion C On P.IdCategoria = C.Id " +
+                    "Where P.IdSucursal = @idSucursal " +
+                    "Order By P.Nombre");
+                datos.setearParametro("@idSucursal", idSucursal);
+                datos.ejecutarLectura();
+                while (datos.Lector.Read())
+                {
+                    Producto aux = new Producto();
+                    aux.Id = (long)datos.Lector["Id"];
+                    aux.Nombre = (string)datos.Lector["Nombre"];
+                    aux.Descripcion = !(datos.Lector["Descripcion"] is DBNull) ? (string)datos.Lector["Descripcion"] : null;
+                    if (!(datos.Lector["IdMarca"] is DBNull))
+                    {
+                        aux.Marca = new Clasificacion();
+                        aux.Marca.Id = (long)datos.Lector["IdMarca"];
+                        aux.Marca.Nombre = (string)datos.Lector["NombreMarca"];
+                        aux.Marca.SeClasifica = true;
+                    }
+                    if (!(datos.Lector["IdCategoria"] is DBNull))
+                    {
+                        aux.Categoria = new Clasificacion();
+                        aux.Categoria.Id = (long)datos.Lector["IdCategoria"];
+                        aux.Categoria.Nombre = (string)datos.Lector["NombreCategoria"];
+                        aux.Categoria.SeClasifica = false;
+                    }
+                    aux.Cantidad = (int)datos.Lector["Cantidad"];
+                    aux.StockMinimo = (int)datos.Lector["StockMinimo"];
+                    aux.PorcentajeGanancia = (decimal)datos.Lector["PorcentajeGanancia"];
+                    aux.PrecioCompraActual = (decimal)datos.Lector["PrecioCompraActual"];
+                    aux.IdSucursal = datos.Lector["IdSucursal"] is DBNull ? 0 : Convert.ToInt32(datos.Lector["IdSucursal"]);
+                    aux.Activo = (bool)datos.Lector["Activo"];
+                    lista.Add(aux);
+                }
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
         public void agregar(Producto nuevo)
         {
             AccesoDatos datos = new AccesoDatos();

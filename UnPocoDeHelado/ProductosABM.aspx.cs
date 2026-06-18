@@ -34,8 +34,7 @@ namespace UnPocoDeHelado
                 {
                     titulo.InnerText = "Nuevo Producto";
                     btnEliminar.Visible = false;
-                    if (Request.QueryString["sucursal"] != null)
-                        txtIdSucursal.Text = Request.QueryString["sucursal"];
+                    txtIdSucursal.Text = ((Usuario)Session["usuario"]).IdSucursal.ToString();
                 }
             }
         }
@@ -100,7 +99,7 @@ namespace UnPocoDeHelado
                 prod.StockMinimo = int.Parse(txtStockMinimo.Text);
                 prod.PorcentajeGanancia = decimal.Parse(txtPorcentaje.Text, CultureInfo.InvariantCulture);
                 prod.PrecioCompraActual = decimal.Parse(txtPrecioCompra.Text, CultureInfo.InvariantCulture);
-                prod.IdSucursal = string.IsNullOrEmpty(txtIdSucursal.Text) ? 0 : int.Parse(txtIdSucursal.Text);
+                prod.IdSucursal = ((Usuario)Session["usuario"]).IdSucursal;
                 prod.Activo = chkActivo.Checked;
 
                 NegocioProducto negocio = new NegocioProducto();

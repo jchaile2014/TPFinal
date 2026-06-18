@@ -18,16 +18,6 @@
         </div>
         <hr class="mb-4" style="border-color: #fecfef; border-width: 2px;" />
 
-        <div class="row mb-4">
-            <div class="col-auto">
-                <label class="form-label">Sucursal</label>
-                <asp:DropDownList ID="ddlSucursal" CssClass="form-select fw-bold text-white border-0" style="background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%); border-radius: 12px;" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlSucursal_SelectedIndexChanged">
-                    <asp:ListItem Value="1" Selected="True">Sucursal 1</asp:ListItem>
-                    <asp:ListItem Value="2">Sucursal 2</asp:ListItem>
-                </asp:DropDownList>
-            </div>
-        </div>
-
         <div class="row">
             <asp:Repeater ID="repEmpleados" runat="server" OnItemCommand="repEmpleados_ItemCommand">
                 <ItemTemplate>

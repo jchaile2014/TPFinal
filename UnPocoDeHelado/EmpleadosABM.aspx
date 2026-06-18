@@ -114,10 +114,6 @@
                             <asp:TextBox ID="txtEmail" CssClass="form-control form-control-custom" TextMode="Email" placeholder="juan@ejemplo.com" runat="server"></asp:TextBox>
                         </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Sucursal</label>
-                            <asp:DropDownList ID="ddlSucursal" CssClass="form-select form-select-custom" runat="server"></asp:DropDownList>
-                        </div>
 
                         <div class="col-md-6">
                             <label class="form-label">Rol</label>

@@ -45,6 +45,43 @@ namespace Negocio
             }
         }
 
+        public List<Empleado> listar(int idSucursal)
+        {
+            List<Empleado> lista = new List<Empleado>();
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("Select Id, Nombre, Apellido, DNI, Email, Telefono, IdSucursal, IdRol, FechaIngreso, Salario, Activo From Empleado Where IdSucursal = @idSucursal Order By Nombre");
+                datos.setearParametro("@idSucursal", idSucursal);
+                datos.ejecutarLectura();
+                while (datos.Lector.Read())
+                {
+                    Empleado aux = new Empleado();
+                    aux.Id = (long)datos.Lector["Id"];
+                    aux.Nombre = (string)datos.Lector["Nombre"];
+                    aux.Apellido = (string)datos.Lector["Apellido"];
+                    aux.DNI = (string)datos.Lector["DNI"];
+                    aux.Email = !(datos.Lector["Email"] is DBNull) ? (string)datos.Lector["Email"] : null;
+                    aux.Telefono = !(datos.Lector["Telefono"] is DBNull) ? (string)datos.Lector["Telefono"] : null;
+                    aux.IdSucursal = datos.Lector["IdSucursal"] is DBNull ? 0 : Convert.ToInt32(datos.Lector["IdSucursal"]);
+                    aux.Rol = (int)datos.Lector["IdRol"];
+                    aux.FechaIngreso = (DateTime)datos.Lector["FechaIngreso"];
+                    aux.Salario = !(datos.Lector["Salario"] is DBNull) ? (decimal?)datos.Lector["Salario"] : null;
+                    aux.Activo = (bool)datos.Lector["Activo"];
+                    lista.Add(aux);
+                }
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
         public void agregar(Empleado nuevo)
         {
             AccesoDatos datos = new AccesoDatos();

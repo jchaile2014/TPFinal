@@ -13,14 +13,17 @@ namespace UnPocoDeHelado
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.esAdmin(Session["usuario"]))
+            {
+                Session.Add("error", "No tenés permisos para acceder a esta sección.");
+                Response.Redirect("Error.aspx", false);
+                return;
+            }
+
             if (!IsPostBack)
             {
-                ddlSucursal.Items.Add(new ListItem("Sucursal Centro (1)", "1"));
-                ddlSucursal.Items.Add(new ListItem("Sucursal Norte (2)", "2"));
-
-                ddlRol.Items.Add(new ListItem("Vendedor", "1"));
-                ddlRol.Items.Add(new ListItem("Gerente", "2"));
-                ddlRol.Items.Add(new ListItem("Administrador", "3"));
+                ddlRol.Items.Add(new ListItem("Administrador", "1"));
+                ddlRol.Items.Add(new ListItem("Vendedor", "2"));
 
                 string id = Request.QueryString["id"];
                 if (id != null)
@@ -38,10 +41,7 @@ namespace UnPocoDeHelado
                         txtDNI.Text = emp.DNI;
                         txtEmail.Text = emp.Email;
                         txtTelefono.Text = emp.Telefono;
-                        
-                        if (ddlSucursal.Items.FindByValue(emp.IdSucursal.ToString()) != null)
-                            ddlSucursal.SelectedValue = emp.IdSucursal.ToString();
-                            
+
                         if (ddlRol.Items.FindByValue(emp.Rol.ToString()) != null)
                             ddlRol.SelectedValue = emp.Rol.ToString();
 
@@ -66,10 +66,10 @@ namespace UnPocoDeHelado
                 emp.DNI = txtDNI.Text;
                 emp.Email = txtEmail.Text;
                 emp.Telefono = txtTelefono.Text;
-                emp.IdSucursal = int.Parse(ddlSucursal.SelectedValue);
+                emp.IdSucursal = ((Usuario)Session["usuario"]).IdSucursal;
                 emp.Rol = int.Parse(ddlRol.SelectedValue);
                 emp.FechaIngreso = DateTime.Parse(txtFechaIngreso.Text);
-                
+
                 if (!string.IsNullOrEmpty(txtSalario.Text))
                     emp.Salario = decimal.Parse(txtSalario.Text);
 

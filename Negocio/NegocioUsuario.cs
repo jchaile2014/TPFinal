@@ -16,7 +16,7 @@ namespace Negocio
             try
             {
                 datos.setearConsulta(
-                    "Select U.Id, U.NombreUsuario, E.Nombre, E.Apellido, E.Email, E.IdRol, E.Activo " +
+                    "Select U.Id, U.NombreUsuario, E.Nombre, E.Apellido, E.Email, E.IdRol, E.IdSucursal, E.Activo " +
                     "From Usuario U Inner Join Empleado E On U.Id = E.Id " +
                     "Where U.NombreUsuario = @usuario And U.Pass = @pass And E.Activo = 1");
                 datos.setearParametro("@usuario", nombreUsuario);
@@ -32,6 +32,7 @@ namespace Negocio
                     usuario.Apellido = (string)datos.Lector["Apellido"];
                     usuario.Email = !(datos.Lector["Email"] is DBNull) ? (string)datos.Lector["Email"] : null;
                     usuario.Rol = (int)datos.Lector["IdRol"];
+                    usuario.IdSucursal = datos.Lector["IdSucursal"] is DBNull ? 0 : Convert.ToInt32(datos.Lector["IdSucursal"]);
                     usuario.Activo = (bool)datos.Lector["Activo"];
                 }
                 return usuario;

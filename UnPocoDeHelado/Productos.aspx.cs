@@ -27,9 +27,9 @@ namespace UnPocoDeHelado
         {
             try
             {
+                Usuario u = (Usuario)Session["usuario"];
                 NegocioProducto negocio = new NegocioProducto();
-                int idSucursal = int.Parse(ddlSucursal.SelectedValue);
-                rptProductos.DataSource = negocio.listar().FindAll(x => x.IdSucursal == idSucursal);
+                rptProductos.DataSource = negocio.listar(u.IdSucursal);
                 rptProductos.DataBind();
             }
             catch (Exception ex)
@@ -39,14 +39,9 @@ namespace UnPocoDeHelado
             }
         }
 
-        protected void ddlSucursal_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            cargarProductos();
-        }
-
         protected void btnAgregar_Click(object sender, EventArgs e)
         {
-            Response.Redirect("ProductosABM.aspx?sucursal=" + ddlSucursal.SelectedValue, false);
+            Response.Redirect("ProductosABM.aspx", false);
         }
     }
 }
