@@ -111,7 +111,7 @@
                     </div>
                     
                     <div class="d-grid gap-2">
-                        <asp:Button ID="btnLogin" runat="server" Text="Ingresar" CssClass="btn btn-custom w-100" OnClientClick="alert('Login exitoso'); return false;" />
+                       <asp:Button ID="btnLogin" runat="server" Text="Ingresar" CssClass="btn btn-custom w-100" OnClick="btnLogin_Click" />
                     </div>
                 </div>
             </div>
