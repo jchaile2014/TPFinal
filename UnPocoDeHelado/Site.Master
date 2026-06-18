@@ -99,16 +99,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="Clientes.aspx"><i class="bi bi-people"></i> Clientes</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" runat="server" id="liProveedores">
                             <a class="nav-link" href="Proveedores.aspx"><i class="bi bi-truck"></i> Proveedores</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" runat="server" id="liProductos">
                             <a class="nav-link" href="Productos.aspx"><i class="bi bi-box-seam"></i> Productos</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" runat="server" id="liClasificacion">
                             <a class="nav-link" href="Clasificaciones.aspx"><i class="bi bi-tags"></i> Clasificacion</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" runat="server" id="liEmpleados">
                             <a class="nav-link" href="Empleados.aspx"><i class="bi bi-person-badge"></i> Empleados</a>
                         </li>
                     </ul>

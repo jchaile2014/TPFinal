@@ -9,7 +9,14 @@ namespace UnPocoDeHelado
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (!Seguridad.esAdmin(Session["usuario"]))
+            {
+                Session.Add("error", "No tenés permisos para acceder a esta sección.");
+                Response.Redirect("Error.aspx", false);
+                return;
+            }
+           
+                if (!IsPostBack)
                 btnAgregar.Enabled = false;
         }
 
