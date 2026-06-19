@@ -42,6 +42,16 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.WebControls.ContentPlaceHolder ContentPlaceHolder1;
 
         /// <summary>
+        /// Control liOperaciones.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liOperaciones;
+
+        /// <summary>
+        /// Control liClientes.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liClientes;
+
+        /// <summary>
         /// Control liProveedores.
         /// </summary>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl liProveedores;
@@ -60,5 +70,15 @@ namespace UnPocoDeHelado
         /// Control liEmpleados.
         /// </summary>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl liEmpleados;
+
+        /// <summary>
+        /// Control liSalir.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liSalir;
+
+        /// <summary>
+        /// Control btnSalir.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.LinkButton btnSalir;
     }
 }

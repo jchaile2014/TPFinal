@@ -86,17 +86,17 @@
             </div>
 
             <div class="col-lg-5 p-4 p-lg-5 d-flex justify-content-center">
-                <div class="login-card w-100">
+                <asp:Panel ID="pnlLogin" runat="server" CssClass="login-card w-100">
                     <div class="text-center mb-4">
                         <h3 class="fw-bold" style="color: #4a4a4a;">Iniciar Sesion</h3>
                         <p class="text-muted small">Ingresa tus credenciales para continuar</p>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label fw-semibold text-secondary">Usuario</label>
                         <asp:TextBox ID="txtUsuario" runat="server" CssClass="form-control form-control-custom" placeholder="Ej. admin"></asp:TextBox>
                     </div>
-                    
+
                     <div class="mb-4">
                         <label class="form-label fw-semibold text-secondary">Clave</label>
                         <asp:TextBox ID="txtPassword" runat="server" CssClass="form-control form-control-custom" TextMode="Password" placeholder="********"></asp:TextBox>
@@ -109,11 +109,21 @@
                         </div>
                         <a href="#" class="text-decoration-none small" style="color: #ff7eb3;"> Olvide mi clave</a>
                     </div>
-                    
+
                     <div class="d-grid gap-2">
-                       <asp:Button ID="btnLogin" runat="server" Text="Ingresar" CssClass="btn btn-custom w-100" OnClick="btnLogin_Click" />
+                        <asp:Button ID="btnLogin" runat="server" Text="Ingresar" CssClass="btn btn-custom w-100" OnClick="btnLogin_Click" />
                     </div>
-                </div>
+                </asp:Panel>
+
+                <asp:Panel ID="pnlLogueado" runat="server" CssClass="login-card w-100 text-center" Visible="false">
+                    <i class="bi bi-check-circle-fill" style="font-size: 3rem; color: #ff7eb3;"></i>
+                    <h3 class="fw-bold mt-3" style="color: #4a4a4a;">Ya iniciaste sesion</h3>
+                    <p class="text-muted mb-1">Usuario: <strong><asp:Label ID="lblUsuario" runat="server"></asp:Label></strong></p>
+                    <p class="text-muted mb-4">Rol: <strong><asp:Label ID="lblRol" runat="server"></asp:Label></strong></p>
+                    <div class="d-grid gap-2">
+                        <asp:Button ID="btnSalirDefault" runat="server" Text="Salir" CssClass="btn btn-custom w-100" OnClick="btnSalirDefault_Click" />
+                    </div>
+                </asp:Panel>
             </div>
         </div>
     </div>

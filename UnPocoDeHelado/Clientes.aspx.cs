@@ -9,6 +9,11 @@ namespace UnPocoDeHelado
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.sesionActiva(Session["usuario"]))
+            {
+                Response.Redirect("default.aspx", false);
+                return;
+            }
             if (!IsPostBack)
                 cargarClientes();
         }

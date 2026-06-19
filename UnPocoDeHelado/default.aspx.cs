@@ -13,8 +13,22 @@ namespace UnPocoDeHelado
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (Session["usuario"] != null)
+            {
+                Usuario u = (Usuario)Session["usuario"];
+                pnlLogin.Visible = false;
+                pnlLogueado.Visible = true;
+                lblUsuario.Text = u.NombreUsuario;
+                lblRol.Text = u.Rol == 1 ? "Administrador" : "Vendedor";
+            }
         }
+
+        protected void btnSalirDefault_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("default.aspx");
+        }
+
         protected void btnLogin_Click(object sender, EventArgs e)
         {
             try

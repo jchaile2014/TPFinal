@@ -31,8 +31,6 @@
                 <asp:TextBox ID="txtPrecioCompra" CssClass="form-control" TextMode="Number" runat="server"></asp:TextBox>
                 <asp:RequiredFieldValidator runat="server" ControlToValidate="txtPrecioCompra" CssClass="text-danger" Display="Dynamic" ErrorMessage="El precio de compra es obligatorio." />
                 <asp:RegularExpressionValidator runat="server" ControlToValidate="txtPrecioCompra" ValidationExpression="\d+([.,]\d{1,2})?" CssClass="text-danger" Display="Dynamic" ErrorMessage="El precio de compra debe ser un numero valido." /></div>
-            <div class="mb-3"><label class="form-label">Id Sucursal</label>
-                <asp:TextBox ID="txtIdSucursal" CssClass="form-control" TextMode="Number" runat="server" ReadOnly="true"></asp:TextBox></div>
             <div class="mb-3 form-check">
                 <asp:CheckBox ID="chkActivo" CssClass="form-check-input" Text="Activo" runat="server" Checked="true" /></div>
             <div class="mb-3">

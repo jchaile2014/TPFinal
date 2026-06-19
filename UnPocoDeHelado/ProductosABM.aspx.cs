@@ -34,7 +34,6 @@ namespace UnPocoDeHelado
                 {
                     titulo.InnerText = "Nuevo Producto";
                     btnEliminar.Visible = false;
-                    txtIdSucursal.Text = ((Usuario)Session["usuario"]).IdSucursal.ToString();
                 }
             }
         }
@@ -70,7 +69,6 @@ namespace UnPocoDeHelado
                     txtStockMinimo.Text = prod.StockMinimo.ToString();
                     txtPorcentaje.Text = prod.PorcentajeGanancia.ToString(CultureInfo.InvariantCulture);
                     txtPrecioCompra.Text = prod.PrecioCompraActual.ToString(CultureInfo.InvariantCulture);
-                    txtIdSucursal.Text = prod.IdSucursal.ToString();
                     chkActivo.Checked = prod.Activo;
                 }
             }

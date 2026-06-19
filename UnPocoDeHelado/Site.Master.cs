@@ -13,12 +13,22 @@ namespace UnPocoDeHelado
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            bool logueado = Seguridad.sesionActiva(Session["usuario"]);
             bool admin = Seguridad.esAdmin(Session["usuario"]);
 
+            liOperaciones.Visible = logueado;
+            liClientes.Visible = logueado;
             liProveedores.Visible = admin;
             liProductos.Visible = admin;
             liClasificacion.Visible = admin;
             liEmpleados.Visible = admin;
+            liSalir.Visible = logueado;
+        }
+
+        protected void btnSalir_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Response.Redirect("default.aspx");
         }
     }
 }

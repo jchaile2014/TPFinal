@@ -93,10 +93,10 @@
                 </button>
                 <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item">
+                        <li class="nav-item" runat="server" id="liOperaciones">
                             <a class="nav-link" href="Operaciones.aspx"><i class="bi bi-cart"></i> Operaciones</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" runat="server" id="liClientes">
                             <a class="nav-link" href="Clientes.aspx"><i class="bi bi-people"></i> Clientes</a>
                         </li>
                         <li class="nav-item" runat="server" id="liProveedores">
@@ -110,6 +110,9 @@
                         </li>
                         <li class="nav-item" runat="server" id="liEmpleados">
                             <a class="nav-link" href="Empleados.aspx"><i class="bi bi-person-badge"></i> Empleados</a>
+                        </li>
+                        <li class="nav-item" runat="server" id="liSalir">
+                            <asp:LinkButton ID="btnSalir" runat="server" CssClass="nav-link" OnClick="btnSalir_Click"><i class="bi bi-box-arrow-right"></i> Salir</asp:LinkButton>
                         </li>
                     </ul>
                 </div>
