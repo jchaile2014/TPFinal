@@ -159,6 +159,55 @@ namespace Negocio
             }
         }
 
+        public void registrarCompra(Operacion compra)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.iniciarTransaccion();
+
+                datos.setearConsulta("Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdEmpleado, IdMedioPago, Estado, Total) OUTPUT INSERTED.Id Values (0, @fecha, @idSucursal, @idEmpleado, @idMedioPago, @estado, @total)");
+                datos.setearParametro("@fecha", compra.Fecha);
+                datos.setearParametro("@idSucursal", compra.IdSucursal > 0 ? (object)compra.IdSucursal : DBNull.Value);
+                datos.setearParametro("@idEmpleado", compra.Empleado.Id);
+                datos.setearParametro("@idMedioPago", compra.MedioPago > 0 ? (object)compra.MedioPago : DBNull.Value);
+                datos.setearParametro("@estado", compra.Estado ?? "Finalizado");
+                datos.setearParametro("@total", compra.Total);
+                long idOperacion = (long)datos.ejecutarAccionScalarTransaccion();
+
+                foreach (DetalleOperacion det in compra.Detalles)
+                {
+                    datos.limpiarParametros();
+                    datos.setearConsulta("Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal) Values (@idOp, 0, @idProd, @idProv, @cant, @precio, @subtotal)");
+                    datos.setearParametro("@idOp", idOperacion);
+                    datos.setearParametro("@idProd", det.Producto.Id);
+                    datos.setearParametro("@idProv", det.Proveedor != null && det.Proveedor.Id > 0 ? (object)det.Proveedor.Id : DBNull.Value);
+                    datos.setearParametro("@cant", det.Cantidad);
+                    datos.setearParametro("@precio", det.PrecioUnitario);
+                    datos.setearParametro("@subtotal", det.Subtotal);
+                    datos.ejecutarAccionTransaccion();
+
+                    datos.limpiarParametros();
+                    datos.setearConsulta("Update Producto Set Cantidad = Cantidad + @cant, PrecioCompraActual = @precio Where Id = @idProd");
+                    datos.setearParametro("@cant", det.Cantidad);
+                    datos.setearParametro("@precio", det.PrecioUnitario);
+                    datos.setearParametro("@idProd", det.Producto.Id);
+                    datos.ejecutarAccionTransaccion();
+                }
+
+                datos.confirmarTransaccion();
+            }
+            catch (Exception ex)
+            {
+                datos.revertirTransaccion();
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
         public void cambiarEstado(long id, string estado)
         {
             AccesoDatos datos = new AccesoDatos();
