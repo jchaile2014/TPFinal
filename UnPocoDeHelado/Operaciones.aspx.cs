@@ -1,12 +1,8 @@
+using Dominio;
+using Negocio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using Dominio;
-using Negocio;
-
 
 namespace UnPocoDeHelado
 {
@@ -19,37 +15,28 @@ namespace UnPocoDeHelado
                 Response.Redirect("default.aspx", false);
                 return;
             }
+
+            btnNuevaCompra.Visible = Seguridad.esAdmin(Session["usuario"]);
+
             if (!IsPostBack)
-            {
                 cargarLista();
-            }
         }
+
         private void cargarLista()
         {
             NegocioOperacion negocio = new NegocioOperacion();
-
             List<Operacion> ventas = negocio.listar(true);
             List<Operacion> compras = negocio.listar(false);
-
             ventas.AddRange(compras);
+            rptOperaciones.DataSource = ventas.OrderByDescending(o => o.Fecha).ToList();
+            rptOperaciones.DataBind();
+        }
 
-            dgvOperaciones.DataSource = ventas.OrderByDescending(o => o.Fecha).ToList();
-            dgvOperaciones.DataBind();
-        }
-        protected void dgvOperaciones_PageIndexChanging(object sender, GridViewPageEventArgs e)
-        {
-            dgvOperaciones.PageIndex = e.NewPageIndex;
-            cargarLista();
-        }
-        protected void dgvOperaciones_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string id = dgvOperaciones.SelectedDataKey.Value.ToString();
-            Response.Redirect("OperacionesABM.aspx?id=" + id);
-        }
         protected void btnNuevaVenta_Click(object sender, EventArgs e)
         {
             Response.Redirect("OperacionesABM.aspx?tipo=venta");
         }
+
         protected void btnNuevaCompra_Click(object sender, EventArgs e)
         {
             Response.Redirect("OperacionesABM.aspx?tipo=compra");

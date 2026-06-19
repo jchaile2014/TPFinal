@@ -14,6 +14,11 @@ namespace UnPocoDeHelado
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!Seguridad.sesionActiva(Session["usuario"]))
+            {
+                Response.Redirect("default.aspx", false);
+                return;
+            }
             if (!Seguridad.esAdmin(Session["usuario"]))
             {
                 Session.Add("error", "No tenés permisos para acceder a esta sección.");
