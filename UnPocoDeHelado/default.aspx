@@ -107,7 +107,7 @@
                             <input class="form-check-input" type="checkbox" id="chkRecordar">
                             <label class="form-check-label text-muted small" for="chkRecordar">Recordarme</label>
                         </div>
-                        <a href="#" class="text-decoration-none small" style="color: #ff7eb3;"> Olvide mi clave</a>
+                        <a href="OlvideClave.aspx" class="text-decoration-none small" style="color: #ff7eb3;"><i class="bi bi-key me-1"></i>Olvide mi clave</a>
                     </div>
 
                     <div class="d-grid gap-2">
