@@ -186,12 +186,53 @@ namespace Negocio
                     datos.setearParametro("@precio", det.PrecioUnitario);
                     datos.setearParametro("@subtotal", det.Subtotal);
                     datos.ejecutarAccionTransaccion();
+                }
 
+                datos.confirmarTransaccion();
+            }
+            catch (Exception ex)
+            {
+                datos.revertirTransaccion();
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void registrarVenta(Operacion venta)
+        {
+            foreach (DetalleOperacion det in venta.Detalles)
+            {
+                if (obtenerStock(det.Producto.Id) < det.Cantidad)
+                    throw new Exception("Stock insuficiente para el producto: " + det.Producto.Nombre);
+            }
+
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.iniciarTransaccion();
+
+                datos.setearConsulta("Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdCliente, IdEmpleado, IdMedioPago, Estado, Total) OUTPUT INSERTED.Id Values (1, @fecha, @idSucursal, @idCliente, @idEmpleado, @idMedioPago, @estado, @total)");
+                datos.setearParametro("@fecha", venta.Fecha);
+                datos.setearParametro("@idSucursal", venta.IdSucursal > 0 ? (object)venta.IdSucursal : DBNull.Value);
+                datos.setearParametro("@idCliente", venta.Cliente != null && venta.Cliente.Id > 0 ? (object)venta.Cliente.Id : DBNull.Value);
+                datos.setearParametro("@idEmpleado", venta.Empleado.Id);
+                datos.setearParametro("@idMedioPago", venta.MedioPago > 0 ? (object)venta.MedioPago : DBNull.Value);
+                datos.setearParametro("@estado", venta.Estado ?? "Cobrada");
+                datos.setearParametro("@total", venta.Total);
+                long idOperacion = (long)datos.ejecutarAccionScalarTransaccion();
+
+                foreach (DetalleOperacion det in venta.Detalles)
+                {
                     datos.limpiarParametros();
-                    datos.setearConsulta("Update Producto Set Cantidad = Cantidad + @cant, PrecioCompraActual = @precio Where Id = @idProd");
+                    datos.setearConsulta("Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal) Values (@idOp, 1, @idProd, NULL, @cant, @precio, @subtotal)");
+                    datos.setearParametro("@idOp", idOperacion);
+                    datos.setearParametro("@idProd", det.Producto.Id);
                     datos.setearParametro("@cant", det.Cantidad);
                     datos.setearParametro("@precio", det.PrecioUnitario);
-                    datos.setearParametro("@idProd", det.Producto.Id);
+                    datos.setearParametro("@subtotal", det.Subtotal);
                     datos.ejecutarAccionTransaccion();
                 }
 
@@ -200,6 +241,28 @@ namespace Negocio
             catch (Exception ex)
             {
                 datos.revertirTransaccion();
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        private int obtenerStock(long idProducto)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("Select Cantidad From Producto Where Id = @id");
+                datos.setearParametro("@id", idProducto);
+                datos.ejecutarLectura();
+                if (datos.Lector.Read())
+                    return (int)datos.Lector["Cantidad"];
+                return 0;
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
             finally

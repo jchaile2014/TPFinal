@@ -6,7 +6,13 @@ namespace UnPocoDeHelado
 
         protected global::System.Web.UI.WebControls.Panel pnlCarga;
 
+        protected global::System.Web.UI.WebControls.Panel pnlProveedor;
+
         protected global::System.Web.UI.WebControls.DropDownList ddlProveedor;
+
+        protected global::System.Web.UI.WebControls.Panel pnlCliente;
+
+        protected global::System.Web.UI.WebControls.DropDownList ddlCliente;
 
         protected global::System.Web.UI.WebControls.DropDownList ddlProducto;
 
@@ -14,9 +20,15 @@ namespace UnPocoDeHelado
 
         protected global::System.Web.UI.WebControls.TextBox txtCantidad;
 
-        protected global::System.Web.UI.WebControls.TextBox txtPrecioCompra;
+        protected global::System.Web.UI.WebControls.TextBox txtPrecioUnit;
+
+        protected global::System.Web.UI.WebControls.Panel pnlMedioPago;
+
+        protected global::System.Web.UI.WebControls.DropDownList ddlMedioPago;
 
         protected global::System.Web.UI.WebControls.Button btnAgregarDetalle;
+
+        protected global::System.Web.UI.WebControls.Label lblMensaje;
 
         protected global::System.Web.UI.WebControls.GridView dgvDetalle;
 

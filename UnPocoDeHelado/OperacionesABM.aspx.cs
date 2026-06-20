@@ -4,11 +4,18 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Web.UI.WebControls;
 
 namespace UnPocoDeHelado
 {
     public partial class OperacionesABM : System.Web.UI.Page
     {
+        private bool EsVenta
+        {
+            get { return ViewState["esVenta"] != null && (bool)ViewState["esVenta"]; }
+            set { ViewState["esVenta"] = value; }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Seguridad.sesionActiva(Session["usuario"]))
@@ -22,8 +29,11 @@ namespace UnPocoDeHelado
                 if (Request.QueryString["id"] != null)
                 {
                     cargarOperacion(long.Parse(Request.QueryString["id"]));
+                    return;
                 }
-                else if (Request.QueryString["tipo"] == "compra")
+
+                string tipo = Request.QueryString["tipo"];
+                if (tipo == "compra")
                 {
                     if (!Seguridad.esAdmin(Session["usuario"]))
                     {
@@ -31,63 +41,92 @@ namespace UnPocoDeHelado
                         Response.Redirect("Error.aspx", false);
                         return;
                     }
+                    EsVenta = false;
                     titulo.InnerText = "Nueva Compra";
-                    cargarCombos();
-                    Session["carritoCompra"] = new List<DetalleOperacion>();
-                    refrescarCarrito();
+                    pnlCliente.Visible = false;
+                    pnlMedioPago.Visible = false;
+                    cargarCombosCompra();
                 }
                 else
                 {
-                    Session.Add("error", "El registro de ventas se implementa en la proxima etapa.");
-                    Response.Redirect("Error.aspx", false);
+                    EsVenta = true;
+                    titulo.InnerText = "Nueva Venta";
+                    pnlProveedor.Visible = false;
+                    txtPrecioUnit.ReadOnly = true;
+                    cargarCombosVenta();
                 }
+
+                Session["carritoOperacion"] = new List<DetalleOperacion>();
+                refrescarCarrito();
             }
         }
 
-        private void cargarCombos()
+        private void cargarCombosCompra()
         {
             NegocioProveedor negProv = new NegocioProveedor();
             ddlProveedor.DataSource = negProv.listar();
             ddlProveedor.DataValueField = "Id";
             ddlProveedor.DataTextField = "Nombre";
             ddlProveedor.DataBind();
-
             cargarProductosDeProveedor();
+        }
+
+        private void cargarCombosVenta()
+        {
+            NegocioCliente negCli = new NegocioCliente();
+            ddlCliente.DataSource = negCli.listar();
+            ddlCliente.DataValueField = "Id";
+            ddlCliente.DataTextField = "Nombre";
+            ddlCliente.DataBind();
+
+            ddlMedioPago.Items.Clear();
+            ddlMedioPago.Items.Add(new ListItem("Efectivo", "1"));
+            ddlMedioPago.Items.Add(new ListItem("Tarjeta", "2"));
+            ddlMedioPago.Items.Add(new ListItem("Transferencia", "3"));
+
+            Usuario u = (Usuario)Session["usuario"];
+            NegocioProducto negProd = new NegocioProducto();
+            List<Producto> productos = negProd.listar(u.IdSucursal);
+            Session["productosOp"] = productos;
+            ddlProducto.DataSource = productos;
+            ddlProducto.DataValueField = "Id";
+            ddlProducto.DataTextField = "Nombre";
+            ddlProducto.DataBind();
+            mostrarDatosProducto();
         }
 
         private void cargarProductosDeProveedor()
         {
             Usuario u = (Usuario)Session["usuario"];
             long idProv = long.Parse(ddlProveedor.SelectedValue);
-
             NegocioProducto negProd = new NegocioProducto();
             List<Producto> productos = negProd.listarPorProveedor(idProv, u.IdSucursal);
-            Session["productosCompra"] = productos;
-
+            Session["productosOp"] = productos;
             ddlProducto.DataSource = productos;
             ddlProducto.DataValueField = "Id";
             ddlProducto.DataTextField = "Nombre";
             ddlProducto.DataBind();
-
             mostrarDatosProducto();
         }
 
         private void mostrarDatosProducto()
         {
-            List<Producto> productos = (List<Producto>)Session["productosCompra"];
+            List<Producto> productos = (List<Producto>)Session["productosOp"];
             if (productos == null || productos.Count == 0 || string.IsNullOrEmpty(ddlProducto.SelectedValue))
             {
                 txtStock.Text = "";
-                txtPrecioCompra.Text = "";
+                txtPrecioUnit.Text = "";
                 return;
             }
-
             long idProd = long.Parse(ddlProducto.SelectedValue);
             Producto prod = productos.Find(x => x.Id == idProd);
             if (prod != null)
             {
                 txtStock.Text = prod.Cantidad.ToString();
-                txtPrecioCompra.Text = prod.PrecioCompraActual.ToString(CultureInfo.InvariantCulture);
+                if (EsVenta)
+                    txtPrecioUnit.Text = prod.PrecioVenta.ToString("0.00", CultureInfo.InvariantCulture);
+                else
+                    txtPrecioUnit.Text = prod.PrecioCompraActual.ToString("0.00", CultureInfo.InvariantCulture);
             }
         }
 
@@ -115,32 +154,62 @@ namespace UnPocoDeHelado
 
         protected void btnAgregarDetalle_Click(object sender, EventArgs e)
         {
+            lblMensaje.Text = "";
             if (string.IsNullOrEmpty(ddlProducto.SelectedValue))
                 return;
 
-            List<DetalleOperacion> carrito = (List<DetalleOperacion>)Session["carritoCompra"];
+            int cantidad;
+            if (!int.TryParse(txtCantidad.Text, out cantidad) || cantidad <= 0)
+            {
+                lblMensaje.Text = "Ingresa una cantidad valida.";
+                return;
+            }
 
-            DetalleOperacion det = new DetalleOperacion();
-            det.Producto = new Producto();
-            det.Producto.Id = long.Parse(ddlProducto.SelectedValue);
-            det.Producto.Nombre = ddlProducto.SelectedItem.Text;
-            det.Proveedor = new Proveedor();
-            det.Proveedor.Id = long.Parse(ddlProveedor.SelectedValue);
-            det.Proveedor.Nombre = ddlProveedor.SelectedItem.Text;
-            det.Cantidad = int.Parse(txtCantidad.Text);
-            det.PrecioUnitario = decimal.Parse(txtPrecioCompra.Text, CultureInfo.InvariantCulture);
-            det.Subtotal = det.Cantidad * det.PrecioUnitario;
+            long idProd = long.Parse(ddlProducto.SelectedValue);
+            decimal precio = Math.Round(decimal.Parse(txtPrecioUnit.Text, CultureInfo.InvariantCulture), 2);
 
-            carrito.Add(det);
-            Session["carritoCompra"] = carrito;
+            List<DetalleOperacion> carrito = (List<DetalleOperacion>)Session["carritoOperacion"];
+            DetalleOperacion existente = carrito.Find(x => x.Producto.Id == idProd);
+            int cantTotal = cantidad + (existente != null ? existente.Cantidad : 0);
 
+            if (EsVenta && cantTotal > int.Parse(txtStock.Text))
+            {
+                lblMensaje.Text = "Stock insuficiente. Disponible: " + txtStock.Text;
+                return;
+            }
+
+            if (existente != null)
+            {
+                existente.Cantidad = cantTotal;
+                existente.PrecioUnitario = precio;
+                existente.Subtotal = cantTotal * precio;
+            }
+            else
+            {
+                DetalleOperacion det = new DetalleOperacion();
+                det.Producto = new Producto();
+                det.Producto.Id = idProd;
+                det.Producto.Nombre = ddlProducto.SelectedItem.Text;
+                if (!EsVenta)
+                {
+                    det.Proveedor = new Proveedor();
+                    det.Proveedor.Id = long.Parse(ddlProveedor.SelectedValue);
+                    det.Proveedor.Nombre = ddlProveedor.SelectedItem.Text;
+                }
+                det.Cantidad = cantidad;
+                det.PrecioUnitario = precio;
+                det.Subtotal = cantidad * precio;
+                carrito.Add(det);
+            }
+
+            Session["carritoOperacion"] = carrito;
             txtCantidad.Text = "";
             refrescarCarrito();
         }
 
         private void refrescarCarrito()
         {
-            List<DetalleOperacion> carrito = (List<DetalleOperacion>)Session["carritoCompra"];
+            List<DetalleOperacion> carrito = (List<DetalleOperacion>)Session["carritoOperacion"];
             dgvDetalle.DataSource = carrito;
             dgvDetalle.DataBind();
             lblTotal.Text = carrito.Sum(x => x.Subtotal).ToString("C");
@@ -150,28 +219,40 @@ namespace UnPocoDeHelado
         {
             try
             {
-                List<DetalleOperacion> carrito = (List<DetalleOperacion>)Session["carritoCompra"];
+                List<DetalleOperacion> carrito = (List<DetalleOperacion>)Session["carritoOperacion"];
                 if (carrito == null || carrito.Count == 0)
                 {
-                    Session.Add("error", "Agrega al menos un producto a la compra.");
-                    Response.Redirect("Error.aspx", false);
+                    lblMensaje.Text = "Agrega al menos un producto.";
                     return;
                 }
+                Session.Remove("carritoOperacion");
 
                 Usuario u = (Usuario)Session["usuario"];
-                Operacion compra = new Operacion();
-                compra.SeOpera = false;
-                compra.Fecha = DateTime.Now;
-                compra.IdSucursal = u.IdSucursal;
-                compra.Empleado = u;
-                compra.Estado = "Finalizado";
-                compra.Total = carrito.Sum(x => x.Subtotal);
-                compra.Detalles = carrito;
+                Operacion op = new Operacion();
+                op.Fecha = DateTime.Now;
+                op.IdSucursal = u.IdSucursal;
+                op.Empleado = u;
+                op.Total = carrito.Sum(x => x.Subtotal);
+                op.Detalles = carrito;
 
                 NegocioOperacion negocio = new NegocioOperacion();
-                negocio.registrarCompra(compra);
 
-                Session.Remove("carritoCompra");
+                if (EsVenta)
+                {
+                    op.SeOpera = true;
+                    op.Cliente = new Cliente();
+                    op.Cliente.Id = long.Parse(ddlCliente.SelectedValue);
+                    op.MedioPago = int.Parse(ddlMedioPago.SelectedValue);
+                    op.Estado = "Cobrada";
+                    negocio.registrarVenta(op);
+                }
+                else
+                {
+                    op.SeOpera = false;
+                    op.Estado = "Finalizado";
+                    negocio.registrarCompra(op);
+                }
+
                 Response.Redirect("Operaciones.aspx", false);
             }
             catch (Exception ex)
@@ -183,7 +264,7 @@ namespace UnPocoDeHelado
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-            Session.Remove("carritoCompra");
+            Session.Remove("carritoOperacion");
             Response.Redirect("Operaciones.aspx");
         }
     }
