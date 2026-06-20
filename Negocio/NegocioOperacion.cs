@@ -64,7 +64,7 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta("Select Id, SeOpera, NumeroFactura, Fecha, Total, Estado From Operacion Where Id = @id");
+                datos.setearConsulta("Select O.Id, O.SeOpera, O.NumeroFactura, O.Fecha, O.Total, O.Estado, O.IdCliente, C.Nombre + ' ' + C.Apellido as ClienteNombre From Operacion O Left Join Cliente C On O.IdCliente = C.Id Where O.Id = @id");
                 datos.setearParametro("@id", id);
                 datos.ejecutarLectura();
                 Operacion aux = new Operacion();
@@ -76,6 +76,12 @@ namespace Negocio
                     aux.Fecha = (DateTime)datos.Lector["Fecha"];
                     aux.Total = (decimal)datos.Lector["Total"];
                     aux.Estado = (string)datos.Lector["Estado"];
+                    if (!(datos.Lector["IdCliente"] is DBNull))
+                    {
+                        aux.Cliente = new Cliente();
+                        aux.Cliente.Id = (long)datos.Lector["IdCliente"];
+                        aux.Cliente.Nombre = (string)datos.Lector["ClienteNombre"];
+                    }
                 }
                 datos.cerrarConexion();
                 datos = new AccesoDatos();
@@ -201,7 +207,7 @@ namespace Negocio
             }
         }
 
-        public void registrarVenta(Operacion venta)
+        public long registrarVenta(Operacion venta)
         {
             foreach (DetalleOperacion det in venta.Detalles)
             {
@@ -209,12 +215,15 @@ namespace Negocio
                     throw new Exception("Stock insuficiente para el producto: " + det.Producto.Nombre);
             }
 
+            string numeroFactura = generarNumeroFactura(venta.IdSucursal);
+
             AccesoDatos datos = new AccesoDatos();
             try
             {
                 datos.iniciarTransaccion();
 
-                datos.setearConsulta("Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdCliente, IdEmpleado, IdMedioPago, Estado, Total) OUTPUT INSERTED.Id Values (1, @fecha, @idSucursal, @idCliente, @idEmpleado, @idMedioPago, @estado, @total)");
+                datos.setearConsulta("Insert Into Operacion (SeOpera, NumeroFactura, Fecha, IdSucursal, IdCliente, IdEmpleado, IdMedioPago, Estado, Total) OUTPUT INSERTED.Id Values (1, @numFactura, @fecha, @idSucursal, @idCliente, @idEmpleado, @idMedioPago, @estado, @total)");
+                datos.setearParametro("@numFactura", numeroFactura);
                 datos.setearParametro("@fecha", venta.Fecha);
                 datos.setearParametro("@idSucursal", venta.IdSucursal > 0 ? (object)venta.IdSucursal : DBNull.Value);
                 datos.setearParametro("@idCliente", venta.Cliente != null && venta.Cliente.Id > 0 ? (object)venta.Cliente.Id : DBNull.Value);
@@ -237,10 +246,31 @@ namespace Negocio
                 }
 
                 datos.confirmarTransaccion();
+                return idOperacion;
             }
             catch (Exception ex)
             {
                 datos.revertirTransaccion();
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        private string generarNumeroFactura(int idSucursal)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("Select Count(*) From Operacion Where SeOpera = 1 And IdSucursal = @idSuc And NumeroFactura Is Not Null");
+                datos.setearParametro("@idSuc", idSucursal);
+                int correlativo = Convert.ToInt32(datos.ejecutarAccionScalar()) + 1;
+                return "B-" + idSucursal.ToString("0000") + "-" + correlativo.ToString("00000000");
+            }
+            catch (Exception ex)
+            {
                 throw ex;
             }
             finally

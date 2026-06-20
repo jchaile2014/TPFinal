@@ -165,8 +165,15 @@ namespace UnPocoDeHelado
                 return;
             }
 
+            decimal precio;
+            if (!decimal.TryParse(txtPrecioUnit.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out precio) || precio <= 0)
+            {
+                lblMensaje.Text = "Ingresa un precio valido.";
+                return;
+            }
+            precio = Math.Round(precio, 2);
+
             long idProd = long.Parse(ddlProducto.SelectedValue);
-            decimal precio = Math.Round(decimal.Parse(txtPrecioUnit.Text, CultureInfo.InvariantCulture), 2);
 
             List<DetalleOperacion> carrito = (List<DetalleOperacion>)Session["carritoOperacion"];
             DetalleOperacion existente = carrito.Find(x => x.Producto.Id == idProd);
@@ -225,6 +232,11 @@ namespace UnPocoDeHelado
                     lblMensaje.Text = "Agrega al menos un producto.";
                     return;
                 }
+                if (EsVenta && string.IsNullOrEmpty(ddlCliente.SelectedValue))
+                {
+                    lblMensaje.Text = "Selecciona un cliente.";
+                    return;
+                }
                 Session.Remove("carritoOperacion");
 
                 Usuario u = (Usuario)Session["usuario"];
@@ -244,15 +256,14 @@ namespace UnPocoDeHelado
                     op.Cliente.Id = long.Parse(ddlCliente.SelectedValue);
                     op.MedioPago = int.Parse(ddlMedioPago.SelectedValue);
                     op.Estado = "Cobrada";
-                    negocio.registrarVenta(op);
-                }
-                else
-                {
-                    op.SeOpera = false;
-                    op.Estado = "Finalizado";
-                    negocio.registrarCompra(op);
+                    long idVenta = negocio.registrarVenta(op);
+                    Response.Redirect("Factura.aspx?id=" + idVenta, false);
+                    return;
                 }
 
+                op.SeOpera = false;
+                op.Estado = "Finalizado";
+                negocio.registrarCompra(op);
                 Response.Redirect("Operaciones.aspx", false);
             }
             catch (Exception ex)

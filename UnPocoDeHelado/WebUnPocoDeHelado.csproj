@@ -74,6 +74,7 @@
     <Content Include="default.aspx" />
     <Content Include="EmpleadosABM.aspx" />
     <Content Include="Error.aspx" />
+    <Content Include="Factura.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Operaciones.aspx" />
     <Content Include="OperacionesABM.aspx" />
@@ -133,6 +134,13 @@
     </Compile>
     <Compile Include="Error.aspx.designer.cs">
       <DependentUpon>Error.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Factura.aspx.cs">
+      <DependentUpon>Factura.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Factura.aspx.designer.cs">
+      <DependentUpon>Factura.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
