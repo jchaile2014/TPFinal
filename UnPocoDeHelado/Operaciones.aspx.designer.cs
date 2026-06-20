@@ -33,7 +33,7 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.WebControls.Button btnNuevaCompra;
 
         /// <summary>
-        /// Control dgvOperaciones.
+        /// Control rptOperaciones.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
