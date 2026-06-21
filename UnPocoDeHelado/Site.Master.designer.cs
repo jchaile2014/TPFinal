@@ -72,6 +72,11 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl liEmpleados;
 
         /// <summary>
+        /// Control liBalances.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl liBalances;
+
+        /// <summary>
         /// Control liSalir.
         /// </summary>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl liSalir;

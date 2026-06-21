@@ -67,6 +67,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Balances.aspx" />
     <Content Include="Clasificaciones.aspx" />
     <Content Include="ClasificacionesABM.aspx" />
     <Content Include="Clientes.aspx" />
@@ -87,6 +88,13 @@
     <Content Include="OlvideClave.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Balances.aspx.cs">
+      <DependentUpon>Balances.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Balances.aspx.designer.cs">
+      <DependentUpon>Balances.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Clasificaciones.aspx.cs">
       <DependentUpon>Clasificaciones.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

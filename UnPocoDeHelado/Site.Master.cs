@@ -22,6 +22,7 @@ namespace UnPocoDeHelado
             liProductos.Visible = admin;
             liClasificacion.Visible = admin;
             liEmpleados.Visible = admin;
+            liBalances.Visible = admin;
             liSalir.Visible = logueado;
         }
 

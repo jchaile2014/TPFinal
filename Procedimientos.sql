@@ -4,8 +4,9 @@ Use UnPocoDeHelado;
 GO
 
 -- sp_registrarVenta
--- Lo invoca el VENDEDOR. Crea la cabecera de venta (SeOpera=1)
--- en estado 'Pendiente'. Devuelve el Id por OUTPUT.
+-- Crea la cabecera de venta (SeOpera=1) en estado 'Pendiente'.
+-- El Total arranca en 0; lo recalcula el trigger al agregar items.
+-- Devuelve el Id por OUTPUT.
 
 Create Procedure sp_registrarVenta
     @IdSucursal        Bigint,
@@ -26,7 +27,7 @@ Begin
     End Try
     Begin Catch
         If @@TRANCOUNT > 0 Rollback Transaction;
-        Print 'Error al registrar la venta: ' + ERROR_MESSAGE();
+        Throw;
     End Catch
 End;
 GO
@@ -50,12 +51,7 @@ Begin
         Select @StockDisp = Cantidad From Producto Where Id = @IdProducto;
 
         If ISNULL(@StockDisp, 0) < @Cantidad
-        Begin
-            Print 'Stock insuficiente. Disponible: '
-                  + Cast(ISNULL(@StockDisp,0) As Varchar)
-                  + ' / Solicitado: ' + Cast(@Cantidad As Varchar);
-            Rollback Transaction; Return;
-        End
+            Throw 50001, 'Stock insuficiente para el producto solicitado.', 1;
 
         Declare @PrecioUnitario Decimal(10,2);
         Set @PrecioUnitario = dbo.fn_precioVenta(@IdProducto);
@@ -69,15 +65,14 @@ Begin
     End Try
     Begin Catch
         If @@TRANCOUNT > 0 Rollback Transaction;
-        Print 'Error al agregar item: ' + ERROR_MESSAGE();
+        Throw;
     End Catch
 End;
 GO
 
 -- sp_cobrarVenta
--- Lo invoca el ADMINISTRADOR. Genera el numero de factura unico
--- B-AAAA-NNNNNNNN (AAAA = sucursal, NNNNNNNN = correlativo)
--- y pasa la venta a estado 'Cobrada'.
+-- Genera el numero de factura unico B-AAAA-NNNNNNNN
+-- (AAAA = sucursal, NNNNNNNN = correlativo) y pasa la venta a 'Cobrada'.
 
 Create Procedure sp_cobrarVenta
     @IdOperacion Bigint,
@@ -92,16 +87,10 @@ Begin
         From Operacion Where Id = @IdOperacion;
 
         If @SeOpera <> 1
-        Begin
-            Print 'La operacion no es una venta.';
-            Rollback Transaction; Return;
-        End
+            Throw 50002, 'La operacion no es una venta.', 1;
 
         If @Estado <> 'Pendiente'
-        Begin
-            Print 'La venta no esta en estado Pendiente.';
-            Rollback Transaction; Return;
-        End
+            Throw 50003, 'La venta no esta en estado Pendiente.', 1;
 
         Declare @Ultimo Int;
         Select @Ultimo = ISNULL(MAX(Cast(SUBSTRING(NumeroFactura, 8, 8) As Int)), 0)
@@ -123,20 +112,21 @@ Begin
         Where Id = @IdOperacion;
 
         Commit Transaction;
-        Print 'Venta cobrada. Factura: ' + @NumeroFactura;
     End Try
     Begin Catch
         If @@TRANCOUNT > 0 Rollback Transaction;
-        Print 'Error al cobrar la venta: ' + ERROR_MESSAGE();
+        Throw;
     End Catch
 End;
 GO
 
 -- sp_registrarCompra
--- Registra una compra (SeOpera = 0). El IdProveedor se guarda
--- en DetalleOperacion (permite varios proveedores por compra).
--- El trigger trg_aplicarStock suma el stock y actualiza el
--- PrecioCompraActual del producto.
+-- Registra una compra (SeOpera = 0). El IdProveedor se guarda en
+-- DetalleOperacion (permite varios proveedores por compra).
+-- Si @IdOperacion llega NULL crea la cabecera y la devuelve; si llega
+-- con valor agrega el renglon a esa compra existente (varios renglones).
+-- El Total lo recalcula el trigger; el trigger trg_aplicarStock suma el
+-- stock y actualiza el PrecioCompraActual del producto.
 
 Create Procedure sp_registrarCompra
     @IdProveedor     Bigint,
@@ -144,22 +134,24 @@ Create Procedure sp_registrarCompra
     @IdEmpleado      Bigint,
     @IdProducto      Bigint,
     @Cantidad        Int,
-    @PrecioUnitario  Decimal(10,2)
+    @PrecioUnitario  Decimal(10,2),
+    @IdOperacion     Bigint = NULL Output
 As
 Begin
     Begin Try
         Begin Transaction;
 
-        Declare @IdCompra Bigint;
         Declare @Subtotal Decimal(12,2) = @Cantidad * @PrecioUnitario;
 
-        Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdEmpleado, Estado, Total)
-        Values (0, GETDATE(), @IdSucursal, @IdEmpleado, 'Finalizado', @Subtotal);
-
-        Set @IdCompra = SCOPE_IDENTITY();
+        If @IdOperacion Is Null
+        Begin
+            Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdEmpleado, Estado, Total)
+            Values (0, GETDATE(), @IdSucursal, @IdEmpleado, 'Finalizado', 0);
+            Set @IdOperacion = SCOPE_IDENTITY();
+        End
 
         Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal)
-        Values (@IdCompra, 0, @IdProducto, @IdProveedor, @Cantidad, @PrecioUnitario, @Subtotal);
+        Values (@IdOperacion, 0, @IdProducto, @IdProveedor, @Cantidad, @PrecioUnitario, @Subtotal);
 
         If Not Exists (Select 1 From ProductoProveedor
                        Where IdProducto = @IdProducto And IdProveedor = @IdProveedor)
@@ -172,7 +164,7 @@ Begin
     End Try
     Begin Catch
         If @@TRANCOUNT > 0 Rollback Transaction;
-        Print 'Error al registrar la compra: ' + ERROR_MESSAGE();
+        Throw;
     End Catch
 End;
 GO

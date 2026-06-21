@@ -111,6 +111,9 @@
                         <li class="nav-item" runat="server" id="liEmpleados">
                             <a class="nav-link" href="Empleados.aspx"><i class="bi bi-person-badge"></i> Empleados</a>
                         </li>
+                        <li class="nav-item" runat="server" id="liBalances">
+                            <a class="nav-link" href="Balances.aspx"><i class="bi bi-graph-up-arrow"></i> Balances</a>
+                        </li>
                         <li class="nav-item" runat="server" id="liSalir">
                             <asp:LinkButton ID="btnSalir" runat="server" CssClass="nav-link" OnClick="btnSalir_Click"><i class="bi bi-box-arrow-right"></i> Salir</asp:LinkButton>
                         </li>

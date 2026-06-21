@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,14 +16,14 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta("Select Id, SeOpera, NumeroFactura, Fecha, IdSucursal, IdCliente, IdEmpleado, IdMedioPago, Estado, Total From Operacion Where SeOpera = @seOpera Order By Fecha Desc");
-                datos.setearParametro("@seOpera", esVenta);
+                datos.setearConsulta("Select IdOperacion, Tipo, NumeroFactura, Fecha, IdSucursal, Empleado, Cliente, Proveedores, MedioPago, Estado, Total From vista_operacionesDetalladas Where Tipo = @tipo Order By Fecha Desc");
+                datos.setearParametro("@tipo", esVenta ? "Venta" : "Compra");
                 datos.ejecutarLectura();
                 while (datos.Lector.Read())
                 {
                     Operacion aux = new Operacion();
-                    aux.Id = (long)datos.Lector["Id"];
-                    aux.SeOpera = (bool)datos.Lector["SeOpera"];
+                    aux.Id = (long)datos.Lector["IdOperacion"];
+                    aux.SeOpera = esVenta;
 
                     if (!(datos.Lector["NumeroFactura"] is DBNull))
                         aux.NumeroFactura = (string)datos.Lector["NumeroFactura"];
@@ -32,17 +33,11 @@ namespace Negocio
                     if (!(datos.Lector["IdSucursal"] is DBNull))
                         aux.IdSucursal = Convert.ToInt32(datos.Lector["IdSucursal"]);
 
-                    if (!(datos.Lector["IdCliente"] is DBNull))
-                    {
-                        aux.Cliente = new Cliente();
-                        aux.Cliente.Id = (long)datos.Lector["IdCliente"];
-                    }
+                    aux.Cliente = new Cliente();
+                    aux.Cliente.Nombre = (string)datos.Lector["Cliente"];
 
                     aux.Empleado = new Empleado();
-                    aux.Empleado.Id = (long)datos.Lector["IdEmpleado"];
-
-                    if (!(datos.Lector["IdMedioPago"] is DBNull))
-                        aux.MedioPago = Convert.ToInt32(datos.Lector["IdMedioPago"]);
+                    aux.Empleado.Nombre = (string)datos.Lector["Empleado"];
 
                     aux.Estado = (string)datos.Lector["Estado"];
                     aux.Total = (decimal)datos.Lector["Total"];
@@ -167,43 +162,39 @@ namespace Negocio
 
         public void registrarCompra(Operacion compra)
         {
-            AccesoDatos datos = new AccesoDatos();
-            try
+            long? idOperacion = null;
+            foreach (DetalleOperacion det in compra.Detalles)
             {
-                datos.iniciarTransaccion();
-
-                datos.setearConsulta("Insert Into Operacion (SeOpera, Fecha, IdSucursal, IdEmpleado, IdMedioPago, Estado, Total) OUTPUT INSERTED.Id Values (0, @fecha, @idSucursal, @idEmpleado, @idMedioPago, @estado, @total)");
-                datos.setearParametro("@fecha", compra.Fecha);
-                datos.setearParametro("@idSucursal", compra.IdSucursal > 0 ? (object)compra.IdSucursal : DBNull.Value);
-                datos.setearParametro("@idEmpleado", compra.Empleado.Id);
-                datos.setearParametro("@idMedioPago", compra.MedioPago > 0 ? (object)compra.MedioPago : DBNull.Value);
-                datos.setearParametro("@estado", compra.Estado ?? "Finalizado");
-                datos.setearParametro("@total", compra.Total);
-                long idOperacion = (long)datos.ejecutarAccionScalarTransaccion();
-
-                foreach (DetalleOperacion det in compra.Detalles)
+                AccesoDatos datos = new AccesoDatos();
+                try
                 {
-                    datos.limpiarParametros();
-                    datos.setearConsulta("Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal) Values (@idOp, 0, @idProd, @idProv, @cant, @precio, @subtotal)");
-                    datos.setearParametro("@idOp", idOperacion);
-                    datos.setearParametro("@idProd", det.Producto.Id);
-                    datos.setearParametro("@idProv", det.Proveedor != null && det.Proveedor.Id > 0 ? (object)det.Proveedor.Id : DBNull.Value);
-                    datos.setearParametro("@cant", det.Cantidad);
-                    datos.setearParametro("@precio", det.PrecioUnitario);
-                    datos.setearParametro("@subtotal", det.Subtotal);
-                    datos.ejecutarAccionTransaccion();
+                    datos.setearProcedimiento("sp_registrarCompra");
+                    datos.setearParametro("@IdProveedor", det.Proveedor.Id);
+                    datos.setearParametro("@IdSucursal", compra.IdSucursal);
+                    datos.setearParametro("@IdEmpleado", compra.Empleado.Id);
+                    datos.setearParametro("@IdProducto", det.Producto.Id);
+                    datos.setearParametro("@Cantidad", det.Cantidad);
+                    datos.setearParametro("@PrecioUnitario", det.PrecioUnitario);
+                    if (idOperacion == null)
+                    {
+                        datos.setearParametroSalida("@IdOperacion", SqlDbType.BigInt);
+                        datos.ejecutarAccion();
+                        idOperacion = Convert.ToInt64(datos.obtenerValorSalida("@IdOperacion"));
+                    }
+                    else
+                    {
+                        datos.setearParametro("@IdOperacion", idOperacion.Value);
+                        datos.ejecutarAccion();
+                    }
                 }
-
-                datos.confirmarTransaccion();
-            }
-            catch (Exception ex)
-            {
-                datos.revertirTransaccion();
-                throw ex;
-            }
-            finally
-            {
-                datos.cerrarConexion();
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    datos.cerrarConexion();
+                }
             }
         }
 
@@ -215,59 +206,55 @@ namespace Negocio
                     throw new Exception("Stock insuficiente para el producto: " + det.Producto.Nombre);
             }
 
-            string numeroFactura = generarNumeroFactura(venta.IdSucursal);
-
+            long idOperacion;
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.iniciarTransaccion();
+                datos.setearProcedimiento("sp_registrarVenta");
+                datos.setearParametro("@IdSucursal", venta.IdSucursal);
+                datos.setearParametro("@IdEmpleado", venta.Empleado.Id);
+                datos.setearParametro("@IdCliente", venta.Cliente != null && venta.Cliente.Id > 0 ? (object)venta.Cliente.Id : 1);
+                datos.setearParametroSalida("@IdOperacionSalida", SqlDbType.BigInt);
+                datos.ejecutarAccion();
+                idOperacion = Convert.ToInt64(datos.obtenerValorSalida("@IdOperacionSalida"));
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
 
-                datos.setearConsulta("Insert Into Operacion (SeOpera, NumeroFactura, Fecha, IdSucursal, IdCliente, IdEmpleado, IdMedioPago, Estado, Total) OUTPUT INSERTED.Id Values (1, @numFactura, @fecha, @idSucursal, @idCliente, @idEmpleado, @idMedioPago, @estado, @total)");
-                datos.setearParametro("@numFactura", numeroFactura);
-                datos.setearParametro("@fecha", venta.Fecha);
-                datos.setearParametro("@idSucursal", venta.IdSucursal > 0 ? (object)venta.IdSucursal : DBNull.Value);
-                datos.setearParametro("@idCliente", venta.Cliente != null && venta.Cliente.Id > 0 ? (object)venta.Cliente.Id : DBNull.Value);
-                datos.setearParametro("@idEmpleado", venta.Empleado.Id);
-                datos.setearParametro("@idMedioPago", venta.MedioPago > 0 ? (object)venta.MedioPago : DBNull.Value);
-                datos.setearParametro("@estado", venta.Estado ?? "Cobrada");
-                datos.setearParametro("@total", venta.Total);
-                long idOperacion = (long)datos.ejecutarAccionScalarTransaccion();
-
-                foreach (DetalleOperacion det in venta.Detalles)
+            foreach (DetalleOperacion det in venta.Detalles)
+            {
+                AccesoDatos datosItem = new AccesoDatos();
+                try
                 {
-                    datos.limpiarParametros();
-                    datos.setearConsulta("Insert Into DetalleOperacion (IdOperacion, SeOpera, IdProducto, IdProveedor, Cantidad, PrecioUnitario, Subtotal) Values (@idOp, 1, @idProd, NULL, @cant, @precio, @subtotal)");
-                    datos.setearParametro("@idOp", idOperacion);
-                    datos.setearParametro("@idProd", det.Producto.Id);
-                    datos.setearParametro("@cant", det.Cantidad);
-                    datos.setearParametro("@precio", det.PrecioUnitario);
-                    datos.setearParametro("@subtotal", det.Subtotal);
-                    datos.ejecutarAccionTransaccion();
+                    datosItem.setearProcedimiento("sp_agregarItemVenta");
+                    datosItem.setearParametro("@IdOperacion", idOperacion);
+                    datosItem.setearParametro("@IdProducto", det.Producto.Id);
+                    datosItem.setearParametro("@Cantidad", det.Cantidad);
+                    datosItem.ejecutarAccion();
                 }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    datosItem.cerrarConexion();
+                }
+            }
 
-                datos.confirmarTransaccion();
-                return idOperacion;
-            }
-            catch (Exception ex)
-            {
-                datos.revertirTransaccion();
-                throw ex;
-            }
-            finally
-            {
-                datos.cerrarConexion();
-            }
-        }
-
-        private string generarNumeroFactura(int idSucursal)
-        {
-            AccesoDatos datos = new AccesoDatos();
+            AccesoDatos datosCobro = new AccesoDatos();
             try
             {
-                datos.setearConsulta("Select Count(*) From Operacion Where SeOpera = 1 And IdSucursal = @idSuc And NumeroFactura Is Not Null");
-                datos.setearParametro("@idSuc", idSucursal);
-                int correlativo = Convert.ToInt32(datos.ejecutarAccionScalar()) + 1;
-                return "B-" + idSucursal.ToString("0000") + "-" + correlativo.ToString("00000000");
+                datosCobro.setearProcedimiento("sp_cobrarVenta");
+                datosCobro.setearParametro("@IdOperacion", idOperacion);
+                datosCobro.setearParametro("@IdMedioPago", venta.MedioPago > 0 ? (object)venta.MedioPago : 1);
+                datosCobro.ejecutarAccion();
             }
             catch (Exception ex)
             {
@@ -275,8 +262,10 @@ namespace Negocio
             }
             finally
             {
-                datos.cerrarConexion();
+                datosCobro.cerrarConexion();
             }
+
+            return idOperacion;
         }
 
         private int obtenerStock(long idProducto)

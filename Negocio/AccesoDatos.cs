@@ -39,6 +39,18 @@ namespace Negocio
             comando.Parameters.AddWithValue(nombre, valor);
         }
 
+        public void setearParametroSalida(string nombre, SqlDbType tipo)
+        {
+            SqlParameter parametro = new SqlParameter(nombre, tipo);
+            parametro.Direction = ParameterDirection.Output;
+            comando.Parameters.Add(parametro);
+        }
+
+        public object obtenerValorSalida(string nombre)
+        {
+            return comando.Parameters[nombre].Value;
+        }
+
         public void ejecutarLectura()
         {
             conexion.Open();

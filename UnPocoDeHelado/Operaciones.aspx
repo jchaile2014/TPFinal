@@ -61,7 +61,7 @@
             </button>
         </div>
         <div class="row g-2">
-            <div class="col-md-7">
+            <div class="col-md-5">
                 <div class="search-wrapper">
                     <i class="bi bi-search search-icon"></i>
                     <input type="text" id="txtBuscar" class="search-input" placeholder="Buscar por numero de factura..." oninput="aplicarFiltros()" />
@@ -70,7 +70,7 @@
                     </button>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
                 <div class="estado-filter-wrapper">
                     <i class="bi bi-funnel estado-filter-icon"></i>
                     <select id="ddlEstado" class="estado-filter" onchange="aplicarFiltros()">
@@ -79,6 +79,29 @@
                         <option value="pendiente">Pendiente</option>
                         <option value="finalizado">Finalizado</option>
                     </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="estado-filter-wrapper">
+                    <i class="bi bi-calendar3 estado-filter-icon"></i>
+                    <select id="ddlFecha" class="estado-filter" onchange="cambiarModoFecha()">
+                        <option value="hoy">Hoy</option>
+                        <option value="semana">Semana pasada</option>
+                        <option value="mes">Ultimo mes</option>
+                        <option value="personalizar">Personalizar</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row g-2 mt-1" id="rowPersonalizar" style="display:none;">
+            <div class="col-md-3 offset-md-9">
+                <div class="row g-2">
+                    <div class="col-6">
+                        <input type="date" id="txtFechaDesde" class="search-input" style="padding: 0.65rem 0.8rem;" onchange="aplicarFiltros()" />
+                    </div>
+                    <div class="col-6">
+                        <input type="date" id="txtFechaHasta" class="search-input" style="padding: 0.65rem 0.8rem;" onchange="aplicarFiltros()" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -98,7 +121,8 @@
                 <div class="col-md-4 col-sm-6 mb-4 op-card-wrapper"
                      data-tipo='<%# Convert.ToBoolean(Eval("SeOpera")) ? "venta" : "compra" %>'
                      data-factura='<%# (Eval("NumeroFactura") ?? "").ToString().ToLower() %>'
-                     data-estado='<%# (Eval("Estado") ?? "").ToString().ToLower() %>'>
+                     data-estado='<%# (Eval("Estado") ?? "").ToString().ToLower() %>'
+                     data-fecha='<%# Eval("Fecha", "{0:yyyy-MM-dd}") %>'>
                     <div class='<%# "op-card op-card-" + (Convert.ToBoolean(Eval("SeOpera")) ? "venta" : "compra") %>'>
                         <div class="op-card-glow"></div>
                         <div class="op-card-inner">
@@ -277,7 +301,43 @@
 <script type="text/javascript">
     window.addEventListener('DOMContentLoaded', function () {
         actualizarContadores();
+        aplicarFiltros();
     });
+
+    function toYMD(d) {
+        var mes = ('0' + (d.getMonth() + 1)).slice(-2);
+        var dia = ('0' + d.getDate()).slice(-2);
+        return d.getFullYear() + '-' + mes + '-' + dia;
+    }
+
+    function obtenerRangoFecha() {
+        var modo = document.getElementById('ddlFecha').value;
+        var hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+        if (modo === 'hoy') {
+            return { desde: toYMD(hoy), hasta: toYMD(hoy) };
+        }
+        if (modo === 'semana') {
+            var d = new Date(hoy); d.setDate(hoy.getDate() - 6);
+            return { desde: toYMD(d), hasta: toYMD(hoy) };
+        }
+        if (modo === 'mes') {
+            var m = new Date(hoy); m.setDate(hoy.getDate() - 29);
+            return { desde: toYMD(m), hasta: toYMD(hoy) };
+        }
+        if (modo === 'personalizar') {
+            return {
+                desde: document.getElementById('txtFechaDesde').value || null,
+                hasta: document.getElementById('txtFechaHasta').value || null
+            };
+        }
+        return { desde: null, hasta: null };
+    }
+
+    function cambiarModoFecha() {
+        var esPersonalizar = document.getElementById('ddlFecha').value === 'personalizar';
+        document.getElementById('rowPersonalizar').style.display = esPersonalizar ? 'flex' : 'none';
+        aplicarFiltros();
+    }
 
     document.addEventListener('click', function (e) {
         var pill = e.target.closest('.tab-pill');
@@ -291,6 +351,7 @@
         var tipoActivo   = document.querySelector('.tab-pill.active')?.dataset.tipo || 'todas';
         var textoBuscar  = (document.getElementById('txtBuscar').value || '').trim().toLowerCase();
         var estadoFiltro = (document.getElementById('ddlEstado').value || '').toLowerCase();
+        var rangoFecha   = obtenerRangoFecha();
 
         document.getElementById('btnLimpiarBuscar').style.display = textoBuscar ? 'block' : 'none';
 
@@ -300,9 +361,13 @@
             var tipo    = card.dataset.tipo    || '';
             var factura = card.dataset.factura || '';
             var estado  = card.dataset.estado  || '';
+            var fecha   = card.dataset.fecha   || '';
+            var okFecha = (!rangoFecha.desde || fecha >= rangoFecha.desde)
+                       && (!rangoFecha.hasta || fecha <= rangoFecha.hasta);
             var ok = (tipoActivo === 'todas' || tipo === tipoActivo)
                   && (!textoBuscar  || factura.includes(textoBuscar))
-                  && (!estadoFiltro || estado.includes(estadoFiltro));
+                  && (!estadoFiltro || estado.includes(estadoFiltro))
+                  && okFecha;
             if (ok) { card.classList.remove('hidden'); visibles++; }
             else      card.classList.add('hidden');
         });
@@ -333,6 +398,8 @@
     function resetearFiltros() {
         document.getElementById('txtBuscar').value = '';
         document.getElementById('ddlEstado').value = '';
+        document.getElementById('ddlFecha').value = 'hoy';
+        document.getElementById('rowPersonalizar').style.display = 'none';
         document.querySelectorAll('.tab-pill').forEach(function (p) { p.classList.remove('active'); });
         document.querySelector('.tab-pill[data-tipo="todas"]').classList.add('active');
         aplicarFiltros();
