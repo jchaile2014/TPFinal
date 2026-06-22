@@ -22,6 +22,7 @@
                 <div class="mb-3 form-check">
                     <asp:CheckBox ID="chkActivo" CssClass="form-check-input" Text="Activo" runat="server" Checked="true" />
                 </div>
+                <hr class="my-4" style="border-color: #fecfef;" />
                 <div class="mb-3">
                     <asp:Button ID="btnGuardar" CssClass="btn px-4 py-2 text-white fw-bold shadow-sm" style="background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%); border: none; border-radius: 12px;" Text="Guardar" runat="server" OnClick="btnGuardar_Click" />
                     <asp:Button ID="btnEliminar" CssClass="btn btn-danger fw-bold" style="border-radius: 12px;" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" CausesValidation="false" />

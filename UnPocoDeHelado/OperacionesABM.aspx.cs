@@ -152,6 +152,22 @@ namespace UnPocoDeHelado
             mostrarDatosProducto();
         }
 
+        protected void dgvDetalle_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName != "EliminarItem")
+                return;
+
+            int indice = int.Parse(e.CommandArgument.ToString());
+            List<DetalleOperacion> carrito = (List<DetalleOperacion>)Session["carritoOperacion"];
+            if (carrito != null && indice >= 0 && indice < carrito.Count)
+            {
+                carrito.RemoveAt(indice);
+                Session["carritoOperacion"] = carrito;
+                refrescarCarrito();
+            }
+            lblMensaje.Text = "";
+        }
+
         protected void btnAgregarDetalle_Click(object sender, EventArgs e)
         {
             lblMensaje.Text = "";

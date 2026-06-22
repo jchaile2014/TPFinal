@@ -83,7 +83,7 @@
         </div>
         <div class="table-responsive">
             <asp:GridView ID="dgvDetalle" CssClass="op-table" runat="server" AutoGenerateColumns="false"
-                GridLines="None">
+                GridLines="None" OnRowCommand="dgvDetalle_RowCommand">
                 <EmptyDataTemplate>
                     <div class="empty-table-msg">
                         <i class="bi bi-inbox" style="font-size:2.5rem; color:#fecfef;"></i>
@@ -102,6 +102,15 @@
                     <asp:BoundField DataField="Cantidad" HeaderText="Cantidad" />
                     <asp:BoundField DataField="PrecioUnitario" HeaderText="P. Unit." DataFormatString="{0:C}" />
                     <asp:BoundField DataField="Subtotal" HeaderText="Subtotal" DataFormatString="{0:C}" />
+                    <asp:TemplateField HeaderText="">
+                        <ItemStyle Width="56px" HorizontalAlign="Center" />
+                        <ItemTemplate>
+                            <asp:LinkButton runat="server" CommandName="EliminarItem" CommandArgument='<%# Container.DataItemIndex %>'
+                                CssClass="btn-quitar-item" CausesValidation="false" ToolTip="Quitar producto">
+                                <i class="bi bi-trash"></i>
+                            </asp:LinkButton>
+                        </ItemTemplate>
+                    </asp:TemplateField>
                 </Columns>
             </asp:GridView>
         </div>
@@ -221,6 +230,14 @@
     .empty-table-msg {
         text-align: center; padding: 2.5rem 1rem;
     }
+    .btn-quitar-item {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 34px; height: 34px; border-radius: 9px;
+        background: #fff0f3; color: #e53e3e;
+        border: 1.5px solid #ffd9e0; text-decoration: none;
+        transition: all 0.2s; font-size: 0.95rem;
+    }
+    .btn-quitar-item:hover { background: #e53e3e; color: white; border-color: #e53e3e; }
     .op-total-row {
         display: flex; justify-content: flex-end; align-items: center;
         gap: 1rem; padding: 1rem 1.5rem;
