@@ -6,7 +6,7 @@
         <div class="row mb-4 align-items-center">
             <div class="col-md-8">
                 <h2 class="fw-bold" style="background: linear-gradient(45deg, #ff9a9e 0%, #ff7eb3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                    <i class="bi bi-people-fill me-2" style="color: #ff7eb3;"></i>Gestion de Empleados
+                    <i class="bi bi-people-fill me-2" style="color: #ff7eb3;"></i>Gestión de Empleados
                 </h2>
                 <p class="text-muted mb-0">Administra el personal</p>
             </div>
@@ -31,7 +31,7 @@
                                 <span class="badge rounded-pill mt-2 mb-3" style="background-color: #fecfef; color: #ff758c;">Sucursal</span>
                                 
                                 <p class="text-muted small mb-1"><i class="bi bi-envelope-fill me-1" style="color: #ff7eb3;"></i> <%# string.IsNullOrEmpty(Eval("Email")?.ToString()) ? "Sin email" : Eval("Email") %></p>
-                                <p class="text-muted small mb-3"><i class="bi bi-telephone-fill me-1" style="color: #ff7eb3;"></i> <%# string.IsNullOrEmpty(Eval("Telefono")?.ToString()) ? "Sin telefono" : Eval("Telefono") %></p>
+                                <p class="text-muted small mb-3"><i class="bi bi-telephone-fill me-1" style="color: #ff7eb3;"></i> <%# string.IsNullOrEmpty(Eval("Telefono")?.ToString()) ? "Sin teléfono" : Eval("Telefono") %></p>
                                 
                                 <div class="d-flex justify-content-between small px-2 py-2" style="background-color: #fdfbfb; border-radius: 10px;">
                                     <div class="text-center">

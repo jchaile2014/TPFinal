@@ -64,7 +64,7 @@
             <div class="col-md-5">
                 <div class="search-wrapper">
                     <i class="bi bi-search search-icon"></i>
-                    <input type="text" id="txtBuscar" class="search-input" placeholder="Buscar por numero de factura..." oninput="aplicarFiltros()" />
+                    <input type="text" id="txtBuscar" class="search-input" placeholder="Buscar por número de factura..." oninput="aplicarFiltros()" />
                     <button type="button" class="search-clear" id="btnLimpiarBuscar" onclick="limpiarBuscar()" style="display:none;">
                         <i class="bi bi-x"></i>
                     </button>
@@ -87,7 +87,7 @@
                     <select id="ddlFecha" class="estado-filter" onchange="cambiarModoFecha()">
                         <option value="hoy">Hoy</option>
                         <option value="semana">Semana pasada</option>
-                        <option value="mes">Ultimo mes</option>
+                        <option value="mes">Último mes</option>
                         <option value="personalizar">Personalizar</option>
                     </select>
                 </div>

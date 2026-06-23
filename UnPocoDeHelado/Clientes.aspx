@@ -6,7 +6,7 @@
         <div class="row mb-4 align-items-center">
             <div class="col-md-8">
                 <h2 class="fw-bold" style="background: linear-gradient(45deg, #ff9a9e 0%, #ff7eb3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                    <i class="bi bi-person-vcard me-2" style="color: #ff7eb3;"></i>Gestion de Clientes
+                    <i class="bi bi-person-vcard me-2" style="color: #ff7eb3;"></i>Gestión de Clientes
                 </h2>
                 <p class="text-muted mb-0">Administra los clientes</p>
             </div>
@@ -29,7 +29,7 @@
                                 <span class="badge rounded-pill mt-2 mb-3" style="background-color: #fecfef; color: #ff758c;">Cliente</span>
                                 <p class="text-muted small mb-1"><i class="bi bi-card-text me-1" style="color: #ff7eb3;"></i> DNI: <%# string.IsNullOrEmpty(Eval("DNI")?.ToString()) ? "—" : Eval("DNI") %></p>
                                 <p class="text-muted small mb-1"><i class="bi bi-envelope-fill me-1" style="color: #ff7eb3;"></i> <%# string.IsNullOrEmpty(Eval("Email")?.ToString()) ? "Sin email" : Eval("Email") %></p>
-                                <p class="text-muted small mb-3"><i class="bi bi-telephone-fill me-1" style="color: #ff7eb3;"></i> <%# string.IsNullOrEmpty(Eval("Telefono")?.ToString()) ? "Sin telefono" : Eval("Telefono") %></p>
+                                <p class="text-muted small mb-3"><i class="bi bi-telephone-fill me-1" style="color: #ff7eb3;"></i> <%# string.IsNullOrEmpty(Eval("Telefono")?.ToString()) ? "Sin teléfono" : Eval("Telefono") %></p>
                             </div>
                             <div class="card-footer bg-transparent border-0 text-center pb-4 mt-auto">
                                 <a href='<%# "ClientesABM.aspx?id=" + Eval("Id") %>' class="btn btn-sm px-4 fw-bold" style="background-color: white; border: 2px solid #ff7eb3; color: #ff7eb3; border-radius: 20px; transition: all 0.3s;">

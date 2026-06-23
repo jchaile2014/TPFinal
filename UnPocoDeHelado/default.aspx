@@ -67,11 +67,11 @@
     <div class="container">
         <div class="hero-section row m-0">
             <div class="col-lg-7 hero-text">
-                <span class="badge bg-danger rounded-pill mb-3 px-3 py-2" style="background-color: #ff758c !important;">Sistema de Gestion</span>
+                <span class="badge bg-danger rounded-pill mb-3 px-3 py-2" style="background-color: #ff758c !important;">Sistema de Gestión</span>
                 <h1 class="icecream-title">Un Poco De Helado</h1>
                 <p class="icecream-subtitle">
-                    Bienvenido al sistema administrativo. Vas a poder gestionar tus ventas, compras, productos, empleados y mucho mas. 
-                    Por favor, inicia sesion para acceder a las funcionalidades del sistema.
+                    Bienvenido al sistema administrativo. Vas a poder gestionar tus ventas, compras, productos, empleados y mucho más. 
+                    Por favor, iniciá sesión para acceder a las funcionalidades del sistema.
                 </p>
                 <div class="d-flex gap-3 mt-4">
                     <div class="d-flex align-items-center gap-2 text-muted">
@@ -88,8 +88,8 @@
             <div class="col-lg-5 p-4 p-lg-5 d-flex justify-content-center">
                 <asp:Panel ID="pnlLogin" runat="server" CssClass="login-card w-100">
                     <div class="text-center mb-4">
-                        <h3 class="fw-bold" style="color: #4a4a4a;">Iniciar Sesion</h3>
-                        <p class="text-muted small">Ingresa tus credenciales para continuar</p>
+                        <h3 class="fw-bold" style="color: #4a4a4a;">Iniciar Sesión</h3>
+                        <p class="text-muted small">Ingresá tus credenciales para continuar</p>
                     </div>
 
                     <div class="mb-3">
@@ -107,7 +107,7 @@
                             <input class="form-check-input" type="checkbox" id="chkRecordar">
                             <label class="form-check-label text-muted small" for="chkRecordar">Recordarme</label>
                         </div>
-                        <a href="OlvideClave.aspx" class="text-decoration-none small" style="color: #ff7eb3;"><i class="bi bi-key me-1"></i>Olvide mi clave</a>
+                        <a href="OlvideClave.aspx" class="text-decoration-none small" style="color: #ff7eb3;"><i class="bi bi-key me-1"></i>Olvidé mi clave</a>
                     </div>
 
                     <div class="d-grid gap-2">
@@ -117,7 +117,7 @@
 
                 <asp:Panel ID="pnlLogueado" runat="server" CssClass="login-card w-100 text-center" Visible="false">
                     <i class="bi bi-check-circle-fill" style="font-size: 3rem; color: #ff7eb3;"></i>
-                    <h3 class="fw-bold mt-3" style="color: #4a4a4a;">Ya iniciaste sesion</h3>
+                    <h3 class="fw-bold mt-3" style="color: #4a4a4a;">Ya iniciaste sesión</h3>
                     <p class="text-muted mb-1">Usuario: <strong><asp:Label ID="lblUsuario" runat="server"></asp:Label></strong></p>
                     <p class="text-muted mb-4">Rol: <strong><asp:Label ID="lblRol" runat="server"></asp:Label></strong></p>
                     <div class="d-grid gap-2">

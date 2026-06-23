@@ -6,9 +6,9 @@
         <div class="row mb-4 align-items-center">
             <div class="col-md-8">
                 <h2 class="fw-bold" style="background: linear-gradient(45deg, #ff9a9e 0%, #ff7eb3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                    <i class="bi bi-box-seam me-2" style="color: #ff7eb3;"></i>Gestion de Productos
+                    <i class="bi bi-box-seam me-2" style="color: #ff7eb3;"></i>Gestión de Productos
                 </h2>
-                <p class="text-muted mb-0">Administra el catalogo</p>
+                <p class="text-muted mb-0">Administra el catálogo</p>
             </div>
             <div class="col-md-4 text-md-end mt-3 mt-md-0">
                 <asp:Button ID="btnAgregar" runat="server" OnClick="btnAgregar_Click" Text="Nuevo Producto" CssClass="btn px-4 py-2 text-white fw-bold shadow-sm" style="background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%); border: none; border-radius: 12px;" />

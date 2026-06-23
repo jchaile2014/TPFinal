@@ -1,75 +1,5 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="EmpleadosABM.aspx.cs" Inherits="UnPocoDeHelado.EmpleadosABM" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <style>
-        .form-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 3rem;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-            border: 1px solid rgba(255,255,255,0.8);
-            margin-bottom: 3rem;
-        }
-        .form-title {
-            background: linear-gradient(45deg, #ff9a9e 0%, #ff7eb3 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-        .form-control-custom, .form-select-custom {
-            border-radius: 10px;
-            padding: 0.75rem 1rem;
-            border: 1px solid #e0e0e0;
-            background-color: #fdfbfb;
-            transition: all 0.3s ease;
-        }
-        .form-control-custom:focus, .form-select-custom:focus {
-            border-color: #ff7eb3;
-            box-shadow: 0 0 0 0.25rem rgba(255, 126, 179, 0.25);
-            background-color: #fff;
-        }
-        .btn-gradient {
-            background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%);
-            border: none;
-            color: white;
-            font-weight: 600;
-            padding: 0.75rem 2rem;
-            border-radius: 12px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-gradient:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(255, 117, 140, 0.4);
-            color: white;
-        }
-        .btn-outline-custom {
-            border: 2px solid #6c757d;
-            color: #6c757d;
-            font-weight: 600;
-            padding: 0.75rem 2rem;
-            border-radius: 12px;
-            background: transparent;
-            transition: all 0.3s;
-        }
-        .btn-outline-custom:hover {
-            background: #6c757d;
-            color: white;
-        }
-        .btn-danger-custom {
-            background: linear-gradient(to right, #ff416c 0%, #ff4b2b 100%);
-            border: none;
-            color: white;
-            font-weight: 600;
-            padding: 0.75rem 2rem;
-            border-radius: 12px;
-        }
-        .form-label {
-            font-weight: 600;
-            color: #6c757d;
-            margin-bottom: 0.3rem;
-            font-size: 0.9rem;
-        }
-    </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -101,16 +31,16 @@
                             <label class="form-label">DNI</label>
                             <asp:TextBox ID="txtDNI" CssClass="form-control form-control-custom" placeholder="Sin puntos ni espacios" runat="server"></asp:TextBox>
                             <asp:RequiredFieldValidator runat="server" ControlToValidate="txtDNI" CssClass="text-danger" Display="Dynamic" ErrorMessage="El DNI es obligatorio." />
-                            <asp:RegularExpressionValidator runat="server" ControlToValidate="txtDNI" ValidationExpression="\d{7,8}" CssClass="text-danger" Display="Dynamic" ErrorMessage="El DNI debe tener 7 u 8 digitos." />
+                            <asp:RegularExpressionValidator runat="server" ControlToValidate="txtDNI" ValidationExpression="\d{7,8}" CssClass="text-danger" Display="Dynamic" ErrorMessage="El DNI debe tener 7 u 8 dígitos." />
                         </div>
 
                         <div class="col-md-6">
-                            <label class="form-label">Telefono</label>
+                            <label class="form-label">Teléfono</label>
                             <asp:TextBox ID="txtTelefono" CssClass="form-control form-control-custom" placeholder="Ej. 11 12345678" runat="server"></asp:TextBox>
                         </div>
 
                         <div class="col-12">
-                            <label class="form-label">Correo Electronico</label>
+                            <label class="form-label">Correo Electrónico</label>
                             <asp:TextBox ID="txtEmail" CssClass="form-control form-control-custom" TextMode="Email" placeholder="juan@ejemplo.com" runat="server"></asp:TextBox>
                         </div>
 
@@ -139,7 +69,7 @@
                                 <asp:CheckBox ID="chkActivo" CssClass="form-check-input" runat="server" Checked="true" />
                                 <label class="form-check-label fw-bold text-secondary" style="font-size: 1rem; cursor: pointer;">Empleado Activo</label>
                             </div>
-                            <small class="text-muted d-block">Si se desactiva, el empleado no podra ingresar al sistema ni figurara en listados operativos.</small>
+                            <small class="text-muted d-block">Si se desactiva, el empleado no podrá ingresar al sistema ni figurará en listados operativos.</small>
                         </div>
                     </div>
 
@@ -147,7 +77,7 @@
 
                     <div class="d-flex justify-content-between align-items-center">
                         <div>
-                            <asp:Button ID="btnEliminar" CssClass="btn btn-danger-custom shadow-sm" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" CausesValidation="false" OnClientClick="return confirm('Estas seguro de eliminar este empleado?');" />
+                            <asp:Button ID="btnEliminar" CssClass="btn btn-danger-custom shadow-sm" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" CausesValidation="false" OnClientClick="return confirm('¿Estás seguro de eliminar este empleado?');" />
                         </div>
                         <div class="d-flex gap-3">
                             <asp:Button ID="btnCancelar" CssClass="btn btn-outline-custom" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" CausesValidation="false" />

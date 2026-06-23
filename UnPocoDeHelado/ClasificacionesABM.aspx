@@ -1,33 +1,56 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ClasificacionesABM.aspx.cs" Inherits="UnPocoDeHelado.ClasificacionesABM" %>
+<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ClasificacionesABM.aspx.cs" Inherits="UnPocoDeHelado.ClasificacionesABM" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-6 offset-md-3">
-                <h2 id="titulo" runat="server" class="fw-bold" style="background: linear-gradient(45deg, #ff9a9e 0%, #ff7eb3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Nueva Clasificación</h2>
-                <hr style="border-color: #fecfef; border-width: 2px;" />
-                <div class="mb-3">
-                    <label class="form-label">Nombre</label>
-                    <asp:TextBox ID="txtNombre" CssClass="form-control" runat="server"></asp:TextBox>
-                    <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNombre" CssClass="text-danger" Display="Dynamic" ErrorMessage="El nombre es obligatorio." />
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+
+                <div class="form-card">
+                    <div class="text-center mb-5">
+                        <i class="bi bi-tags" style="font-size: 3rem; color: #ff7eb3;"></i>
+                        <h2 id="titulo" runat="server" class="form-title mt-2">Nueva Clasificación</h2>
+                        <p class="text-muted">Completa los datos de la clasificación para registrarla en el sistema</p>
+                    </div>
+
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Nombre</label>
+                            <asp:TextBox ID="txtNombre" CssClass="form-control form-control-custom" placeholder="Nombre de la clasificación" runat="server"></asp:TextBox>
+                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtNombre" CssClass="text-danger" Display="Dynamic" ErrorMessage="El nombre es obligatorio." />
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo</label>
+                            <asp:DropDownList ID="ddlTipo" CssClass="form-select form-select-custom" runat="server">
+                                <asp:ListItem Value="True">Marca</asp:ListItem>
+                                <asp:ListItem Value="False">Categoría</asp:ListItem>
+                            </asp:DropDownList>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <div class="form-check mb-1">
+                                <asp:CheckBox ID="chkActivo" CssClass="form-check-input" runat="server" Checked="true" />
+                                <label class="form-check-label fw-bold text-secondary" style="font-size: 1rem; cursor: pointer;">Clasificación Activa</label>
+                            </div>
+                            <small class="text-muted d-block">Si se desactiva, la clasificación no figurará en listados operativos.</small>
+                        </div>
+                    </div>
+
+                    <hr class="my-5" style="border-color: #fecfef;" />
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <asp:Button ID="btnEliminar" CssClass="btn btn-danger-custom shadow-sm" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" CausesValidation="false" OnClientClick="return confirm('¿Estás seguro de eliminar esta clasificación?');" />
+                        </div>
+                        <div class="d-flex gap-3">
+                            <asp:Button ID="btnCancelar" CssClass="btn btn-outline-custom" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" CausesValidation="false" />
+                            <asp:Button ID="btnGuardar" CssClass="btn btn-gradient shadow-sm" Text="Guardar Cambios" runat="server" OnClick="btnGuardar_Click" />
+                        </div>
+                    </div>
+
                 </div>
-                <div class="mb-3">
-                    <label class="form-label">Tipo</label>
-                    <asp:DropDownList ID="ddlTipo" CssClass="form-select" runat="server">
-                        <asp:ListItem Value="True">Marca</asp:ListItem>
-                        <asp:ListItem Value="False">Categoría</asp:ListItem>
-                    </asp:DropDownList>
-                </div>
-                <div class="mb-3 form-check">
-                    <asp:CheckBox ID="chkActivo" CssClass="form-check-input" Text="Activo" runat="server" Checked="true" />
-                </div>
-                <hr class="my-4" style="border-color: #fecfef;" />
-                <div class="mb-3">
-                    <asp:Button ID="btnGuardar" CssClass="btn px-4 py-2 text-white fw-bold shadow-sm" style="background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%); border: none; border-radius: 12px;" Text="Guardar" runat="server" OnClick="btnGuardar_Click" />
-                    <asp:Button ID="btnEliminar" CssClass="btn btn-danger fw-bold" style="border-radius: 12px;" Text="Eliminar" runat="server" OnClick="btnEliminar_Click" Visible="false" CausesValidation="false" />
-                    <asp:Button ID="btnCancelar" CssClass="btn btn-light fw-bold" style="border: 2px solid #ff7eb3; color: #ff7eb3; border-radius: 12px;" Text="Cancelar" runat="server" OnClick="btnCancelar_Click" CausesValidation="false" />
-                </div>
+
             </div>
         </div>
     </div>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -82,6 +82,11 @@ namespace UnPocoDeHelado
                 Session.Add("error", ex.ToString());
                 Response.Redirect("Error.aspx", false);
             }
+        }
+
+        protected void btnEliminar_Click(object sender, EventArgs e)
+        {
+            // Reservado para futura implementación de eliminación
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)

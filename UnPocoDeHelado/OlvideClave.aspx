@@ -200,7 +200,7 @@
             </asp:Panel>
 
             <asp:Panel ID="pnlPaso1" runat="server">
-                <p class="text-muted small mb-3"><i class="bi bi-info-circle me-1" style="color:#ff7eb3;"></i> Ingresa tu nombre de usuario y DNI para confirmar tu identidad.</p>
+                <p class="text-muted small mb-3"><i class="bi bi-info-circle me-1" style="color:#ff7eb3;"></i> Ingresá tu nombre de usuario y DNI para confirmar tu identidad.</p>
                 <div class="mb-3">
                     <label class="form-label-custom">Nombre de usuario</label>
                     <asp:TextBox ID="txtUsuarioPaso1" runat="server" CssClass="form-control form-control-custom" placeholder="Ej. jgarcia" />
@@ -229,11 +229,11 @@
             </asp:Panel>
 
             <asp:Panel ID="pnlPaso2" runat="server" Visible="false">
-                <p class="text-muted small mb-3"><i class="bi bi-check-circle me-1" style="color:#28a745;"></i> Identidad verificada. Ahora podes establecer tu nueva clave.</p>
+                <p class="text-muted small mb-3"><i class="bi bi-check-circle me-1" style="color:#28a745;"></i> Identidad verificada. Ahora podés establecer tu nueva clave.</p>
                 <div class="mb-3">
                     <label class="form-label-custom">Nueva clave</label>
                     <div class="password-wrapper">
-                        <asp:TextBox ID="txtNuevaPass" runat="server" CssClass="form-control form-control-custom" TextMode="Password" placeholder="Minimo 6 caracteres" style="padding-right: 2.5rem;" />
+                        <asp:TextBox ID="txtNuevaPass" runat="server" CssClass="form-control form-control-custom" TextMode="Password" placeholder="Mínimo 6 caracteres" style="padding-right: 2.5rem;" />
                         <button type="button" class="toggle-pass" onclick="togglePass('txtNuevaPass', this)">
                             <i class="bi bi-eye"></i>
                         </button>
@@ -255,7 +255,7 @@
                 <div class="mb-4">
                     <label class="form-label-custom">Confirmar clave</label>
                     <div class="password-wrapper">
-                        <asp:TextBox ID="txtConfirmarPass" runat="server" CssClass="form-control form-control-custom" TextMode="Password" placeholder="Repeti la clave" style="padding-right: 2.5rem;" />
+                        <asp:TextBox ID="txtConfirmarPass" runat="server" CssClass="form-control form-control-custom" TextMode="Password" placeholder="Repetí la clave" style="padding-right: 2.5rem;" />
                         <button type="button" class="toggle-pass" onclick="togglePass('txtConfirmarPass', this)">
                             <i class="bi bi-eye"></i>
                         </button>
@@ -288,9 +288,9 @@
                 <div class="text-center">
                     <i class="bi bi-check-circle-fill success-checkmark"></i>
                     <h4 class="fw-bold" style="color:#4a4a4a;">Clave actualizada</h4>
-                    <p class="text-muted mb-4">Tu clave fue cambiada exitosamente. Ya podes iniciar sesion con tu nueva clave.</p>
+                    <p class="text-muted mb-4">Tu clave fue cambiada exitosamente. Ya podés iniciar sesión con tu nueva clave.</p>
                     <a href="default.aspx" class="btn btn-recover text-decoration-none">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>Ir al inicio de sesion
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Ir al inicio de sesión
                     </a>
                 </div>
             </asp:Panel>
