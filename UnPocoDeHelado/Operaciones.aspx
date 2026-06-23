@@ -2,18 +2,22 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-<div class="container mt-5">
+<div class="container mt-4">
 
-    <div class="row mb-4 align-items-center">
-        <div class="col-md-7">
-            <h2 class="fw-bold" style="background: linear-gradient(45deg, #ff9a9e 0%, #ff7eb3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                <i class="bi bi-cart3 me-2" style="color: #ff7eb3;"></i>Operaciones
-            </h2>
-            <p class="text-muted mb-0">Ventas y compras</p>
+    <div class="page-hero d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+        <div class="d-flex align-items-center gap-3" style="z-index:1; position:relative;">
+            <i class="bi bi-cart3 page-hero-icon"></i>
+            <div>
+                <h2 class="page-hero-title">Operaciones</h2>
+                <p class="page-hero-sub">Registrá y consultá ventas y compras</p>
+            </div>
         </div>
-        <div class="col-md-5 text-md-end mt-3 mt-md-0">
-            <asp:Button ID="btnNuevaVenta" runat="server" OnClick="btnNuevaVenta_Click" Text="Nueva Venta" CssClass="btn px-4 py-2 text-white fw-bold shadow-sm me-2" style="background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%); border: none; border-radius: 12px;" />
-            <asp:Button ID="btnNuevaCompra" runat="server" OnClick="btnNuevaCompra_Click" Text="Nueva Compra" CssClass="btn px-4 py-2 fw-bold" style="background-color: white; border: 2px solid #ff7eb3; color: #ff7eb3; border-radius: 12px;" />
+        <div class="d-flex gap-2" style="z-index:1; position:relative;">
+            <asp:Button ID="btnNuevaVenta" runat="server" OnClick="btnNuevaVenta_Click"
+                Text="+ Nueva Venta" CssClass="btn btn-hero" />
+            <asp:Button ID="btnNuevaCompra" runat="server" OnClick="btnNuevaCompra_Click"
+                Text="+ Nueva Compra" CssClass="btn"
+                style="background: rgba(255,255,255,0.25); color: white; border: 2px solid rgba(255,255,255,0.7); font-weight: 700; padding: 0.6rem 1.5rem; border-radius: 50px; backdrop-filter: blur(4px);" />
         </div>
     </div>
 
@@ -46,19 +50,22 @@
     <hr class="mb-4" style="border-color: #fecfef; border-width: 2px;" />
 
     <div class="filter-bar mb-4">
-        <div class="tab-pills mb-3" id="tabPills">
-            <button type="button" class="tab-pill active" data-tipo="todas" onclick="aplicarFiltros()">
-                <i class="bi bi-grid me-1"></i>Todas
-                <span class="pill-count" id="countTodas">0</span>
-            </button>
-            <button type="button" class="tab-pill" data-tipo="venta" onclick="aplicarFiltros()">
-                <i class="bi bi-arrow-up-circle me-1"></i>Ventas
-                <span class="pill-count" id="countVentas">0</span>
-            </button>
-            <button type="button" class="tab-pill" data-tipo="compra" onclick="aplicarFiltros()">
-                <i class="bi bi-arrow-down-circle me-1"></i>Compras
-                <span class="pill-count" id="countCompras">0</span>
-            </button>
+        <div class="filter-section p-2 mb-3" style="margin-bottom: 1.5rem !important;">
+            <span class="filter-label" style="margin-right:0.5rem; margin-left: 0.5rem;">Filtrar por</span>
+            <div class="filter-pills" id="tabPills">
+                <button type="button" class="filter-pill active" data-tipo="todas" onclick="aplicarFiltros()">
+                    <span class="pill-dot"></span> Todas
+                    <span class="badge bg-white text-dark ms-1" id="countTodas" style="font-size:0.7rem; border-radius:10px;">0</span>
+                </button>
+                <button type="button" class="filter-pill" data-tipo="venta" onclick="aplicarFiltros()">
+                    <i class="bi bi-arrow-up-circle-fill" style="color:#ff758c;"></i> Ventas
+                    <span class="badge bg-white text-dark ms-1" id="countVentas" style="font-size:0.7rem; border-radius:10px;">0</span>
+                </button>
+                <button type="button" class="filter-pill" data-tipo="compra" onclick="aplicarFiltros()">
+                    <i class="bi bi-arrow-down-circle-fill" style="color:#4f8ef7;"></i> Compras
+                    <span class="badge bg-white text-dark ms-1" id="countCompras" style="font-size:0.7rem; border-radius:10px;">0</span>
+                </button>
+            </div>
         </div>
         <div class="row g-2">
             <div class="col-md-5">
@@ -85,6 +92,7 @@
                 <div class="estado-filter-wrapper">
                     <i class="bi bi-calendar3 estado-filter-icon"></i>
                     <select id="ddlFecha" class="estado-filter" onchange="cambiarModoFecha()">
+                        <option value="todas">Todas las fechas</option>
                         <option value="hoy">Hoy</option>
                         <option value="semana">Semana pasada</option>
                         <option value="mes">Último mes</option>
@@ -157,7 +165,6 @@
 </div>
 
 <style>
-    /* KPI Strip */
     .kpi-strip {
         display: flex;
         align-items: center;
@@ -188,24 +195,7 @@
         box-shadow: 0 4px 20px rgba(255,117,140,0.08);
         border: 1px solid rgba(255,126,179,0.15);
     }
-    .tab-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-    .tab-pill {
-        border: 2px solid #e0e0e0; background: white; color: #9a9a9a;
-        font-weight: 600; font-size: 0.88rem; padding: 0.45rem 1.1rem;
-        border-radius: 50px; cursor: pointer; transition: all 0.25s;
-        display: flex; align-items: center; gap: 0.3rem;
-    }
-    .tab-pill:hover { border-color: #ff7eb3; color: #ff7eb3; }
-    .tab-pill.active {
-        background: linear-gradient(to right, #ff758c, #ff7eb3);
-        border-color: transparent; color: white;
-        box-shadow: 0 4px 12px rgba(255,117,140,0.35);
-    }
-    .pill-count {
-        background: rgba(255,255,255,0.3); border-radius: 50px;
-        font-size: 0.75rem; padding: 0 0.45rem; min-width: 1.3rem; text-align: center;
-    }
-    .tab-pill:not(.active) .pill-count { background: #f0f0f0; color: #666; }
+
     .search-wrapper { position: relative; }
     .search-icon {
         position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
@@ -313,6 +303,9 @@
     function obtenerRangoFecha() {
         var modo = document.getElementById('ddlFecha').value;
         var hoy = new Date(); hoy.setHours(0, 0, 0, 0);
+        if (modo === 'todas') {
+            return { desde: null, hasta: null };
+        }
         if (modo === 'hoy') {
             return { desde: toYMD(hoy), hasta: toYMD(hoy) };
         }
@@ -340,15 +333,15 @@
     }
 
     document.addEventListener('click', function (e) {
-        var pill = e.target.closest('.tab-pill');
+        var pill = e.target.closest('.filter-pill');
         if (!pill) return;
-        document.querySelectorAll('.tab-pill').forEach(function (p) { p.classList.remove('active'); });
+        document.querySelectorAll('.filter-pill').forEach(function (p) { p.classList.remove('active'); });
         pill.classList.add('active');
         aplicarFiltros();
     });
 
     function aplicarFiltros() {
-        var tipoActivo   = document.querySelector('.tab-pill.active')?.dataset.tipo || 'todas';
+        var tipoActivo   = document.querySelector('.filter-pill.active')?.dataset.tipo || 'todas';
         var textoBuscar  = (document.getElementById('txtBuscar').value || '').trim().toLowerCase();
         var estadoFiltro = (document.getElementById('ddlEstado').value || '').toLowerCase();
         var rangoFecha   = obtenerRangoFecha();
@@ -398,10 +391,10 @@
     function resetearFiltros() {
         document.getElementById('txtBuscar').value = '';
         document.getElementById('ddlEstado').value = '';
-        document.getElementById('ddlFecha').value = 'hoy';
+        document.getElementById('ddlFecha').value = 'todas';
         document.getElementById('rowPersonalizar').style.display = 'none';
-        document.querySelectorAll('.tab-pill').forEach(function (p) { p.classList.remove('active'); });
-        document.querySelector('.tab-pill[data-tipo="todas"]').classList.add('active');
+        document.querySelectorAll('.filter-pill').forEach(function (p) { p.classList.remove('active'); });
+        document.querySelector('.filter-pill[data-tipo="todas"]').classList.add('active');
         aplicarFiltros();
     }
 </script>

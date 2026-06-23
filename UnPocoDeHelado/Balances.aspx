@@ -1,40 +1,83 @@
 <%@ Page Title="Balances" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Balances.aspx.cs" Inherits="UnPocoDeHelado.Balances" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style>
+        .balance-card {
+            background: white;
+            border-radius: 18px;
+            border: none;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            padding: 1.75rem;
+            margin-bottom: 1.75rem;
+        }
+        .balance-card-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #ff758c;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px dashed #fecfef;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .total-box {
+            background: linear-gradient(135deg, #fff0f5, #fff);
+            border-radius: 14px;
+            padding: 1rem 1.5rem;
+            border: 1.5px solid #fecfef;
+            text-align: center;
+        }
+        .total-label { font-size: 0.8rem; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 0.05em; }
+        .total-value { font-size: 2rem; font-weight: 900; background: linear-gradient(45deg, #ff758c, #ff7eb3); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .table { font-size: 0.9rem; }
+        .table thead th { background: #fff5f8; color: #c05070; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; border: none; padding: 0.9rem 1rem; }
+        .table tbody td { padding: 0.8rem 1rem; border-color: #fff0f5; vertical-align: middle; }
+        .table tbody tr:hover td { background: #fff8fb; }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="container mt-5">
-        <div class="row mb-4 align-items-center">
-            <div class="col-md-8">
-                <h2 class="fw-bold" style="background: linear-gradient(45deg, #ff9a9e 0%, #ff7eb3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                    <i class="bi bi-graph-up-arrow me-2" style="color: #ff7eb3;"></i>Balances y Reportes
-                </h2>
-                <p class="text-muted mb-0">Indicadores de tu sucursal</p>
+    <div class="container mt-4">
+
+        <div class="page-hero d-flex align-items-center gap-3 flex-wrap">
+            <div class="d-flex align-items-center gap-3" style="z-index:1; position:relative;">
+                <i class="bi bi-graph-up-arrow page-hero-icon"></i>
+                <div>
+                    <h2 class="page-hero-title">Balances y Reportes</h2>
+                    <p class="page-hero-sub">Indicadores de rendimiento de tu sucursal</p>
+                </div>
             </div>
         </div>
-        <hr class="mb-4" style="border-color: #fecfef; border-width: 2px;" />
 
-        <div class="card shadow-sm border-0 rounded-4 p-4 mb-5">
-            <h5 class="fw-bold mb-3" style="color: #ff758c;"><i class="bi bi-calendar-range me-2"></i>Ventas por periodo</h5>
+        <div class="balance-card">
+            <div class="balance-card-title">
+                <i class="bi bi-calendar-range"></i> Ventas por período
+            </div>
             <div class="row g-3 align-items-end">
                 <div class="col-md-3">
                     <label class="form-label">Desde</label>
-                    <asp:TextBox ID="txtDesde" runat="server" TextMode="Date" CssClass="form-control" style="border-radius: 12px;" />
+                    <asp:TextBox ID="txtDesde" runat="server" TextMode="Date" CssClass="form-control form-control-custom" />
                 </div>
                 <div class="col-md-3">
                     <label class="form-label">Hasta</label>
-                    <asp:TextBox ID="txtHasta" runat="server" TextMode="Date" CssClass="form-control" style="border-radius: 12px;" />
+                    <asp:TextBox ID="txtHasta" runat="server" TextMode="Date" CssClass="form-control form-control-custom" />
                 </div>
                 <div class="col-md-3">
-                    <asp:Button ID="btnConsultar" runat="server" Text="Consultar" OnClick="btnConsultar_Click" CssClass="btn px-4 py-2 text-white fw-bold shadow-sm w-100" style="background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%); border: none; border-radius: 12px;" />
+                    <asp:Button ID="btnConsultar" runat="server" Text="Consultar" OnClick="btnConsultar_Click"
+                        CssClass="btn btn-gradient shadow-sm w-100" />
                 </div>
-                <div class="col-md-3 text-md-end">
-                    <span class="text-muted d-block">Total cobrado</span>
-                    <h4 class="fw-bold mb-0" style="color: #ff758c;"><asp:Label ID="lblTotalVentas" runat="server">$0,00</asp:Label></h4>
+                <div class="col-md-3">
+                    <div class="total-box">
+                        <div class="total-label">Total cobrado</div>
+                        <div class="total-value"><asp:Label ID="lblTotalVentas" runat="server">$0,00</asp:Label></div>
+                    </div>
                 </div>
             </div>
             <hr class="my-4" style="border-color: #fecfef;" />
-            <h6 class="fw-bold mb-3" style="color: #ff758c;"><i class="bi bi-list-ul me-2"></i>Detalle de articulos vendidos</h6>
-            <asp:GridView ID="dgvDetalleVentas" runat="server" CssClass="table table-striped align-middle" AutoGenerateColumns="false" GridLines="None" EmptyDataText="No hubo ventas cobradas en el periodo seleccionado.">
+            <div class="balance-card-title">
+                <i class="bi bi-list-ul"></i> Detalle de artículos vendidos
+            </div>
+            <asp:GridView ID="dgvDetalleVentas" runat="server" CssClass="table" AutoGenerateColumns="false"
+                GridLines="None" EmptyDataText="No hubo ventas cobradas en el período seleccionado.">
                 <Columns>
                     <asp:BoundField DataField="Producto" HeaderText="Producto" />
                     <asp:BoundField DataField="Cantidad" HeaderText="Cantidad vendida" />
@@ -43,31 +86,38 @@
             </asp:GridView>
         </div>
 
-        <div class="card shadow-sm border-0 rounded-4 p-4 mb-5">
-            <h5 class="fw-bold mb-3" style="color: #ff758c;"><i class="bi bi-exclamation-triangle me-2"></i>Stock critico</h5>
-            <asp:GridView ID="dgvStockCritico" runat="server" CssClass="table table-striped align-middle" AutoGenerateColumns="false" GridLines="None" EmptyDataText="No hay productos por debajo del stock minimo.">
+        <div class="balance-card">
+            <div class="balance-card-title">
+                <i class="bi bi-exclamation-triangle"></i> Stock crítico
+            </div>
+            <asp:GridView ID="dgvStockCritico" runat="server" CssClass="table" AutoGenerateColumns="false"
+                GridLines="None" EmptyDataText="No hay productos por debajo del stock mínimo.">
                 <Columns>
                     <asp:BoundField DataField="Producto" HeaderText="Producto" />
-                    <asp:BoundField DataField="Categoria" HeaderText="Categoria" />
-                    <asp:BoundField DataField="StockActual" HeaderText="Stock" />
-                    <asp:BoundField DataField="StockMinimo" HeaderText="Minimo" />
+                    <asp:BoundField DataField="Categoria" HeaderText="Categoría" />
+                    <asp:BoundField DataField="StockActual" HeaderText="Stock actual" />
+                    <asp:BoundField DataField="StockMinimo" HeaderText="Mínimo" />
                     <asp:BoundField DataField="PrecioCompraActual" HeaderText="P. Compra" DataFormatString="{0:C}" />
                     <asp:BoundField DataField="ProveedoresDisponibles" HeaderText="Proveedores" />
                 </Columns>
             </asp:GridView>
         </div>
 
-        <div class="card shadow-sm border-0 rounded-4 p-4 mb-5">
-            <h5 class="fw-bold mb-3" style="color: #ff758c;"><i class="bi bi-trophy me-2"></i>Productos mas vendidos</h5>
-            <asp:GridView ID="dgvTop" runat="server" CssClass="table table-striped align-middle" AutoGenerateColumns="false" GridLines="None" EmptyDataText="Todavia no hay ventas registradas.">
+        <div class="balance-card">
+            <div class="balance-card-title">
+                <i class="bi bi-trophy"></i> Productos más vendidos
+            </div>
+            <asp:GridView ID="dgvTop" runat="server" CssClass="table" AutoGenerateColumns="false"
+                GridLines="None" EmptyDataText="Todavía no hay ventas registradas.">
                 <Columns>
                     <asp:BoundField DataField="Producto" HeaderText="Producto" />
-                    <asp:BoundField DataField="Categoria" HeaderText="Categoria" />
+                    <asp:BoundField DataField="Categoria" HeaderText="Categoría" />
                     <asp:BoundField DataField="Marca" HeaderText="Marca" />
                     <asp:BoundField DataField="UnidadesVendidas" HeaderText="Unidades" />
                     <asp:BoundField DataField="TotalFacturado" HeaderText="Facturado" DataFormatString="{0:C}" />
                 </Columns>
             </asp:GridView>
         </div>
+
     </div>
 </asp:Content>

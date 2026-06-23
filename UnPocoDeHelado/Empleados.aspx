@@ -2,48 +2,56 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="container mt-5">
-        <div class="row mb-4 align-items-center">
-            <div class="col-md-8">
-                <h2 class="fw-bold" style="background: linear-gradient(45deg, #ff9a9e 0%, #ff7eb3 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-                    <i class="bi bi-people-fill me-2" style="color: #ff7eb3;"></i>Gestión de Empleados
-                </h2>
-                <p class="text-muted mb-0">Administra el personal</p>
+    <div class="container mt-4">
+
+        <div class="page-hero d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3" style="z-index:1; position:relative;">
+                <i class="bi bi-person-badge page-hero-icon"></i>
+                <div>
+                    <h2 class="page-hero-title">Gestión de Empleados</h2>
+                    <p class="page-hero-sub">Administrá el personal de tu sucursal</p>
+                </div>
             </div>
-            <div class="col-md-4 text-md-end mt-3 mt-md-0">
-                <asp:LinkButton ID="btnAgregar" runat="server" OnClick="btnAgregar_Click" CssClass="btn px-4 py-2 text-white fw-bold shadow-sm" style="background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%); border: none; border-radius: 12px; transition: transform 0.2s;">
+            <div style="z-index:1; position:relative;">
+                <asp:LinkButton ID="btnAgregar" runat="server" OnClick="btnAgregar_Click" CssClass="btn btn-hero">
                     <i class="bi bi-plus-circle me-1"></i> Nuevo Empleado
                 </asp:LinkButton>
             </div>
         </div>
-        <hr class="mb-4" style="border-color: #fecfef; border-width: 2px;" />
 
         <div class="row">
             <asp:Repeater ID="repEmpleados" runat="server" OnItemCommand="repEmpleados_ItemCommand">
                 <ItemTemplate>
                     <div class="col-md-4 col-sm-6 mb-4">
-                        <div class="card h-100 shadow-sm border-0 rounded-4" style="background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); transition: transform 0.2s;">
-                            <div class="card-body text-center">
+                        <div class="list-card h-100">
+                            <div class="card-body text-center" style="padding: 1.75rem 1rem 1rem; background: linear-gradient(160deg, #fff0f5 0%, #ffffff 70%);">
                                 <div class="mb-3">
                                     <i class="bi bi-person-circle" style="font-size: 4rem; color: #ff758c;"></i>
                                 </div>
-                                <h5 class="card-title fw-bold" style="color: #4a4a4a; margin-bottom: 0;"><%# Eval("Nombre") %> <%# Eval("Apellido") %></h5>
-                                <span class="badge rounded-pill mt-2 mb-3" style="background-color: #fecfef; color: #ff758c;">Sucursal</span>
-                                
-                                <p class="text-muted small mb-1"><i class="bi bi-envelope-fill me-1" style="color: #ff7eb3;"></i> <%# string.IsNullOrEmpty(Eval("Email")?.ToString()) ? "Sin email" : Eval("Email") %></p>
-                                <p class="text-muted small mb-3"><i class="bi bi-telephone-fill me-1" style="color: #ff7eb3;"></i> <%# string.IsNullOrEmpty(Eval("Telefono")?.ToString()) ? "Sin teléfono" : Eval("Telefono") %></p>
-                                
-                                <div class="d-flex justify-content-between small px-2 py-2" style="background-color: #fdfbfb; border-radius: 10px;">
+                                <h5 class="fw-bold mb-0" style="color: #333;"><%# Eval("Nombre") %> <%# Eval("Apellido") %></h5>
+                                <span class="badge rounded-pill mt-2 mb-3" style="background-color: #fecfef; color: #ff758c; font-size: 0.75rem; font-weight: 700;">Empleado</span>
+                                <p class="text-muted small mb-1">
+                                    <i class="bi bi-envelope-fill me-1" style="color:#ff7eb3;"></i>
+                                    <%# string.IsNullOrEmpty(Eval("Email")?.ToString()) ? "Sin email" : Eval("Email") %>
+                                </p>
+                                <p class="text-muted small mb-3">
+                                    <i class="bi bi-telephone-fill me-1" style="color:#ff7eb3;"></i>
+                                    <%# string.IsNullOrEmpty(Eval("Telefono")?.ToString()) ? "Sin teléfono" : Eval("Telefono") %>
+                                </p>
+                                <div class="d-flex justify-content-between small px-2 py-2" style="background-color: #fdf5f8; border-radius: 10px;">
                                     <div class="text-center">
-                                        <strong style="color: #ff758c;">DNI</strong><br /><span class="text-muted"><%# Eval("DNI") %></span>
+                                        <strong style="color: #ff758c;">DNI</strong><br />
+                                        <span class="text-muted"><%# Eval("DNI") %></span>
                                     </div>
                                     <div class="text-center">
-                                        <strong style="color: #ff758c;">Ingreso</strong><br /><span class="text-muted"><%# Eval("FechaIngreso", "{0:dd/MM/yyyy}") %></span>
+                                        <strong style="color: #ff758c;">Ingreso</strong><br />
+                                        <span class="text-muted"><%# Eval("FechaIngreso", "{0:dd/MM/yyyy}") %></span>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-footer bg-transparent border-0 text-center pb-4 mt-auto">
-                                <asp:LinkButton ID="btnEditar" runat="server" CommandName="Editar" CommandArgument='<%# Eval("Id") %>' CssClass="btn btn-sm px-4 fw-bold" style="background-color: white; border: 2px solid #ff7eb3; color: #ff7eb3; border-radius: 20px; transition: all 0.3s;">
+                            <div class="card-footer bg-transparent border-0 text-center pb-4 mt-auto" style="border-top: 1px solid rgba(0,0,0,0.05) !important;">
+                                <asp:LinkButton ID="btnEditar" runat="server" CommandName="Editar"
+                                    CommandArgument='<%# Eval("Id") %>' CssClass="btn-editar">
                                     <i class="bi bi-pencil-square me-1"></i> Editar
                                 </asp:LinkButton>
                             </div>
@@ -53,16 +61,4 @@
             </asp:Repeater>
         </div>
     </div>
-    
-    <style>
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(255, 117, 140, 0.15) !important;
-        }
-        .card-footer .btn:hover {
-            background: linear-gradient(to right, #ff758c 0%, #ff7eb3 100%) !important;
-            color: white !important;
-            border-color: transparent !important;
-        }
-    </style>
 </asp:Content>
