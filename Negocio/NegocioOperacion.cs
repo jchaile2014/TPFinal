@@ -12,12 +12,23 @@ namespace Negocio
     {
         public List<Operacion> listar(bool esVenta)
         {
+            return listar(esVenta, null);
+        }
+
+        public List<Operacion> listar(bool esVenta, long? idEmpleado)
+        {
             List<Operacion> lista = new List<Operacion>();
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.setearConsulta("Select IdOperacion, Tipo, NumeroFactura, Fecha, IdSucursal, Empleado, Cliente, Proveedores, MedioPago, Estado, Total From vista_operacionesDetalladas Where Tipo = @tipo Order By Fecha Desc");
+                string consulta = "Select IdOperacion, Tipo, NumeroFactura, Fecha, IdSucursal, Empleado, Cliente, Proveedores, MedioPago, Estado, Total From vista_operacionesDetalladas Where Tipo = @tipo";
+                if (idEmpleado.HasValue)
+                    consulta += " And IdEmpleado = @idEmp";
+                consulta += " Order By Fecha Desc";
+                datos.setearConsulta(consulta);
                 datos.setearParametro("@tipo", esVenta ? "Venta" : "Compra");
+                if (idEmpleado.HasValue)
+                    datos.setearParametro("@idEmp", idEmpleado.Value);
                 datos.ejecutarLectura();
                 while (datos.Lector.Read())
                 {

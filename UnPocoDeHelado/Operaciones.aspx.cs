@@ -18,6 +18,13 @@ namespace UnPocoDeHelado
 
             btnNuevaCompra.Visible = Seguridad.esAdmin(Session["usuario"]);
 
+            if (!Seguridad.esAdmin(Session["usuario"]))
+            {
+                pillTodas.Visible = false;
+                pillCompras.Visible = false;
+                pillVentas.Attributes["class"] = "filter-pill active";
+            }
+
             if (!IsPostBack)
                 cargarLista();
         }
@@ -25,10 +32,18 @@ namespace UnPocoDeHelado
         private void cargarLista()
         {
             NegocioOperacion negocio = new NegocioOperacion();
-            List<Operacion> ventas = negocio.listar(true);
-            List<Operacion> compras = negocio.listar(false);
-            ventas.AddRange(compras);
-            rptOperaciones.DataSource = ventas.OrderByDescending(o => o.Fecha).ToList();
+            List<Operacion> lista;
+            if (Seguridad.esAdmin(Session["usuario"]))
+            {
+                lista = negocio.listar(true);
+                lista.AddRange(negocio.listar(false));
+            }
+            else
+            {
+                Usuario u = (Usuario)Session["usuario"];
+                lista = negocio.listar(true, u.Id);
+            }
+            rptOperaciones.DataSource = lista.OrderByDescending(o => o.Fecha).ToList();
             rptOperaciones.DataBind();
         }
 

@@ -40,5 +40,20 @@ namespace UnPocoDeHelado
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptOperaciones;
+
+        /// <summary>
+        /// Control pillTodas.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlButton pillTodas;
+
+        /// <summary>
+        /// Control pillVentas.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlButton pillVentas;
+
+        /// <summary>
+        /// Control pillCompras.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlButton pillCompras;
     }
 }

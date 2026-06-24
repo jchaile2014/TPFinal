@@ -84,11 +84,6 @@ namespace UnPocoDeHelado
             }
         }
 
-        protected void btnEliminar_Click(object sender, EventArgs e)
-        {
-            // Reservado para futura implementación de eliminación
-        }
-
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
             Response.Redirect("Clientes.aspx", false);

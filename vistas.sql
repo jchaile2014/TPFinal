@@ -54,6 +54,7 @@ Select
     o.NumeroFactura,
     o.Fecha,
     o.IdSucursal,
+    o.IdEmpleado,
     e.Nombre + ' ' + e.Apellido As Empleado,
     ISNULL(cl.Nombre + ' ' + cl.Apellido, '-') As Cliente,
     ISNULL(STUFF((

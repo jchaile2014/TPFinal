@@ -53,15 +53,15 @@
         <div class="filter-section p-2 mb-3" style="margin-bottom: 1.5rem !important;">
             <span class="filter-label" style="margin-right:0.5rem; margin-left: 0.5rem;">Filtrar por</span>
             <div class="filter-pills" id="tabPills">
-                <button type="button" class="filter-pill active" data-tipo="todas" onclick="aplicarFiltros()">
+                <button type="button" runat="server" id="pillTodas" class="filter-pill active" data-tipo="todas" onclick="aplicarFiltros()">
                     <span class="pill-dot"></span> Todas
                     <span class="badge bg-white text-dark ms-1" id="countTodas" style="font-size:0.7rem; border-radius:10px;">0</span>
                 </button>
-                <button type="button" class="filter-pill" data-tipo="venta" onclick="aplicarFiltros()">
+                <button type="button" runat="server" id="pillVentas" class="filter-pill" data-tipo="venta" onclick="aplicarFiltros()">
                     <i class="bi bi-arrow-up-circle-fill" style="color:#ff758c;"></i> Ventas
                     <span class="badge bg-white text-dark ms-1" id="countVentas" style="font-size:0.7rem; border-radius:10px;">0</span>
                 </button>
-                <button type="button" class="filter-pill" data-tipo="compra" onclick="aplicarFiltros()">
+                <button type="button" runat="server" id="pillCompras" class="filter-pill" data-tipo="compra" onclick="aplicarFiltros()">
                     <i class="bi bi-arrow-down-circle-fill" style="color:#4f8ef7;"></i> Compras
                     <span class="badge bg-white text-dark ms-1" id="countCompras" style="font-size:0.7rem; border-radius:10px;">0</span>
                 </button>
@@ -367,6 +367,11 @@
         document.getElementById('sinResultados').style.display = visibles === 0 ? 'block' : 'none';
     }
 
+    function setText(id, val) {
+        var el = document.getElementById(id);
+        if (el) el.textContent = val;
+    }
+
     function actualizarContadores() {
         var cards = document.querySelectorAll('.op-card-wrapper');
         var v = 0, c = 0;
@@ -374,12 +379,12 @@
             if (card.dataset.tipo === 'venta')  v++;
             if (card.dataset.tipo === 'compra') c++;
         });
-        document.getElementById('countTodas').textContent   = cards.length;
-        document.getElementById('countVentas').textContent  = v;
-        document.getElementById('countCompras').textContent = c;
-        document.getElementById('kpiCountTodas').textContent   = cards.length;
-        document.getElementById('kpiCountVentas').textContent  = v;
-        document.getElementById('kpiCountCompras').textContent = c;
+        setText('countTodas', cards.length);
+        setText('countVentas', v);
+        setText('countCompras', c);
+        setText('kpiCountTodas', cards.length);
+        setText('kpiCountVentas', v);
+        setText('kpiCountCompras', c);
     }
 
     function limpiarBuscar() {
@@ -394,7 +399,8 @@
         document.getElementById('ddlFecha').value = 'todas';
         document.getElementById('rowPersonalizar').style.display = 'none';
         document.querySelectorAll('.filter-pill').forEach(function (p) { p.classList.remove('active'); });
-        document.querySelector('.filter-pill[data-tipo="todas"]').classList.add('active');
+        var pillDefault = document.querySelector('.filter-pill[data-tipo="todas"]') || document.querySelector('.filter-pill[data-tipo="venta"]');
+        if (pillDefault) pillDefault.classList.add('active');
         aplicarFiltros();
     }
 </script>
