@@ -50,6 +50,9 @@ namespace Negocio
                     aux.Empleado = new Empleado();
                     aux.Empleado.Nombre = (string)datos.Lector["Empleado"];
 
+                    if (!(datos.Lector["Proveedores"] is DBNull))
+                        aux.Proveedores = (string)datos.Lector["Proveedores"];
+
                     aux.Estado = (string)datos.Lector["Estado"];
                     aux.Total = (decimal)datos.Lector["Total"];
                     lista.Add(aux);

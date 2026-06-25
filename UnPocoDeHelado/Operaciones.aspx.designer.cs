@@ -42,6 +42,11 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.WebControls.Repeater rptOperaciones;
 
         /// <summary>
+        /// Control ddlEmpleado.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.DropDownList ddlEmpleado;
+
+        /// <summary>
         /// Control pillTodas.
         /// </summary>
         protected global::System.Web.UI.HtmlControls.HtmlButton pillTodas;

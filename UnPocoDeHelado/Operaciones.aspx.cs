@@ -26,7 +26,23 @@ namespace UnPocoDeHelado
             }
 
             if (!IsPostBack)
+            {
+                cargarFiltroEmpleados();
                 cargarLista();
+            }
+        }
+
+        private void cargarFiltroEmpleados()
+        {
+            Usuario u = (Usuario)Session["usuario"];
+            NegocioEmpleado negocio = new NegocioEmpleado();
+            ddlEmpleado.Items.Clear();
+            ddlEmpleado.Items.Add(new System.Web.UI.WebControls.ListItem("Todos los empleados", ""));
+            foreach (Empleado emp in negocio.listar(u.IdSucursal))
+            {
+                string nombre = emp.Nombre + " " + emp.Apellido;
+                ddlEmpleado.Items.Add(new System.Web.UI.WebControls.ListItem(nombre, nombre.ToLower()));
+            }
         }
 
         private void cargarLista()

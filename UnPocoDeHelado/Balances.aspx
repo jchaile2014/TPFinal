@@ -33,7 +33,9 @@
         .table thead th { background: #fff5f8; color: #c05070; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; border: none; padding: 0.9rem 1rem; }
         .table tbody td { padding: 0.8rem 1rem; border-color: #fff0f5; vertical-align: middle; }
         .table tbody tr:hover td { background: #fff8fb; }
+        .chart-box { position: relative; height: 300px; }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container mt-4">
@@ -84,6 +86,7 @@
                     <asp:BoundField DataField="Total" HeaderText="Total" DataFormatString="{0:C}" />
                 </Columns>
             </asp:GridView>
+            <div class="chart-box mt-4"><canvas id="chartDetalle"></canvas></div>
         </div>
 
         <div class="balance-card">
@@ -107,6 +110,7 @@
             <div class="balance-card-title">
                 <i class="bi bi-trophy"></i> Productos más vendidos
             </div>
+            <div class="chart-box mb-4"><canvas id="chartTop"></canvas></div>
             <asp:GridView ID="dgvTop" runat="server" CssClass="table" AutoGenerateColumns="false"
                 GridLines="None" EmptyDataText="Todavía no hay ventas registradas.">
                 <Columns>
@@ -120,4 +124,29 @@
         </div>
 
     </div>
+
+    <script type="text/javascript">
+        (function () {
+            var colorPrincipal = '#ff7eb3';
+            var paleta = ['#ff7eb3', '#ff9a9e', '#ffc3a0', '#c9a7eb', '#a0d8ef', '#b5ead7', '#ffdac1', '#e2a9f3', '#ffb7b2', '#bde0fe'];
+
+            var ctxTop = document.getElementById('chartTop');
+            if (ctxTop && typeof Chart !== 'undefined') {
+                new Chart(ctxTop, {
+                    type: 'bar',
+                    data: { labels: <%= topLabels %>, datasets: [{ label: 'Unidades vendidas', data: <%= topData %>, backgroundColor: colorPrincipal, borderRadius: 6 }] },
+                    options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                });
+            }
+
+            var ctxDet = document.getElementById('chartDetalle');
+            if (ctxDet && typeof Chart !== 'undefined') {
+                new Chart(ctxDet, {
+                    type: 'doughnut',
+                    data: { labels: <%= detalleLabels %>, datasets: [{ data: <%= detalleData %>, backgroundColor: paleta }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
+                });
+            }
+        })();
+    </script>
 </asp:Content>

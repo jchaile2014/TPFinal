@@ -79,13 +79,9 @@
             </div>
             <div class="col-md-4">
                 <div class="estado-filter-wrapper">
-                    <i class="bi bi-funnel estado-filter-icon"></i>
-                    <select id="ddlEstado" class="estado-filter" onchange="aplicarFiltros()">
-                        <option value="">Todos los estados</option>
-                        <option value="cobrada">Cobrada</option>
-                        <option value="pendiente">Pendiente</option>
-                        <option value="finalizado">Finalizado</option>
-                    </select>
+                    <i class="bi bi-person estado-filter-icon"></i>
+                    <asp:DropDownList ID="ddlEmpleado" runat="server" ClientIDMode="Static" CssClass="estado-filter" onchange="aplicarFiltros()">
+                    </asp:DropDownList>
                 </div>
             </div>
             <div class="col-md-3">
@@ -130,7 +126,8 @@
                      data-tipo='<%# Convert.ToBoolean(Eval("SeOpera")) ? "venta" : "compra" %>'
                      data-factura='<%# (Eval("NumeroFactura") ?? "").ToString().ToLower() %>'
                      data-estado='<%# (Eval("Estado") ?? "").ToString().ToLower() %>'
-                     data-fecha='<%# Eval("Fecha", "{0:yyyy-MM-dd}") %>'>
+                     data-fecha='<%# Eval("Fecha", "{0:yyyy-MM-dd}") %>'
+                     data-empleado='<%# (Eval("Empleado.Nombre") ?? "").ToString() %>'>
                     <div class='<%# "op-card op-card-" + (Convert.ToBoolean(Eval("SeOpera")) ? "venta" : "compra") %>'>
                         <div class="op-card-glow"></div>
                         <div class="op-card-inner">
@@ -146,8 +143,9 @@
                                 <span><i class="bi bi-cash"></i> <%# Eval("Total", "{0:C}") %></span>
                             </div>
                             <div class="mt-2">
-                                <span class='estado-badge estado-<%# (Eval("Estado") ?? "").ToString().ToLower() %>'>
-                                    <%# Eval("Estado") %>
+                                <span class="op-cliente-badge">
+                                    <i class='<%# Convert.ToBoolean(Eval("SeOpera")) ? "bi bi-person me-1" : "bi bi-truck me-1" %>'></i>
+                                    <%# Convert.ToBoolean(Eval("SeOpera")) ? Eval("Cliente.Nombre") : Eval("Proveedores") %>
                                 </span>
                             </div>
                         </div>
@@ -281,6 +279,11 @@
     .estado-cobrada   { background: #d1fae5; color: #065f46; }
     .estado-pendiente { background: #fef3c7; color: #92400e; }
     .estado-finalizado { background: #dbeafe; color: #1e40af; }
+    .op-cliente-badge {
+        display: inline-block; font-size: 0.82rem; font-weight: 600;
+        padding: 0.2rem 0.85rem; border-radius: 50px;
+        background: #fff0f5; color: #c05070;
+    }
     .op-card-wrapper.hidden { display: none !important; }
     @keyframes fadeInUp {
         from { opacity: 0; transform: translateY(20px); }
@@ -341,25 +344,25 @@
     });
 
     function aplicarFiltros() {
-        var tipoActivo   = document.querySelector('.filter-pill.active')?.dataset.tipo || 'todas';
-        var textoBuscar  = (document.getElementById('txtBuscar').value || '').trim().toLowerCase();
-        var estadoFiltro = (document.getElementById('ddlEstado').value || '').toLowerCase();
-        var rangoFecha   = obtenerRangoFecha();
+        var tipoActivo     = document.querySelector('.filter-pill.active')?.dataset.tipo || 'todas';
+        var textoBuscar    = (document.getElementById('txtBuscar').value || '').trim().toLowerCase();
+        var empleadoFiltro = (document.getElementById('ddlEmpleado').value || '').toLowerCase();
+        var rangoFecha     = obtenerRangoFecha();
 
         document.getElementById('btnLimpiarBuscar').style.display = textoBuscar ? 'block' : 'none';
 
         var cards = document.querySelectorAll('.op-card-wrapper');
         var visibles = 0;
         cards.forEach(function (card) {
-            var tipo    = card.dataset.tipo    || '';
-            var factura = card.dataset.factura || '';
-            var estado  = card.dataset.estado  || '';
-            var fecha   = card.dataset.fecha   || '';
+            var tipo     = card.dataset.tipo     || '';
+            var factura  = card.dataset.factura  || '';
+            var empleado = (card.dataset.empleado || '').toLowerCase();
+            var fecha    = card.dataset.fecha    || '';
             var okFecha = (!rangoFecha.desde || fecha >= rangoFecha.desde)
                        && (!rangoFecha.hasta || fecha <= rangoFecha.hasta);
             var ok = (tipoActivo === 'todas' || tipo === tipoActivo)
-                  && (!textoBuscar  || factura.includes(textoBuscar))
-                  && (!estadoFiltro || estado.includes(estadoFiltro))
+                  && (!textoBuscar    || factura.includes(textoBuscar))
+                  && (!empleadoFiltro || empleado === empleadoFiltro)
                   && okFecha;
             if (ok) { card.classList.remove('hidden'); visibles++; }
             else      card.classList.add('hidden');
@@ -395,7 +398,7 @@
 
     function resetearFiltros() {
         document.getElementById('txtBuscar').value = '';
-        document.getElementById('ddlEstado').value = '';
+        document.getElementById('ddlEmpleado').value = '';
         document.getElementById('ddlFecha').value = 'todas';
         document.getElementById('rowPersonalizar').style.display = 'none';
         document.querySelectorAll('.filter-pill').forEach(function (p) { p.classList.remove('active'); });

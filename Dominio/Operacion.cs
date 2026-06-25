@@ -27,6 +27,8 @@ namespace Dominio
         public string Estado { get; set; }
         public decimal Total { get; set; }
 
+        public string Proveedores { get; set; }
+
         public List<DetalleOperacion> Detalles { get; set; }
     }
 }
