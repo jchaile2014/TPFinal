@@ -24,7 +24,7 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.WebControls.Button btnAgregar;
 
         /// <summary>
-        /// Control dgvClientes.
+        /// Control rptClientes.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
