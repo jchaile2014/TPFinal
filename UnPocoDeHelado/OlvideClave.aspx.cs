@@ -31,88 +31,37 @@ namespace UnPocoDeHelado
             try
             {
                 NegocioUsuario negocio = new NegocioUsuario();
-                Usuario u = negocio.verificarIdentidad(txtUsuarioPaso1.Text.Trim(), txtDNI.Text.Trim());
+                Usuario u = negocio.obtenerPorEmail(txtEmail.Text.Trim());
 
-                if (u != null)
+                if (u == null)
                 {
-                    ViewState["idUsuario"] = u.Id;
-                    ViewState["nombreUsuario"] = u.NombreUsuario;
-                    paso = 2;
-                    MostrarPaso(2);
-                    MostrarAlerta("success", $"<i class=\"bi bi-check-circle me-2\"></i>Identidad verificada. ¡Hola, {u.Nombre}! Podes ingresar tu nueva clave.");
+                    MostrarAlerta("danger", "<i class=\"bi bi-exclamation-triangle me-2\"></i>No encontramos una cuenta activa con ese correo.");
+                    return;
                 }
-                else
-                {
-                    MostrarAlerta("danger", "<i class=\"bi bi-exclamation-triangle me-2\"></i>No encontramos una cuenta activa con ese usuario y DNI. Verifica los datos ingresados.");
-                }
-            }
-            catch (Exception ex)
-            {
-                MostrarAlerta("danger", "<i class=\"bi bi-exclamation-triangle me-2\"></i>Ocurrio un error inesperado: " + ex.Message);
-            }
-        }
 
-        protected void btnCambiarPass_Click(object sender, EventArgs e)
-        {
-            OcultarAlerta();
+                string claveTemporal = negocio.restablecerClaveTemporal(u.Id);
 
-            paso = 2;
-            MostrarPaso(2);
-
-            if (ViewState["idUsuario"] == null)
-            {
-                paso = 1;
-                MostrarPaso(1);
-                MostrarAlerta("warning", "<i class=\"bi bi-exclamation-triangle me-2\"></i>La sesión expiro, por favor comenza de nuevo.");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtNuevaPass.Text))
-            {
-                MostrarAlerta("danger", "<i class=\"bi bi-exclamation-triangle me-2\"></i>La nueva clave es requerida.");
-                return;
-            }
-
-            if (txtNuevaPass.Text.Length < 6)
-            {
-                MostrarAlerta("danger", "<i class=\"bi bi-exclamation-triangle me-2\"></i>La clave debe tener al menos 6 caracteres.");
-                return;
-            }
-
-            if (txtNuevaPass.Text != txtConfirmarPass.Text)
-            {
-                MostrarAlerta("danger", "<i class=\"bi bi-exclamation-triangle me-2\"></i>Las claves no coinciden. Por favor verifica que hayas escrito lo mismo en ambos campos.");
-                return;
-            }
-
-            try
-            {
-                long idUsuario = (long)ViewState["idUsuario"];
-                NegocioUsuario negocio = new NegocioUsuario();
-                negocio.cambiarPassword(idUsuario, txtNuevaPass.Text);
+                ServicioCorreo correo = new ServicioCorreo();
+                correo.enviar(
+                    u.Email,
+                    "Recuperación de clave - Un Poco De Helado",
+                    "<p>Hola " + u.Nombre + ",</p>" +
+                    "<p>Tu clave temporal es: <b style=\"font-size:1.2rem; color:#ff758c;\">" + claveTemporal + "</b></p>" +
+                    "<p>Ingresá al sistema con esta clave y cambiala apenas puedas.</p>" +
+                    "<p style=\"color:#999; font-size:0.85rem;\">Si no pediste este cambio, ignorá este correo.</p>");
 
                 paso = 3;
                 MostrarPaso(3);
             }
             catch (Exception ex)
             {
-                MostrarAlerta("danger", "<i class=\"bi bi-exclamation-triangle me-2\"></i>Error al guardar la clave: " + ex.Message);
+                MostrarAlerta("danger", "<i class=\"bi bi-exclamation-triangle me-2\"></i>No se pudo enviar el correo: " + ex.Message);
             }
-        }
-
-        protected void btnVolverPaso1_Click(object sender, EventArgs e)
-        {
-            OcultarAlerta();
-            paso = 1;
-            MostrarPaso(1);
-            ViewState["idUsuario"] = null;
-            ViewState["nombreUsuario"] = null;
         }
 
         private void MostrarPaso(int numeroPaso)
         {
             pnlPaso1.Visible = (numeroPaso == 1);
-            pnlPaso2.Visible = (numeroPaso == 2);
             pnlExito.Visible = (numeroPaso == 3);
         }
 

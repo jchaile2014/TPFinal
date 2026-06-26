@@ -185,14 +185,12 @@
                 <i class="bi bi-shield-lock"></i>
             </div>
             <h1 class="recover-title">Recuperar Clave</h1>
-            <p class="recover-subtitle">Vamos a verificar tu identidad para restablecer tu clave</p>
+            <p class="recover-subtitle">Te enviaremos una clave temporal a tu correo registrado</p>
 
             <div class="step-indicator">
-                <div class="step-dot <%= paso == 1 ? "active" : "done" %>" id="dotPaso1">1</div>
+                <div class="step-dot <%= paso == 1 ? "active" : "done" %>">1</div>
                 <div class="step-line <%= paso > 1 ? "done" : "" %>"></div>
-                <div class="step-dot <%= paso == 2 ? "active" : (paso > 2 ? "done" : "inactive") %>" id="dotPaso2">2</div>
-                <div class="step-line <%= paso > 2 ? "done" : "" %>"></div>
-                <div class="step-dot <%= paso == 3 ? "active" : "inactive" %>" id="dotPaso3"><i class="bi bi-check"></i></div>
+                <div class="step-dot <%= paso == 3 ? "active" : "inactive" %>"><i class="bi bi-check"></i></div>
             </div>
 
             <asp:Panel ID="pnlAlerta" runat="server" Visible="false">
@@ -200,95 +198,36 @@
             </asp:Panel>
 
             <asp:Panel ID="pnlPaso1" runat="server">
-                <p class="text-muted small mb-3"><i class="bi bi-info-circle me-1" style="color:#ff7eb3;"></i> Ingresá tu nombre de usuario y DNI para confirmar tu identidad.</p>
-                <div class="mb-3">
-                    <label class="form-label-custom">Nombre de usuario</label>
-                    <asp:TextBox ID="txtUsuarioPaso1" runat="server" CssClass="form-control form-control-custom" placeholder="Ej. jgarcia" />
-                    <asp:RequiredFieldValidator ID="rfvUsuario" runat="server"
-                        ControlToValidate="txtUsuarioPaso1"
-                        ErrorMessage="El nombre de usuario es requerido."
-                        CssClass="text-danger small"
-                        ValidationGroup="vgPaso1"
-                        Display="Dynamic" />
-                </div>
+                <p class="text-muted small mb-3"><i class="bi bi-info-circle me-1" style="color:#ff7eb3;"></i> Ingresá tu correo electrónico registrado y te enviaremos una clave temporal.</p>
                 <div class="mb-4">
-                    <label class="form-label-custom">DNI</label>
-                    <asp:TextBox ID="txtDNI" runat="server" CssClass="form-control form-control-custom" placeholder="Ej. 12345678" MaxLength="10" />
-                    <asp:RequiredFieldValidator ID="rfvDNI" runat="server"
-                        ControlToValidate="txtDNI"
-                        ErrorMessage="El DNI es requerido."
+                    <label class="form-label-custom">Correo electrónico</label>
+                    <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control form-control-custom" TextMode="Email" placeholder="tucorreo@ejemplo.com" />
+                    <asp:RequiredFieldValidator ID="rfvEmail" runat="server"
+                        ControlToValidate="txtEmail"
+                        ErrorMessage="El correo es requerido."
+                        CssClass="text-danger small"
+                        ValidationGroup="vgPaso1"
+                        Display="Dynamic" />
+                    <asp:RegularExpressionValidator ID="revEmail" runat="server"
+                        ControlToValidate="txtEmail"
+                        ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"
+                        ErrorMessage="Formato de correo inválido."
                         CssClass="text-danger small"
                         ValidationGroup="vgPaso1"
                         Display="Dynamic" />
                 </div>
-                <asp:Button ID="btnVerificar" runat="server" Text="Verificar identidad"
+                <asp:Button ID="btnVerificar" runat="server" Text="Enviar clave temporal"
                     CssClass="btn btn-recover"
                     OnClick="btnVerificar_Click"
                     ValidationGroup="vgPaso1" />
                 <a href="default.aspx" class="btn-back"><i class="bi bi-arrow-left me-1"></i>Volver al inicio</a>
             </asp:Panel>
 
-            <asp:Panel ID="pnlPaso2" runat="server" Visible="false">
-                <p class="text-muted small mb-3"><i class="bi bi-check-circle me-1" style="color:#28a745;"></i> Identidad verificada. Ahora podés establecer tu nueva clave.</p>
-                <div class="mb-3">
-                    <label class="form-label-custom">Nueva clave</label>
-                    <div class="password-wrapper">
-                        <asp:TextBox ID="txtNuevaPass" runat="server" CssClass="form-control form-control-custom" TextMode="Password" placeholder="Mínimo 6 caracteres" style="padding-right: 2.5rem;" />
-                        <button type="button" class="toggle-pass" onclick="togglePass('txtNuevaPass', this)">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </div>
-                    <asp:RequiredFieldValidator ID="rfvNuevaPass" runat="server"
-                        ControlToValidate="txtNuevaPass"
-                        ErrorMessage="La nueva clave es requerida."
-                        CssClass="text-danger small"
-                        ValidationGroup="vgPaso2"
-                        Display="Dynamic" />
-                    <asp:RegularExpressionValidator ID="revNuevaPass" runat="server"
-                        ControlToValidate="txtNuevaPass"
-                        ValidationExpression=".{6,}"
-                        ErrorMessage="La clave debe tener al menos 6 caracteres."
-                        CssClass="text-danger small"
-                        ValidationGroup="vgPaso2"
-                        Display="Dynamic" />
-                </div>
-                <div class="mb-4">
-                    <label class="form-label-custom">Confirmar clave</label>
-                    <div class="password-wrapper">
-                        <asp:TextBox ID="txtConfirmarPass" runat="server" CssClass="form-control form-control-custom" TextMode="Password" placeholder="Repetí la clave" style="padding-right: 2.5rem;" />
-                        <button type="button" class="toggle-pass" onclick="togglePass('txtConfirmarPass', this)">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </div>
-                    <asp:RequiredFieldValidator ID="rfvConfirmar" runat="server"
-                        ControlToValidate="txtConfirmarPass"
-                        ErrorMessage="Por favor confirma la clave."
-                        CssClass="text-danger small"
-                        ValidationGroup="vgPaso2"
-                        Display="Dynamic" />
-                    <asp:CompareValidator ID="cvPasswords" runat="server"
-                        ControlToValidate="txtConfirmarPass"
-                        ControlToCompare="txtNuevaPass"
-                        ErrorMessage="Las claves no coinciden."
-                        CssClass="text-danger small"
-                        ValidationGroup="vgPaso2"
-                        Display="Dynamic" />
-                </div>
-                <asp:Button ID="btnCambiarPass" runat="server" Text="Guardar nueva clave"
-                    CssClass="btn btn-recover"
-                    OnClick="btnCambiarPass_Click"
-                    ValidationGroup="vgPaso2" />
-                <asp:LinkButton ID="btnVolverPaso1" runat="server"
-                    CssClass="btn-back"
-                    OnClick="btnVolverPaso1_Click"
-                    CausesValidation="false"><i class="bi bi-arrow-left me-1"></i>Volver</asp:LinkButton>
-            </asp:Panel>
-
             <asp:Panel ID="pnlExito" runat="server" Visible="false">
                 <div class="text-center">
-                    <i class="bi bi-check-circle-fill success-checkmark"></i>
-                    <h4 class="fw-bold" style="color:#4a4a4a;">Clave actualizada</h4>
-                    <p class="text-muted mb-4">Tu clave fue cambiada exitosamente. Ya podés iniciar sesión con tu nueva clave.</p>
+                    <i class="bi bi-envelope-check-fill success-checkmark"></i>
+                    <h4 class="fw-bold" style="color:#4a4a4a;">Correo enviado</h4>
+                    <p class="text-muted mb-4">Te enviamos una clave temporal a tu correo. Revisá tu bandeja de entrada (y la carpeta de spam), ingresá con esa clave y cambiala apenas puedas.</p>
                     <a href="default.aspx" class="btn btn-recover text-decoration-none">
                         <i class="bi bi-box-arrow-in-right me-2"></i>Ir al inicio de sesión
                     </a>

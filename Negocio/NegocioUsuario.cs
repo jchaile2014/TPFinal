@@ -85,6 +85,60 @@ namespace Negocio
             }
         }
 
+        public Usuario obtenerPorEmail(string email)
+        {
+            Usuario usuario = null;
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta(
+                    "Select U.Id, U.NombreUsuario, E.Nombre, E.Apellido, E.Email, E.IdRol, E.IdSucursal, E.Activo " +
+                    "From Usuario U Inner Join Empleado E On U.Id = E.Id " +
+                    "Where E.Email = @email And E.Activo = 1");
+                datos.setearParametro("@email", email);
+                datos.ejecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    usuario = new Usuario();
+                    usuario.Id = (long)datos.Lector["Id"];
+                    usuario.NombreUsuario = (string)datos.Lector["NombreUsuario"];
+                    usuario.Nombre = (string)datos.Lector["Nombre"];
+                    usuario.Apellido = (string)datos.Lector["Apellido"];
+                    usuario.Email = !(datos.Lector["Email"] is DBNull) ? (string)datos.Lector["Email"] : null;
+                    usuario.Rol = (int)datos.Lector["IdRol"];
+                    usuario.IdSucursal = datos.Lector["IdSucursal"] is DBNull ? 0 : Convert.ToInt32(datos.Lector["IdSucursal"]);
+                    usuario.Activo = (bool)datos.Lector["Activo"];
+                }
+                return usuario;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public string restablecerClaveTemporal(long idUsuario)
+        {
+            string nueva = generarClave(8);
+            cambiarPassword(idUsuario, nueva);
+            return nueva;
+        }
+
+        private string generarClave(int largo)
+        {
+            const string chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789abcdefghijkmnpqrstuvwxyz";
+            Random rnd = new Random();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < largo; i++)
+                sb.Append(chars[rnd.Next(chars.Length)]);
+            return sb.ToString();
+        }
+
         public void cambiarPassword(long idUsuario, string nuevaPass)
         {
             AccesoDatos datos = new AccesoDatos();
