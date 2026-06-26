@@ -21,25 +21,37 @@ namespace UnPocoDeHelado
                 return;
             }
            
-                if (!IsPostBack)
-                btnAgregar.Enabled = false;
+            if (!IsPostBack)
+            {
+                cargarTodasLasClasificaciones();
+            }
         }
 
         protected void ddlTipo_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ddlTipo.SelectedValue == "")
             {
-                btnAgregar.Enabled = false;
-                rptClasificaciones.DataSource = null;
-                rptClasificaciones.DataBind();
+                cargarTodasLasClasificaciones();
                 return;
             }
 
             bool esMarca = bool.Parse(ddlTipo.SelectedValue);
             cargarClasificaciones(esMarca);
+        }
 
-            btnAgregar.Enabled = true;
-            btnAgregar.Text = esMarca ? "Nueva Marca" : "Nueva Categoría";
+        private void cargarTodasLasClasificaciones()
+        {
+            try
+            {
+                NegocioClasificacion negocio = new NegocioClasificacion();
+                rptClasificaciones.DataSource = negocio.listar();
+                rptClasificaciones.DataBind();
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
+            }
         }
 
         private void cargarClasificaciones(bool esMarca)
@@ -55,11 +67,6 @@ namespace UnPocoDeHelado
                 Session.Add("error", ex.ToString());
                 Response.Redirect("Error.aspx", false);
             }
-        }
-
-        protected void btnAgregar_Click(object sender, EventArgs e)
-        {
-            Response.Redirect("ClasificacionesABM.aspx?esMarca=" + ddlTipo.SelectedValue, false);
         }
     }
 }

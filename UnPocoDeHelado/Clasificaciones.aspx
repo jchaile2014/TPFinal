@@ -169,20 +169,13 @@
                     <p class="clas-hero-sub">Administrá marcas y categorías de productos</p>
                 </div>
             </div>
-            <div style="z-index:1; position:relative;">
-                <asp:Button ID="btnAgregar" runat="server" OnClick="btnAgregar_Click"
-                    Text="+ Nueva Clasificación"
-                    Enabled="false"
-                    CssClass="btn-nuevo-clas btn" />
-            </div>
+
         </div>
 
         <div class="filter-section">
             <span class="filter-label">Filtrar por</span>
             <div class="filter-pills" id="filterPills">
-                <button type="button" class="filter-pill active" data-val="" onclick="filtrarPill(this)">
-                    <span class="pill-dot"></span> Todos
-                </button>
+
                 <button type="button" class="filter-pill" data-val="True" onclick="filtrarPill(this)">
                     <i class="bi bi-bookmark-star-fill" style="color:#ff758c;"></i> Marcas
                 </button>
