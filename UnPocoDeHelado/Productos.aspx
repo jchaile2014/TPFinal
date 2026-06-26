@@ -1,10 +1,41 @@
 <%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Productos.aspx.cs" Inherits="UnPocoDeHelado.Productos" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <style>
+        .filter-bar {
+            background: rgba(255,255,255,0.85);
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(255,117,140,0.08);
+            border: 1px solid rgba(255,126,179,0.15);
+        }
+        .search-wrapper { position: relative; }
+        .search-icon {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: #ff7eb3; font-size: 1rem; pointer-events: none;
+        }
+        .search-input {
+            width: 100%; padding: 0.65rem 1rem 0.65rem 2.5rem;
+            border: 1.5px solid #e0e0e0; border-radius: 50px;
+            font-size: 0.9rem; outline: none; transition: border-color 0.25s; background: white;
+        }
+        .search-input:focus { border-color: #ff7eb3; box-shadow: 0 0 0 3px rgba(255,126,179,0.15); }
+        .estado-filter-wrapper { position: relative; }
+        .estado-filter-icon {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: #ff7eb3; font-size: 0.95rem; pointer-events: none;
+        }
+        .estado-filter {
+            width: 100%; padding: 0.65rem 1rem 0.65rem 2.4rem;
+            border: 1.5px solid #e0e0e0; border-radius: 50px;
+            font-size: 0.9rem; outline: none; appearance: none; background: white; cursor: pointer;
+        }
+        .estado-filter:focus { border-color: #ff7eb3; box-shadow: 0 0 0 3px rgba(255,126,179,0.15); }
+    </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container mt-4">
 
-        <div class="page-hero d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="page-hero d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
             <div class="d-flex align-items-center gap-3" style="z-index:1; position:relative;">
                 <i class="bi bi-box-seam page-hero-icon"></i>
                 <div>
@@ -15,6 +46,38 @@
             <div style="z-index:1; position:relative;">
                 <asp:Button ID="btnAgregar" runat="server" OnClick="btnAgregar_Click"
                     Text="+ Nuevo Producto" CssClass="btn btn-hero" />
+            </div>
+        </div>
+
+        <div class="filter-bar mb-4">
+            <div class="filter-section p-2 mb-3" style="margin-bottom: 1.5rem !important;">
+                <span class="filter-label" style="margin-right:0.5rem; margin-left: 0.5rem;">ORDENAR POR</span>
+                <div class="filter-pills">
+                    <asp:LinkButton ID="btnOrdenPredeterminado" runat="server" CssClass="filter-pill active" OnClick="btnOrdenPredeterminado_Click" style="text-decoration:none;">
+                        <span class="pill-dot"></span> Alfabético
+                    </asp:LinkButton>
+                    <asp:LinkButton ID="btnOrdenarStock" runat="server" CssClass="filter-pill" OnClick="btnOrdenarStock_Click" style="text-decoration:none;">
+                        <i class="bi bi-arrow-down-circle-fill" style="color:#ff758c;"></i> Mayor Stock
+                    </asp:LinkButton>
+                    <asp:LinkButton ID="btnOrdenarStockMenor" runat="server" CssClass="filter-pill" OnClick="btnOrdenarStockMenor_Click" style="text-decoration:none;">
+                        <i class="bi bi-arrow-up-circle-fill" style="color:#4f8ef7;"></i> Menor Stock
+                    </asp:LinkButton>
+                </div>
+            </div>
+            <div class="row g-2">
+                <div class="col-md-6">
+                    <div class="search-wrapper">
+                        <i class="bi bi-search search-icon"></i>
+                        <asp:TextBox ID="txtFiltro" runat="server" CssClass="search-input" placeholder="Buscar por nombre..." AutoPostBack="true" OnTextChanged="Filtro_Changed"></asp:TextBox>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="estado-filter-wrapper">
+                        <i class="bi bi-tags estado-filter-icon"></i>
+                        <asp:DropDownList ID="ddlCategoria" runat="server" CssClass="estado-filter" AutoPostBack="true" OnSelectedIndexChanged="Filtro_Changed">
+                        </asp:DropDownList>
+                    </div>
+                </div>
             </div>
         </div>
 
