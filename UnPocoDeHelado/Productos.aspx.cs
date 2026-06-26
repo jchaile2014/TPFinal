@@ -28,6 +28,7 @@ namespace UnPocoDeHelado
             if (!IsPostBack)
             {
                 cargarCategorias();
+                cargarMarcas();
                 cargarProductos();
             }
         }
@@ -43,6 +44,25 @@ namespace UnPocoDeHelado
                 ddlCategoria.DataValueField = "Id";
                 ddlCategoria.DataBind();
                 ddlCategoria.Items.Insert(0, new ListItem("Todas las categorías", ""));
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
+            }
+        }
+
+        private void cargarMarcas()
+        {
+            try
+            {
+                NegocioClasificacion negocio = new NegocioClasificacion();
+                List<Clasificacion> lista = negocio.listar(true);
+                ddlMarca.DataSource = lista;
+                ddlMarca.DataTextField = "Nombre";
+                ddlMarca.DataValueField = "Id";
+                ddlMarca.DataBind();
+                ddlMarca.Items.Insert(0, new ListItem("Todas las marcas", ""));
             }
             catch (Exception ex)
             {
@@ -69,6 +89,12 @@ namespace UnPocoDeHelado
                 {
                     long idCategoria = long.Parse(ddlCategoria.SelectedValue);
                     lista = lista.FindAll(x => x.Categoria != null && x.Categoria.Id == idCategoria);
+                }
+
+                if (!string.IsNullOrEmpty(ddlMarca.SelectedValue))
+                {
+                    long idMarca = long.Parse(ddlMarca.SelectedValue);
+                    lista = lista.FindAll(x => x.Marca != null && x.Marca.Id == idMarca);
                 }
 
                 if (btnOrdenarStock.CssClass.Contains("active"))

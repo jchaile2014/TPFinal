@@ -23,35 +23,33 @@ namespace UnPocoDeHelado
            
             if (!IsPostBack)
             {
-                cargarTodasLasClasificaciones();
+                ddlTipo.SelectedValue = "True";
+                cargarClasificaciones(true);
+                actualizarBotones(true);
             }
         }
 
         protected void ddlTipo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (ddlTipo.SelectedValue == "")
-            {
-                cargarTodasLasClasificaciones();
-                return;
-            }
-
             bool esMarca = bool.Parse(ddlTipo.SelectedValue);
             cargarClasificaciones(esMarca);
+            actualizarBotones(esMarca);
         }
 
-        private void cargarTodasLasClasificaciones()
+        private void actualizarBotones(bool esMarca)
         {
-            try
-            {
-                NegocioClasificacion negocio = new NegocioClasificacion();
-                rptClasificaciones.DataSource = negocio.listar();
-                rptClasificaciones.DataBind();
-            }
-            catch (Exception ex)
-            {
-                Session.Add("error", ex.ToString());
-                Response.Redirect("Error.aspx", false);
-            }
+            btnNuevaMarca.Visible = esMarca;
+            btnNuevaCategoria.Visible = !esMarca;
+        }
+
+        protected void btnNuevaMarca_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ClasificacionesABM.aspx?tipo=marca", false);
+        }
+
+        protected void btnNuevaCategoria_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ClasificacionesABM.aspx?tipo=categoria", false);
         }
 
         private void cargarClasificaciones(bool esMarca)

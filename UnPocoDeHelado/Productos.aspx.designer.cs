@@ -69,6 +69,11 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.WebControls.DropDownList ddlCategoria;
 
         /// <summary>
+        /// Control ddlMarca.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.DropDownList ddlMarca;
+
+        /// <summary>
         /// Control rptProductos.
         /// </summary>
         /// <remarks>

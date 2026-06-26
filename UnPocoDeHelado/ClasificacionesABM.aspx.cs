@@ -37,6 +37,10 @@ namespace UnPocoDeHelado
                 {
                     titulo.InnerText = "Nueva Clasificación";
                     btnEliminar.Visible = false;
+                    if (Request.QueryString["tipo"] == "categoria")
+                        ddlTipo.SelectedValue = "False";
+                    else
+                        ddlTipo.SelectedValue = "True";
                 }
             }
         }

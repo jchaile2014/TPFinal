@@ -170,6 +170,10 @@
                 </div>
             </div>
 
+            <div style="z-index:1; position:relative;">
+                <asp:Button ID="btnNuevaMarca" runat="server" Text="+ Nueva Marca" CssClass="btn-nuevo-clas" OnClick="btnNuevaMarca_Click" />
+                <asp:Button ID="btnNuevaCategoria" runat="server" Text="+ Nueva Categoría" CssClass="btn-nuevo-clas" OnClick="btnNuevaCategoria_Click" Visible="false" />
+            </div>
         </div>
 
         <div class="filter-section">
@@ -187,7 +191,6 @@
 
         <asp:DropDownList ID="ddlTipo" CssClass="ddl-oculto" runat="server"
             AutoPostBack="true" OnSelectedIndexChanged="ddlTipo_SelectedIndexChanged">
-            <asp:ListItem Value="">Todos</asp:ListItem>
             <asp:ListItem Value="True">Marca</asp:ListItem>
             <asp:ListItem Value="False">Categoría</asp:ListItem>
         </asp:DropDownList>

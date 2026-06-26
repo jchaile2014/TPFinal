@@ -71,10 +71,17 @@
                         <asp:TextBox ID="txtFiltro" runat="server" CssClass="search-input" placeholder="Buscar por nombre..." AutoPostBack="true" OnTextChanged="Filtro_Changed"></asp:TextBox>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="estado-filter-wrapper">
                         <i class="bi bi-tags estado-filter-icon"></i>
                         <asp:DropDownList ID="ddlCategoria" runat="server" CssClass="estado-filter" AutoPostBack="true" OnSelectedIndexChanged="Filtro_Changed">
+                        </asp:DropDownList>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="estado-filter-wrapper">
+                        <i class="bi bi-bookmark-star estado-filter-icon"></i>
+                        <asp:DropDownList ID="ddlMarca" runat="server" CssClass="estado-filter" AutoPostBack="true" OnSelectedIndexChanged="Filtro_Changed">
                         </asp:DropDownList>
                     </div>
                 </div>

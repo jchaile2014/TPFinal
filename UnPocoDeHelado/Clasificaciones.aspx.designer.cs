@@ -16,6 +16,16 @@ namespace UnPocoDeHelado
 
 
         /// <summary>
+        /// Control btnNuevaMarca.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Button btnNuevaMarca;
+
+        /// <summary>
+        /// Control btnNuevaCategoria.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Button btnNuevaCategoria;
+
+        /// <summary>
         /// Control ddlTipo.
         /// </summary>
         /// <remarks>
