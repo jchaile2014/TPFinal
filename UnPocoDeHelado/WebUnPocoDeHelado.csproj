@@ -77,6 +77,7 @@
     <Content Include="Error.aspx" />
     <Content Include="Factura.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="Perfil.aspx" />
     <Content Include="Operaciones.aspx" />
     <Content Include="OperacionesABM.aspx" />
     <Content Include="Productos.aspx" />
@@ -153,6 +154,13 @@
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Perfil.aspx.cs">
+      <DependentUpon>Perfil.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Perfil.aspx.designer.cs">
+      <DependentUpon>Perfil.aspx</DependentUpon>
     </Compile>
     <Compile Include="Operaciones.aspx.cs">
       <DependentUpon>Operaciones.aspx</DependentUpon>

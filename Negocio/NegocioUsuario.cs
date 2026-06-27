@@ -122,6 +122,68 @@ namespace Negocio
             }
         }
 
+        public bool existeUsuario(string nombreUsuario)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("Select Count(*) From Usuario Where NombreUsuario = @usuario");
+                datos.setearParametro("@usuario", nombreUsuario);
+                return Convert.ToInt32(datos.ejecutarAccionScalar()) > 0;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public string crearUsuarioConClaveTemporal(long idEmpleado, string nombreUsuario)
+        {
+            string clave = generarClave(8);
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("Insert Into Usuario (Id, NombreUsuario, Pass) Values (@id, @usuario, @pass)");
+                datos.setearParametro("@id", idEmpleado);
+                datos.setearParametro("@usuario", nombreUsuario);
+                datos.setearParametro("@pass", clave);
+                datos.ejecutarAccion();
+                return clave;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        public void cambiarNombreUsuario(long idUsuario, string nuevoUsuario)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setearConsulta("Update Usuario Set NombreUsuario = @usuario Where Id = @id");
+                datos.setearParametro("@usuario", nuevoUsuario);
+                datos.setearParametro("@id", idUsuario);
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
         public string restablecerClaveTemporal(long idUsuario)
         {
             string nueva = generarClave(8);

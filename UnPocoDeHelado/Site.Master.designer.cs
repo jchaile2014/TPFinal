@@ -33,6 +33,16 @@ namespace UnPocoDeHelado
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
+        /// Control lnkPerfilNav.
+        /// </summary>
+        protected global::System.Web.UI.HtmlControls.HtmlAnchor lnkPerfilNav;
+
+        /// <summary>
+        /// Control litUsuarioNav.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.Literal litUsuarioNav;
+
+        /// <summary>
         /// Control liOperaciones.
         /// </summary>
         /// <remarks>

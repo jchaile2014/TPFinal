@@ -44,6 +44,12 @@
                             <asp:TextBox ID="txtEmail" CssClass="form-control form-control-custom" TextMode="Email" placeholder="juan@ejemplo.com" runat="server"></asp:TextBox>
                         </div>
 
+                        <asp:Panel ID="pnlUsuario" runat="server" CssClass="col-12">
+                            <label class="form-label">Nombre de usuario</label>
+                            <asp:TextBox ID="txtUsuario" CssClass="form-control form-control-custom" placeholder="Ej. jperez" runat="server"></asp:TextBox>
+                            <asp:RequiredFieldValidator runat="server" ControlToValidate="txtUsuario" CssClass="text-danger" Display="Dynamic" ErrorMessage="El nombre de usuario es obligatorio." />
+                            <small class="text-muted d-block"><i class="bi bi-envelope me-1"></i>Se le enviará una clave temporal al correo para que pueda ingresar. </small>
+                        </asp:Panel>
 
                         <div class="col-md-6">
                             <label class="form-label">Rol</label>
@@ -72,6 +78,8 @@
                             <small class="text-muted d-block">Si se desactiva, el empleado no podrá ingresar al sistema ni figurará en listados operativos.</small>
                         </div>
                     </div>
+
+                    <asp:Label ID="lblMensaje" runat="server" CssClass="text-danger fw-semibold d-block mt-3" />
 
                     <hr class="my-5" style="border-color: #fecfef;" />
 

@@ -35,6 +35,7 @@ namespace UnPocoDeHelado
                 {
                     titulo.InnerText = "Editar Empleado";
                     btnEliminar.Visible = true;
+                    pnlUsuario.Visible = false;
 
                     NegocioEmpleado negocio = new NegocioEmpleado();
                     Empleado emp = negocio.listar().Find(x => x.Id == long.Parse(id));
@@ -86,11 +87,35 @@ namespace UnPocoDeHelado
                 {
                     emp.Id = long.Parse(Request.QueryString["id"]);
                     negocio.modificar(emp);
+                    Response.Redirect("Empleados.aspx", false);
+                    return;
                 }
-                else
+
+                if (string.IsNullOrWhiteSpace(txtEmail.Text))
                 {
-                    negocio.agregar(emp);
+                    lblMensaje.Text = "El correo es obligatorio: ahí se le envía la clave de acceso.";
+                    return;
                 }
+
+                NegocioUsuario negocioUsuario = new NegocioUsuario();
+                if (negocioUsuario.existeUsuario(txtUsuario.Text.Trim()))
+                {
+                    lblMensaje.Text = "Ese nombre de usuario ya está en uso.";
+                    return;
+                }
+
+                long idNuevo = negocio.agregar(emp);
+                string claveTemporal = negocioUsuario.crearUsuarioConClaveTemporal(idNuevo, txtUsuario.Text.Trim());
+
+                ServicioCorreo correo = new ServicioCorreo();
+                correo.enviar(
+                    emp.Email,
+                    "Acceso al sistema - Un Poco De Helado",
+                    "<p>Hola " + emp.Nombre + ",</p>" +
+                    "<p>Se creó tu cuenta para el sistema.</p>" +
+                    "<p>Usuario: <b>" + txtUsuario.Text.Trim() + "</b><br/>" +
+                    "Clave temporal: <b style=\"color:#ff758c;\">" + claveTemporal + "</b></p>" +
+                    "<p>Ingresá con esos datos y cambiá la clave desde tu perfil.</p>");
 
                 Response.Redirect("Empleados.aspx", false);
             }

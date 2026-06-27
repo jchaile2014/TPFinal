@@ -82,13 +82,13 @@ namespace Negocio
             }
         }
 
-        public void agregar(Empleado nuevo)
+        public long agregar(Empleado nuevo)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
                 datos.setearConsulta("Insert Into Empleado (Nombre, Apellido, DNI, Email, Telefono, IdSucursal, IdRol, FechaIngreso, Salario, Activo) " +
-                    "Values (@nombre, @apellido, @dni, @email, @telefono, @idSucursal, @idRol, @fechaIngreso, @salario, 1)");
+                    "OUTPUT INSERTED.Id Values (@nombre, @apellido, @dni, @email, @telefono, @idSucursal, @idRol, @fechaIngreso, @salario, 1)");
                 datos.setearParametro("@nombre", nuevo.Nombre);
                 datos.setearParametro("@apellido", nuevo.Apellido);
                 datos.setearParametro("@dni", nuevo.DNI);
@@ -98,7 +98,7 @@ namespace Negocio
                 datos.setearParametro("@idRol", nuevo.Rol);
                 datos.setearParametro("@fechaIngreso", nuevo.FechaIngreso);
                 datos.setearParametro("@salario", (object)nuevo.Salario ?? DBNull.Value);
-                datos.ejecutarAccion();
+                return (long)datos.ejecutarAccionScalar();
             }
             catch (Exception ex)
             {

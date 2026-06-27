@@ -24,6 +24,13 @@ namespace UnPocoDeHelado
             liEmpleados.Visible = admin;
             liBalances.Visible = admin;
             liSalir.Visible = logueado;
+
+            lnkPerfilNav.Visible = logueado;
+            if (logueado)
+            {
+                Usuario u = (Usuario)Session["usuario"];
+                litUsuarioNav.Text = u.Nombre + " · " + (admin ? "Administrador" : "Vendedor");
+            }
         }
 
         protected void btnSalir_Click(object sender, EventArgs e)

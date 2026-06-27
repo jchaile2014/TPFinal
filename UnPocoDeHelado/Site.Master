@@ -40,6 +40,22 @@
             font-size: 1.5rem;
             letter-spacing: 0.5px;
         }
+        .navbar-user {
+            color: rgba(255,255,255,0.95) !important;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.88rem;
+            margin-left: 1rem;
+            padding: 0.35rem 0.9rem;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.18);
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+        .navbar-user:hover {
+            background: rgba(255,255,255,0.3);
+            color: #fff !important;
+        }
         .custom-navbar .nav-link {
             color: rgba(255,255,255,0.9) !important;
             font-weight: 500;
@@ -305,6 +321,9 @@
         <nav class="navbar navbar-expand-lg custom-navbar">
             <div class="container-fluid">
                 <a class="navbar-brand" href="default.aspx"><i class="bi bi-shop"></i> Un Poco De Helado</a>
+                <a runat="server" id="lnkPerfilNav" href="Perfil.aspx" class="navbar-user" visible="false">
+                    <i class="bi bi-person-circle me-1"></i><asp:Literal ID="litUsuarioNav" runat="server"></asp:Literal>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
