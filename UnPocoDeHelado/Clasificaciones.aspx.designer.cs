@@ -42,5 +42,15 @@ namespace UnPocoDeHelado
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptClasificaciones;
+
+        /// <summary>
+        /// Control txtFiltroNombre.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.TextBox txtFiltroNombre;
+
+        /// <summary>
+        /// Control ddlFiltroEstado.
+        /// </summary>
+        protected global::System.Web.UI.WebControls.DropDownList ddlFiltroEstado;
     }
 }

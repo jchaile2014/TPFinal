@@ -52,12 +52,35 @@ namespace UnPocoDeHelado
             Response.Redirect("ClasificacionesABM.aspx?tipo=categoria", false);
         }
 
+        protected void Filtros_Changed(object sender, EventArgs e)
+        {
+            bool esMarca = bool.Parse(ddlTipo.SelectedValue);
+            cargarClasificaciones(esMarca);
+        }
+
         private void cargarClasificaciones(bool esMarca)
         {
             try
             {
                 NegocioClasificacion negocio = new NegocioClasificacion();
-                rptClasificaciones.DataSource = negocio.listar(esMarca);
+                List<Clasificacion> lista = negocio.listar(esMarca);
+
+                string filtroNombre = txtFiltroNombre.Text.Trim().ToLower();
+                if (!string.IsNullOrEmpty(filtroNombre))
+                {
+                    lista = lista.FindAll(x => x.Nombre.ToLower().Contains(filtroNombre));
+                }
+                string filtroEstado = ddlFiltroEstado.SelectedValue;
+                if (filtroEstado == "Activos")
+                {
+                    lista = lista.FindAll(x => x.Activo == true);
+                }
+                else if (filtroEstado == "Inactivos")
+                {
+                    lista = lista.FindAll(x => x.Activo == false);
+                }
+
+                rptClasificaciones.DataSource = lista;
                 rptClasificaciones.DataBind();
             }
             catch (Exception ex)

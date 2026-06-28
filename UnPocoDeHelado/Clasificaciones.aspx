@@ -176,16 +176,27 @@
             </div>
         </div>
 
-        <div class="filter-section">
-            <span class="filter-label">Filtrar por</span>
-            <div class="filter-pills" id="filterPills">
+        <div class="filter-section d-flex align-items-center flex-wrap gap-3 mb-4">
+            <div class="d-flex align-items-center gap-2">
+                <span class="filter-label">Filtrar por</span>
+                <div class="filter-pills" id="filterPills">
+                    <button type="button" class="filter-pill" data-val="True" onclick="filtrarPill(this)">
+                        <i class="bi bi-bookmark-star-fill" style="color:#ff758c;"></i> Marcas
+                    </button>
+                    <button type="button" class="filter-pill" data-val="False" onclick="filtrarPill(this)">
+                        <i class="bi bi-grid-fill" style="color:#4f8ef7;"></i> Categorías
+                    </button>
+                </div>
+            </div>
 
-                <button type="button" class="filter-pill" data-val="True" onclick="filtrarPill(this)">
-                    <i class="bi bi-bookmark-star-fill" style="color:#ff758c;"></i> Marcas
-                </button>
-                <button type="button" class="filter-pill" data-val="False" onclick="filtrarPill(this)">
-                    <i class="bi bi-grid-fill" style="color:#4f8ef7;"></i> Categorías
-                </button>
+            <div class="d-flex align-items-center gap-2 ms-auto">
+                <asp:TextBox ID="txtFiltroNombre" runat="server" CssClass="form-control" placeholder="Buscar por nombre..." AutoPostBack="true" OnTextChanged="Filtros_Changed" style="border-radius: 20px; border: 1px solid #ddd; padding: 0.4rem 1rem; width: 220px;"></asp:TextBox>
+                
+                <asp:DropDownList ID="ddlFiltroEstado" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="Filtros_Changed" style="border-radius: 20px; border: 1px solid #ddd; padding: 0.4rem 1rem; width: 140px; cursor: pointer;">
+                    <asp:ListItem Value="Todos">Todos</asp:ListItem>
+                    <asp:ListItem Value="Activos">Activos</asp:ListItem>
+                    <asp:ListItem Value="Inactivos">Inactivos</asp:ListItem>
+                </asp:DropDownList>
             </div>
         </div>
 
