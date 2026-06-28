@@ -18,10 +18,66 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="kpi-strip mb-4">
+            <div class="kpi-item">
+                <i class="bi bi-truck kpi-icon" style="color:#ff7eb3;"></i>
+                <div>
+                    <div class="kpi-label">Total proveedores</div>
+                    <div class="kpi-value" id="kpiCountTodas">—</div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="mb-4" style="border-color: #fecfef; border-width: 2px;" />
+
+        <div class="filter-bar mb-4">
+            <div class="row g-2">
+                <div class="col-md-5">
+                    <div class="search-wrapper">
+                        <i class="bi bi-search search-icon"></i>
+                        <input type="text" id="txtBuscar" class="search-input" placeholder="Buscar por nombre, CUIT, email o teléfono..." oninput="aplicarFiltros()" />
+                        <button type="button" class="search-clear" id="btnLimpiarBuscar" onclick="limpiarBuscar()" style="display:none;">
+                            <i class="bi bi-x"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="estado-filter-wrapper">
+                        <i class="bi bi-tag estado-filter-icon"></i>
+                        <select id="ddlRubro" class="estado-filter" onchange="aplicarFiltros()">
+                            <option value="">Todos los rubros</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="estado-filter-wrapper">
+                        <i class="bi bi-sort-alpha-down estado-filter-icon"></i>
+                        <select id="ddlOrdenar" class="estado-filter" onchange="aplicarFiltros()">
+                            <option value="az">A a Z</option>
+                            <option value="za">Z a A</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="sinResultados" class="text-center py-5" style="display:none;">
+            <i class="bi bi-search" style="font-size: 3rem; color: #fecfef;"></i>
+            <p class="text-muted mt-3 fw-semibold">No se encontraron proveedores con ese criterio.</p>
+            <button type="button" class="btn btn-sm" onclick="resetearFiltros()" style="border: 2px solid #ff7eb3; color: #ff7eb3; border-radius: 20px; padding: 0.4rem 1.2rem;">
+                Limpiar filtros
+            </button>
+        </div>
+
+        <div class="row" id="gridProveedores">
             <asp:Repeater ID="rptProveedores" runat="server">
                 <ItemTemplate>
-                    <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="col-md-4 col-sm-6 mb-4 proveedor-card-wrapper"
+                         data-nombre='<%# (Eval("Nombre") ?? "").ToString().ToLower() %>'
+                         data-cuit='<%# (Eval("CUIT") ?? "").ToString().ToLower() %>'
+                         data-email='<%# (Eval("Email") ?? "").ToString().ToLower() %>'
+                         data-telefono='<%# (Eval("Telefono") ?? "").ToString().ToLower() %>'
+                         data-rubro='<%# (Eval("Rubro") ?? "").ToString() %>'>
                         <div class="list-card h-100">
                             <div class="card-body text-center" style="padding: 1.75rem 1rem 1rem; background: linear-gradient(160deg, #fff0f5 0%, #ffffff 70%);">
                                 <div class="mb-3">
@@ -59,4 +115,116 @@
             </asp:Repeater>
         </div>
     </div>
+
+    <style>
+        .kpi-strip {
+            display: flex; align-items: center;
+            background: rgba(255,255,255,0.9);
+            border-radius: 16px; padding: 1rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(255,117,140,0.08);
+            border: 1px solid rgba(255,126,179,0.12);
+            flex-wrap: wrap;
+        }
+        .kpi-item { display: flex; align-items: center; gap: 0.8rem; flex: 1; min-width: 120px; padding: 0.25rem 1rem; }
+        .kpi-icon { font-size: 1.8rem; }
+        .kpi-label { font-size: 0.75rem; color: #9a9a9a; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .kpi-value { font-size: 1.5rem; font-weight: 800; color: #4a4a4a; }
+        .filter-bar {
+            background: rgba(255,255,255,0.85);
+            border-radius: 16px; padding: 1.25rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(255,117,140,0.08);
+            border: 1px solid rgba(255,126,179,0.15);
+        }
+        .search-wrapper { position: relative; }
+        .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #ff7eb3; font-size: 1rem; pointer-events: none; }
+        .search-input {
+            width: 100%; padding: 0.65rem 2.5rem;
+            border: 1.5px solid #e0e0e0; border-radius: 50px;
+            font-size: 0.9rem; outline: none; transition: border-color 0.25s; background: white;
+        }
+        .search-input:focus { border-color: #ff7eb3; box-shadow: 0 0 0 3px rgba(255,126,179,0.15); }
+        .search-clear { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #aaa; cursor: pointer; font-size: 1rem; padding: 0; }
+        .search-clear:hover { color: #ff7eb3; }
+        .estado-filter-wrapper { position: relative; }
+        .estado-filter-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #ff7eb3; font-size: 0.95rem; pointer-events: none; }
+        .estado-filter {
+            width: 100%; padding: 0.65rem 1rem 0.65rem 2.4rem;
+            border: 1.5px solid #e0e0e0; border-radius: 50px;
+            font-size: 0.9rem; outline: none; appearance: none; background: white; cursor: pointer;
+        }
+        .estado-filter:focus { border-color: #ff7eb3; box-shadow: 0 0 0 3px rgba(255,126,179,0.15); }
+        .proveedor-card-wrapper.hidden { display: none !important; }
+    </style>
+
+    <script type="text/javascript">
+        window.addEventListener('DOMContentLoaded', function () {
+            poblarRubros();
+            actualizarContadores();
+            aplicarFiltros();
+        });
+
+        function poblarRubros() {
+            var select = document.getElementById('ddlRubro');
+            if (!select) return;
+            var rubros = [];
+            document.querySelectorAll('.proveedor-card-wrapper').forEach(function (card) {
+                var r = (card.dataset.rubro || '').trim();
+                if (r && rubros.indexOf(r) === -1) rubros.push(r);
+            });
+            rubros.sort();
+            rubros.forEach(function (r) {
+                var opt = document.createElement('option');
+                opt.value = r.toLowerCase();
+                opt.textContent = r;
+                select.appendChild(opt);
+            });
+        }
+
+        function aplicarFiltros() {
+            var textoBuscar = (document.getElementById('txtBuscar').value || '').trim().toLowerCase();
+            var rubroFiltro = (document.getElementById('ddlRubro').value || '').toLowerCase();
+            var orden = document.getElementById('ddlOrdenar').value;
+
+            document.getElementById('btnLimpiarBuscar').style.display = textoBuscar ? 'block' : 'none';
+
+            var grid = document.getElementById('gridProveedores');
+            var cards = Array.from(document.querySelectorAll('.proveedor-card-wrapper'));
+            var visibles = 0;
+            cards.forEach(function (card) {
+                var nombre = card.dataset.nombre || '';
+                var cuit = card.dataset.cuit || '';
+                var email = card.dataset.email || '';
+                var telefono = card.dataset.telefono || '';
+                var rubro = (card.dataset.rubro || '').toLowerCase();
+                var okBuscar = !textoBuscar || nombre.includes(textoBuscar) || cuit.includes(textoBuscar) || email.includes(textoBuscar) || telefono.includes(textoBuscar);
+                var okRubro = !rubroFiltro || rubro === rubroFiltro;
+                if (okBuscar && okRubro) { card.classList.remove('hidden'); visibles++; }
+                else card.classList.add('hidden');
+            });
+            cards.sort(function (a, b) {
+                var na = a.dataset.nombre || '', nb = b.dataset.nombre || '';
+                return orden === 'az' ? na.localeCompare(nb) : nb.localeCompare(na);
+            });
+            cards.forEach(function (card) { grid.appendChild(card); });
+            document.getElementById('sinResultados').style.display = visibles === 0 ? 'block' : 'none';
+        }
+
+        function actualizarContadores() {
+            var el = document.getElementById('kpiCountTodas');
+            if (el) el.textContent = document.querySelectorAll('.proveedor-card-wrapper').length;
+        }
+
+        function limpiarBuscar() {
+            document.getElementById('txtBuscar').value = '';
+            document.getElementById('btnLimpiarBuscar').style.display = 'none';
+            aplicarFiltros();
+        }
+
+        function resetearFiltros() {
+            document.getElementById('txtBuscar').value = '';
+            document.getElementById('ddlRubro').value = '';
+            document.getElementById('ddlOrdenar').value = 'az';
+            aplicarFiltros();
+        }
+    </script>
 </asp:Content>
